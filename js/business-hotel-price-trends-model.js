@@ -301,21 +301,28 @@
     return latest ? ordered.filter((snap) => snap.cohort_version === latest.cohort_version) : [];
   }
 
+  // dates の泊ごとに、取得ごとの料金（施設ごと・中央値）をたどる。各取得の marketView は1回だけ作る
+  function stayHistories(cohort, snapshots, code, dates) {
+    const views = usableSnapshots(snapshots).map((snap) => ({snap, view: marketView(cohort, snap, code), index: new Map(snap.stay_dates.map((date, i) => [date, i]))}));
+    return dates.map((date) => {
+      const points = views.map(({snap, view, index: byDate}) => {
+        const index = byDate.get(date);
+        if (index === undefined || !view) return null;
+        const hotels = view.core.map((hotel) => ({hotel_no: hotel.hotel_no, name: hotel.name, price: hotel.prices[index], soldOut: hotel.meals[index] === "-"}));
+        const prices = hotels.map((hotel) => hotel.price).filter(isPrice);
+        const status = prices.length >= MIN_CORE_FOR_MEDIAN ? "ok" : prices.length === REFERENCE_CORE ? "reference" : "none";
+        return {snapshot: snap.snapshot_date, daysBefore: daysBetween(date, snap.snapshot_date), status, median: status === "none" ? null : median(prices), soldOut: hotels.filter((hotel) => hotel.soldOut).length, hotels};
+      }).filter(Boolean);
+      const valid = points.filter((point) => point.status !== "none");
+      const first = valid[0] || null;
+      const last = valid.length && valid[valid.length - 1].snapshot === (points[points.length - 1] || {}).snapshot ? valid[valid.length - 1] : null;
+      const change = first && last && first !== last ? (last.median / first.median - 1) * 100 : null;
+      return {date, points, first, last, change, direction: change === null ? null : change >= TREND_THRESHOLD ? "up" : change <= -TREND_THRESHOLD ? "down" : "flat"};
+    });
+  }
+
   function stayHistory(cohort, snapshots, code, date) {
-    const points = usableSnapshots(snapshots).map((snap) => {
-      const index = snap.stay_dates.indexOf(date);
-      const view = index < 0 ? null : marketView(cohort, snap, code);
-      if (!view) return null;
-      const hotels = view.core.map((hotel) => ({hotel_no: hotel.hotel_no, name: hotel.name, price: hotel.prices[index], soldOut: hotel.meals[index] === "-"}));
-      const prices = hotels.map((hotel) => hotel.price).filter(isPrice);
-      const status = prices.length >= MIN_CORE_FOR_MEDIAN ? "ok" : prices.length === REFERENCE_CORE ? "reference" : "none";
-      return {snapshot: snap.snapshot_date, daysBefore: daysBetween(date, snap.snapshot_date), status, median: status === "none" ? null : median(prices), soldOut: hotels.filter((hotel) => hotel.soldOut).length, hotels};
-    }).filter(Boolean);
-    const valid = points.filter((point) => point.status !== "none");
-    const first = valid[0];
-    const last = valid[valid.length - 1];
-    const change = first && last && first !== last ? (last.median / first.median - 1) * 100 : null;
-    return {date, points, first: first || null, last: last || null, change, direction: change === null ? null : change >= TREND_THRESHOLD ? "up" : change <= -TREND_THRESHOLD ? "down" : "flat"};
+    return stayHistories(cohort, snapshots, code, [date])[0];
   }
 
   // 値段の動き方の集計: 今朝の対象期間の泊 × CORE施設ごとに、いちばん古い取得と今朝を比べる。
@@ -522,6 +529,7 @@
     crossCityBrand,
     weeklyChange,
     stayHistory,
+    stayHistories,
     pricePaths,
     TREND_THRESHOLD,
     eventCandidates,

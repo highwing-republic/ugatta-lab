@@ -337,20 +337,13 @@ a.bht-hotel__photo:focus-visible{outline:2px solid var(--lab-focus);outline-offs
 .bht-peak-label{fill:var(--ink-soft);font:500 11px var(--sans);paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
 .bht-peak-value{fill:var(--ink);font:700 13px var(--sans);font-variant-numeric:tabular-nums;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
 @media(max-width:620px){.bht-daily-lead{font-size:14px}.bht-periods ol{grid-template-columns:1fr;gap:6px}.bht-period{padding:8px 10px}.bht-period__date{font-size:13px}.bht-peak-value{font-size:12px}.bht-peak-label{font-size:10px}}
-/* 泊まる日ごとの値段の動き */
-.bht-stay-controls{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px 16px;margin:0 0 16px}
-.bht-stay-controls label{display:flex;flex:0 1 300px;gap:7px;color:var(--lab-ink-soft);font-size:12px;font-weight:500;flex-direction:column}
-.bht-stay-controls select{width:100%;min-height:44px;padding:0 34px 0 12px;border:1px solid #b8c6cf;border-radius:9px;background:#fff;color:var(--ink);font:500 14px/1.4 var(--sans)}
-.bht-stay-controls select:focus{outline:2px solid var(--lab-focus);outline-offset:2px}
-.bht-stay-controls p{margin:0 0 12px;color:var(--ink-soft);font-size:12px}
-.bht-stay-hotel{fill:none;stroke:#b4c0c8;stroke-width:1.5;stroke-linejoin:round}
-.bht-stay-hotel-dot{fill:#b4c0c8;stroke:#fff;stroke-width:1.5}
-.bht-stay-median{fill:none;stroke:var(--bht-series);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
-.bht-stay-median-dot{fill:var(--bht-series);stroke:#fff;stroke-width:2}
-.bht-stay-hotel-dot:focus,.bht-stay-median-dot:focus{outline:none;stroke:var(--ink)}
-.bht-stay-value{fill:var(--ink);font:700 12px var(--sans);font-variant-numeric:tabular-nums;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
-.bht-key-line--bold{border-top-width:3px}
-.bht-key-line--hotel{border-top-color:#b4c0c8}
+/* 泊まる日ごとの値段の動き: 0を中央に、値上がりは上・値下がりは下 */
+.bht-move--up{fill:var(--bht-day-high);background:var(--bht-day-high)}
+.bht-move--flat{fill:var(--bht-day-mid);background:var(--bht-day-mid)}
+.bht-move--down{fill:var(--bht-day-low);background:var(--bht-day-low)}
+.bht-tooltip__spark{display:block;margin-top:6px}
+.bht-spark path{fill:none;stroke:var(--bht-series);stroke-width:2;stroke-linejoin:round}
+.bht-spark circle{fill:var(--bht-series)}
 .bht-paths{margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}
 .bht-paths h3{margin:0 0 6px;font-size:16px}
 .bht-paths__lead{margin:0 0 12px;color:var(--ink);font-size:14px;line-height:1.8}

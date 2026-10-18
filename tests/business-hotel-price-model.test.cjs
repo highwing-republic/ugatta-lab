@@ -107,6 +107,20 @@ test("泊まる日ごとの値段の動き: 同じ泊の料金を取得の古い
   assert.equal(history.direction, "up");
 });
 
+test("泊ごとの値段の動き: 今朝の中央値が出せない泊は変化率を出さない", () => {
+  const snap = (date, shift) => snapshot(date, {start: date, shift});
+  const latest = snap("2026-10-16", -800);
+  // 10/19（月）泊は今朝、3施設が売り切れ → 比較データ不足
+  [0, 1, 2].forEach((i) => {
+    latest.markets[0].hotels[i].price[3] = null;
+  });
+  const [kept, missing] = model.stayHistories(cohort, [snap("2026-10-14", 0), latest], "sapporo", ["2026-10-18", "2026-10-19"]);
+  assert.equal(Math.round(kept.change * 10) / 10, -9.8); // 8,200円 → 7,400円
+  assert.equal(kept.direction, "down");
+  assert.equal(missing.change, null);
+  assert.equal(missing.points.length, 2);
+});
+
 test("値段の動き方: 施設ごとに最初の取得と今朝を比べ、高い泊とその他の泊で数える", () => {
   const snap = (date, shift) => snapshot(date, {start: date, shift});
   const latest = snap("2026-10-16", 400);
