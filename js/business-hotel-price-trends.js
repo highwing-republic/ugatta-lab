@@ -498,6 +498,13 @@
       return;
     }
     const count = (direction) => withChange.filter((item) => item.direction === direction).length;
+    // 動いた泊がほとんど無いときは、平たんなグラフで場所を取らず一文だけにする
+    const FLAT_LIMIT = 3;
+    if (count("up") + count("down") < FLAT_LIMIT) {
+      lead.innerHTML = `記録の最初の取得から今朝までに、値段が±${M.TREND_THRESHOLD}%以上動いた泊は${count("up") + count("down")}泊だけで、<b>この期間は値段がほぼ動いていません</b>（比べた${withChange.length}泊）。`;
+      clear();
+      return;
+    }
     const highest = withChange.slice().sort((a, b) => b.change - a.change)[0];
     const lowest = withChange.slice().sort((a, b) => a.change - b.change)[0];
     const since = [state.latest, ...state.history].map((snap) => snap.snapshot_date).sort()[0];
