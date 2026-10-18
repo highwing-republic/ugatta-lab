@@ -292,6 +292,38 @@
     return {status: "ok", change, direction, hotels, hotelCount: valid.length};
   }
 
+  // 値段が変わった日: 泊まる日ごとに、毎朝の取得を新しい順にさかのぼり、CORE中央値が
+  // 前の取得から±3%以上動いた直近の取得日を探す。比較施設群が違う取得や、どちらかが
+  // 比較データ不足（2施設以下）の組は比べない。daysAgo は最新の取得日からの日数（0 = 今朝）
+  function priceChanges(cohort, snapshots, code, {nights} = {}) {
+    const ordered = (snapshots || []).filter(Boolean).slice().sort((a, b) => (a.snapshot_date < b.snapshot_date ? 1 : -1));
+    const latest = ordered[0];
+    if (!latest) return [];
+    const usable = ordered.filter((snap) => snap.cohort_version === latest.cohort_version);
+    const byDate = usable.map((snap) => {
+      const view = marketView(cohort, snap, code);
+      return {date: snap.snapshot_date, days: view ? new Map(dailyMedians(view).map((day) => [day.date, day])) : new Map()};
+    });
+    const latestView = marketView(cohort, latest, code, {nights});
+    if (!latestView) return [];
+    const daysBetween = (a, b) => Math.round((Date.parse(`${a}T00:00:00Z`) - Date.parse(`${b}T00:00:00Z`)) / 86400000);
+    return latestView.dates.map((date) => {
+      const series = byDate.map((item) => ({snapshot: item.date, day: item.days.get(date)})).filter((item) => item.day && item.day.status !== "none");
+      const now = series[0] && series[0].snapshot === latest.snapshot_date ? series[0] : null;
+      if (!now) return {date, status: "none"};
+      for (let i = 0; i < series.length - 1; i += 1) {
+        const after = series[i].day.median;
+        const before = series[i + 1].day.median;
+        const change = (after / before - 1) * 100;
+        if (Math.abs(change) >= TREND_THRESHOLD) {
+          return {date, status: "changed", changedOn: series[i].snapshot, previousOn: series[i + 1].snapshot, daysAgo: daysBetween(latest.snapshot_date, series[i].snapshot), from: before, to: after, change, direction: change > 0 ? "up" : "down", now: now.day.median};
+        }
+      }
+      const oldest = series[series.length - 1].snapshot;
+      return {date, status: series.length > 1 ? "steady" : "unknown", since: oldest, sinceDays: daysBetween(latest.snapshot_date, oldest), now: now.day.median};
+    });
+  }
+
   // ---------------------------------------------------------------- 全国サマリとランキング
 
   function nationalSummary(cohort, latest, previous, {nights} = {}) {
@@ -452,6 +484,8 @@
     hotelSummary,
     crossCityBrand,
     weeklyChange,
+    priceChanges,
+    TREND_THRESHOLD,
     eventCandidates,
     EVENT_TOP,
     formatPeriod,

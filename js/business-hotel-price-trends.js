@@ -4,7 +4,7 @@
   const M = globalThis.BusinessHotelPriceModel;
   const DATA = "data/business-hotel-price-trends/";
   const $ = (selector) => document.querySelector(selector);
-  const state = {cohort: null, manifest: null, latest: null, previous: null, events: null, images: null, eventView: null, market: null, nights: 30, rankTab: "volatileMarkets"};
+  const state = {cohort: null, manifest: null, latest: null, previous: null, history: [], dailyMode: "price", events: null, images: null, eventView: null, market: null, nights: 30, rankTab: "volatileMarkets"};
 
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
   const yen = M.formatYen;
@@ -43,6 +43,7 @@
       setupControls();
       show("dashboard");
       render();
+      loadHistory(manifest, latestEntry, previous);
     } catch (error) {
       if (error.status === 404) {
         $("#bht-error-title").textContent = "データを準備中です";
@@ -56,6 +57,17 @@
     }
   }
 
+  // 値段が変わった日を見るための過去の取得（最大14日前まで）。表示を待たせないよう後から読み、
+  // 読めた分だけで宿泊日別のグラフを描き直す
+  const HISTORY_DAYS = 14;
+  async function loadHistory(manifest, latestEntry, previous) {
+    const oldest = M.addDays(latestEntry.date, -HISTORY_DAYS);
+    const entries = manifest.snapshots.filter((item) => item.date < latestEntry.date && item.date >= oldest);
+    const loaded = await Promise.all(entries.map((item) => (previous && item.date === previous.snapshot_date ? previous : getJson(DATA + item.file).catch(() => null))));
+    state.history = loaded.filter(Boolean);
+    if (state.history.length) render();
+  }
+
   function show(which) {
     $("#bht-loading").hidden = which !== "loading";
     $("#bht-error").hidden = which !== "error";
@@ -67,12 +79,15 @@
     const codes = state.cohort.markets.map((market) => market.code);
     state.market = codes.includes(params.get("market")) ? params.get("market") : codes[0];
     state.nights = params.get("nights") === "60" ? 60 : 30;
+    state.dailyMode = params.get("daily") === "changes" ? "changes" : "price";
   }
 
   function writeUrl() {
     const params = new URLSearchParams(location.search);
     params.set("market", state.market);
     params.set("nights", String(state.nights));
+    if (state.dailyMode === "changes") params.set("daily", "changes");
+    else params.delete("daily");
     history.replaceState(null, "", `${location.pathname}?${params}`);
   }
 
@@ -82,6 +97,12 @@
     market.value = state.market;
     $("#bht-nights").value = String(state.nights);
     market.onchange = () => selectMarket(market.value);
+    document.querySelectorAll("#bht-daily-mode button").forEach((button) => {
+      button.onclick = () => {
+        state.dailyMode = button.dataset.mode;
+        render();
+      };
+    });
     $("#bht-nights").onchange = (event) => {
       state.nights = Number(event.target.value);
       render();
@@ -116,7 +137,7 @@
     const current = summaries.find((item) => item.view && item.view.code === state.market);
     if (!current || !current.summary) return;
     renderMarket(current);
-    renderDaily(current.summary);
+    renderDaily(current.summary, M.priceChanges(state.cohort, [state.latest, ...state.history], state.market, {nights: state.nights}));
     renderWeekday(current.summary);
     renderMeals(current.view);
     renderCalendar(current.summary);
@@ -346,11 +367,45 @@
     list.innerHTML = `<h3>料金が上がる期間${periods.length > shown.length ? `<small>（山の高い${shown.length}件）</small>` : ""}</h3><ol>${shown.map((period) => `<li class="bht-period${period.spike ? " bht-period--spike" : ""}"><span class="bht-period__date">${escapeHtml(periodText(period))}</span><span class="bht-period__peak">最高 <b>${escapeHtml(manYen(period.peak.median))}</b>（${escapeHtml(shortDate(period.peak.date))}・ふだんの${escapeHtml(period.peak.ratio.toFixed(1))}倍${period.peak.reference ? "・参考値" : ""}）</span></li>`).join("")}</ol>`;
   }
 
-  function renderDaily(summary) {
+  const agoText = (days) => (days === 0 ? "今朝" : `${days}日前`);
+  const changeText = (item) => `${yen(item.from)}→${yen(item.to)}（${item.change > 0 ? "+" : "−"}${Math.abs(item.change).toFixed(0)}%）`;
+  // 値段が変わった時期の区分: 今朝／1〜2日前／3〜6日前／7日以上前・変わらず
+  const ageClass = (item) => (!item || item.status !== "changed" ? "old" : item.daysAgo === 0 ? "0" : item.daysAgo <= 2 ? "1" : item.daysAgo <= 6 ? "3" : "old");
+  function changeNote(item) {
+    if (!item || item.status === "none") return "";
+    if (item.status === "changed") return `${agoText(item.daysAgo)}${item.daysAgo ? `（${shortDate(item.changedOn)}の取得）` : "の取得"}で${item.direction === "up" ? "値上がり" : "値下がり"} ${changeText(item)}`;
+    if (item.status === "steady") return `記録のある${item.sinceDays + 1}日間は値段がほぼ同じ（±${M.TREND_THRESHOLD}%未満）`;
+    return "取得の記録が今朝の分だけで、変化はまだ分かりません";
+  }
+
+  function renderChangeLead(changes) {
+    const lead = $("#bht-daily-lead");
+    const list = $("#bht-periods");
+    const name = $("#bht-market-name").textContent;
+    const changed = changes.filter((item) => item.status === "changed");
+    const records = state.history.length + 1;
+    const first = [state.latest, ...state.history].map((snap) => snap.snapshot_date).sort()[0];
+    if (records < 2) {
+      lead.innerHTML = `${escapeHtml(name)}の取得の記録はまだ今朝の分だけです。明日の朝から、泊まる日ごとに値段が変わった日を表示します。`;
+      list.innerHTML = "";
+      return;
+    }
+    const today = changed.filter((item) => item.daysAgo === 0);
+    const up = today.filter((item) => item.direction === "up").length;
+    lead.innerHTML = `${escapeHtml(name)}で<b>今朝の取得で値段が変わった泊まる日は${today.length}泊</b>（上がった${up}泊・下がった${today.length - up}泊）。棒の色は、その泊の値段が最後に変わった日です。<span class="bht-daily-lead__note">毎朝の取得を比べ、5施設の中央値が±${M.TREND_THRESHOLD}%以上動いた日を「変わった日」としています。記録は${escapeHtml(M.formatDate(first))}からの${records}日分です。</span>`;
+    const top = changed.slice().sort((a, b) => a.daysAgo - b.daysAgo || Math.abs(b.change) - Math.abs(a.change)).slice(0, 6).sort((a, b) => (a.date < b.date ? -1 : 1));
+    list.innerHTML = top.length ? `<h3>最近、大きく変わった泊まる日</h3><ol>${top.map((item) => `<li class="bht-period bht-change--${item.direction}"><span class="bht-period__date">${escapeHtml(M.formatDate(item.date))}泊</span><span class="bht-period__peak"><b>${escapeHtml(agoText(item.daysAgo))}</b>に${item.direction === "up" ? "値上がり" : "値下がり"} ${escapeHtml(changeText(item))}</span></li>`).join("")}</ol>` : "";
+  }
+
+  function renderDaily(summary, changes = []) {
     const days = summary.days;
     const chart = $("#bht-daily-chart");
     const periods = M.pricePeriods(summary);
-    renderDailyLead(summary, periods);
+    const changeMode = state.dailyMode === "changes";
+    const changeByDate = new Map(changes.map((item) => [item.date, item]));
+    document.querySelectorAll("#bht-daily-mode button").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.mode === state.dailyMode)));
+    if (changeMode) renderChangeLead(changes);
+    else renderDailyLead(summary, periods);
     const width = chartWidth(chart, 960);
     const narrow = width < 560;
     const height = narrow ? 300 : 360, top = 34, right = 16, bottom = 64, left = narrow ? 40 : 56;
@@ -374,13 +429,16 @@
     const barWidth = Math.max(2, Math.min(22, step - 2));
     const bars = days.map((day, index) => {
       if (day.status === "none") return `<text class="bht-bar-none" x="${cx(index)}" y="${plotBottom - 4}" text-anchor="middle">–</text>`;
-      const level = M.calendarClass(day, summary.typical);
+      const level = changeMode ? `age-${ageClass(changeByDate.get(day.date))}` : M.calendarClass(day, summary.typical);
       const h = Math.max(1, plotBottom - y(day.median));
-      return `<path class="bht-day bht-day--${level}${day.status === "reference" ? " bht-day--reference" : ""}" d="${roundedBar(cx(index) - barWidth / 2, plotBottom - h, barWidth, h, true)}"/>`;
+      const change = changeByDate.get(day.date);
+      // 値段が変わった日の表示では、その泊が最後に動いた向きを棒の上に矢印で
+      const arrow = changeMode && change && change.status === "changed" ? `<text class="bht-arrow bht-arrow--${change.direction}" x="${cx(index)}" y="${plotBottom - h - 5}" text-anchor="middle">${change.direction === "up" ? "▲" : "▼"}</text>` : "";
+      return `<path class="bht-day bht-day--${level}${day.status === "reference" ? " bht-day--reference" : ""}" d="${roundedBar(cx(index) - barWidth / 2, plotBottom - h, barWidth, h, true)}"/>${arrow}`;
     }).join("");
     const typical = summary.typical ? `<line class="bht-typical" x1="${left}" x2="${width - right}" y1="${y(summary.typical)}" y2="${y(summary.typical)}"/>`: "";
     // 山の高い期間だけ、いちばん高い泊に日付と料金を書く
-    const peakLabels = topPeriods(periods, narrow ? 3 : 6).map((period) => {
+    const peakLabels = (changeMode ? [] : topPeriods(periods, narrow ? 3 : 6)).map((period) => {
       const index = days.findIndex((day) => day.date === period.peak.date);
       const x = Math.min(width - right - 24, Math.max(left + 24, cx(index)));
       const y0 = y(period.peak.median);
@@ -400,15 +458,18 @@
     const busyMarks = days.map((day, index) => (day.busy ? `<g class="bht-busy-mark"><rect x="${cx(index) - 7}" y="${plotBottom + 38}" width="14" height="14" rx="3"/><text x="${cx(index)}" y="${plotBottom + 49}" text-anchor="middle">売</text></g>` : "")).join("");
     chart.innerHTML = `<svg viewBox="0 0 ${width} ${height}" aria-hidden="true">${weekend}${grid}${unit}${bars}${typical}${peakLabels}${xLabels}${busyMarks}<line class="bht-crosshair" id="bht-crosshair" x1="${left}" x2="${left}" y1="${top}" y2="${plotBottom}"/></svg>`;
     chart.setAttribute("aria-label", `宿泊日別の料金。${$("#bht-daily-lead").textContent}`);
-    $("#bht-daily-legend").innerHTML = `<span><i class="bht-key-bar bht-day--low"></i>ふだんより安い</span><span><i class="bht-key-bar bht-day--mid"></i>ふだん並み</span><span><i class="bht-key-bar bht-day--high"></i>高い（+10%以上）</span><span><i class="bht-key-bar bht-day--spike"></i>急騰（1.5倍以上）</span>${summary.typical ? `<span><i class="bht-key-typical"></i>ふだんの料金（代表料金 ${escapeHtml(yen(summary.typical))}）</span>` : ""}<span><i class="bht-key-weekend"></i>休前日（金・土・祝前日の泊）</span><span><i class="bht-key-bar bht-key-reference-bar"></i>参考値（3施設）</span><span><i class="bht-key-busy">売</i>売り切れが目立つ日</span>`;
+    $("#bht-daily-legend").innerHTML = changeMode
+      ? `<span><i class="bht-key-bar bht-day--age-0"></i>今朝変わった</span><span><i class="bht-key-bar bht-day--age-1"></i>1〜2日前に変わった</span><span><i class="bht-key-bar bht-day--age-3"></i>3〜6日前に変わった</span><span><i class="bht-key-bar bht-day--age-old"></i>7日以上前／記録の間は変わらず</span><span><b class="bht-arrow bht-arrow--up">▲</b>値上がり　<b class="bht-arrow bht-arrow--down">▼</b>値下がり</span><span><i class="bht-key-busy">売</i>売り切れが目立つ日</span>`
+      : `<span><i class="bht-key-bar bht-day--low"></i>ふだんより安い</span><span><i class="bht-key-bar bht-day--mid"></i>ふだん並み</span><span><i class="bht-key-bar bht-day--high"></i>高い（+10%以上）</span><span><i class="bht-key-bar bht-day--spike"></i>急騰（1.5倍以上）</span>${summary.typical ? `<span><i class="bht-key-typical"></i>ふだんの料金（代表料金 ${escapeHtml(yen(summary.typical))}）</span>` : ""}<span><i class="bht-key-weekend"></i>休前日（金・土・祝前日の泊）</span><span><i class="bht-key-bar bht-key-reference-bar"></i>参考値（3施設）</span><span><i class="bht-key-busy">売</i>売り切れが目立つ日</span>`;
     bindCrosshair(chart, days, cx, step, (day) => {
       const tag = [day.holiday, day.eveOf ? `${day.eveOf}の前日` : ""].filter(Boolean).join("・");
       const sold = day.soldOut ? `\n楽天で売り切れ ${day.soldOut}/${day.total}施設${day.busy ? "（売り切れが目立つ日）" : ""}` : "";
       if (day.status === "none") return `${M.formatDate(day.date)}泊${tag ? ` ${tag}` : ""}\n比較データ不足（料金確認 ${day.count}/${day.total}施設）${sold}`;
       const ratio = summary.typical ? `\n${LEVEL_TEXT[M.calendarClass(day, summary.typical)]}（ふだんの${(day.median / summary.typical).toFixed(2)}倍）` : "";
-      return `${yen(day.median)}\n${M.formatDate(day.date)}泊${tag ? ` ${tag}` : ""}・中央値${day.status === "reference" ? "（参考）" : ""}${ratio}\n5施設の最安 ${yen(day.min)}〜最高 ${yen(day.max)}\n料金確認 ${day.count}/${day.total}施設${sold}`;
+      const note = changeNote(changeByDate.get(day.date));
+      return `${yen(day.median)}\n${M.formatDate(day.date)}泊${tag ? ` ${tag}` : ""}・中央値${day.status === "reference" ? "（参考）" : ""}${ratio}${note ? `\n${note}` : ""}\n5施設の最安 ${yen(day.min)}〜最高 ${yen(day.max)}\n料金確認 ${day.count}/${day.total}施設${sold}`;
     });
-    $("#bht-daily-table").innerHTML = tableTwin("表で見る", ["宿泊日", "中央値", "ふだんとの比", "最安", "最高", "料金確認", "売り切れ"], days.map((day) => [`${M.formatDate(day.date)}${day.holiday ? ` ${day.holiday}` : ""}`, day.status === "none" ? "—" : `${yen(day.median)}${day.status === "reference" ? "（参考）" : ""}`, day.status === "none" || !summary.typical ? "—" : `${(day.median / summary.typical).toFixed(2)}倍`, yen(day.min), yen(day.max), `${day.count}/${day.total}`, `${day.soldOut}/${day.total}${day.busy ? "（目立つ）" : ""}`]));
+    $("#bht-daily-table").innerHTML = tableTwin("表で見る", ["宿泊日", "中央値", "ふだんとの比", "値段が変わった日", "最安", "最高", "料金確認", "売り切れ"], days.map((day) => [`${M.formatDate(day.date)}${day.holiday ? ` ${day.holiday}` : ""}`, day.status === "none" ? "—" : `${yen(day.median)}${day.status === "reference" ? "（参考）" : ""}`, day.status === "none" || !summary.typical ? "—" : `${(day.median / summary.typical).toFixed(2)}倍`, changeNote(changeByDate.get(day.date)) || "—", yen(day.min), yen(day.max), `${day.count}/${day.total}`, `${day.soldOut}/${day.total}${day.busy ? "（目立つ）" : ""}`]));
   }
 
   // 曜日別: 代表料金との差（%）。0を基準に上下へ伸びる1系列の棒。

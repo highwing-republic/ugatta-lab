@@ -337,3 +337,20 @@ a.bht-hotel__photo:focus-visible{outline:2px solid var(--lab-focus);outline-offs
 .bht-peak-label{fill:var(--ink-soft);font:500 11px var(--sans);paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
 .bht-peak-value{fill:var(--ink);font:700 13px var(--sans);font-variant-numeric:tabular-nums;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
 @media(max-width:620px){.bht-daily-lead{font-size:14px}.bht-periods ol{grid-template-columns:1fr;gap:6px}.bht-period{padding:8px 10px}.bht-period__date{font-size:13px}.bht-peak-value{font-size:12px}.bht-peak-label{font-size:10px}}
+/* 棒の色分けの切り替えと、値段が変わった日の色（新しいほど濃い1色の段階） */
+.bht-mode{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.bht-mode span{margin-right:4px;color:var(--lab-ink-soft);font-size:12px}
+.bht-mode button{min-height:36px;padding:0 14px;border:1px solid #b8c6cf;border-radius:999px;background:#fff;color:var(--ink);font:500 13px/1 var(--sans);cursor:pointer}
+.bht-mode button[aria-pressed=true]{border-color:var(--lab-navy);background:var(--lab-navy);color:#fff}
+.bht-mode button:focus-visible{outline:2px solid var(--lab-focus);outline-offset:2px}
+.bht-daily-lead__note{display:block;margin-top:4px;color:var(--ink-soft);font-size:12px}
+:root{--bht-age-0:#173f66;--bht-age-1:#3d7cb0;--bht-age-3:#8fb6d6;--bht-age-old:#d3dbe1}
+.bht-day--age-0{fill:var(--bht-age-0);background:var(--bht-age-0)}
+.bht-day--age-1{fill:var(--bht-age-1);background:var(--bht-age-1)}
+.bht-day--age-3{fill:var(--bht-age-3);background:var(--bht-age-3)}
+.bht-day--age-old{fill:var(--bht-age-old);background:var(--bht-age-old)}
+.bht-arrow{font:700 10px var(--sans)}
+text.bht-arrow--up{fill:var(--bht-day-spike)}text.bht-arrow--down{fill:var(--bht-day-low)}
+b.bht-arrow--up{color:var(--bht-day-spike)}b.bht-arrow--down{color:var(--bht-day-low)}
+.bht-change--up{border-left-color:var(--bht-day-spike)}
+.bht-change--down{border-left-color:var(--bht-day-low)}
