@@ -1,0 +1,578 @@
+{
+ "schema_version": 1,
+ "generated_at": "2026-10-18T09:09:01+09:00",
+ "source": {
+  "name": "楽天トラベル施設情報API",
+  "url": "https://webservice.rakuten.co.jp/documentation/hotel-detail-search"
+ },
+ "credit": "写真：楽天トラベル",
+ "hotels": {
+  "219": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/219/219.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/219.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "427": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/427/427.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/427.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "910": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/910/910.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/910.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "916": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/916/916.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/916.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "1365": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/1365/1365.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/1365.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "2098": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/2098/2098.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/2098.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "2120": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/2120/2120.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/2120.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "4926": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/4926/4926.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/4926.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "11031": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/11031/11031.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/11031.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "15424": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/15424/15424.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/15424.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "16445": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/16445/16445.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/16445.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "18165": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/18165/18165.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/18165.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "19738": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/19738/19738.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/19738.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "19934": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/19934/19934.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/19934.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "40550": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/40550/40550.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/40550.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "40768": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/40768/40768.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/40768.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "50125": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/50125/50125.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/50125.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "52641": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/52641/52641.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/52641.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "53171": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/53171/53171.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/53171.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "53225": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/53225/53225.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/53225.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "54012": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/54012/54012.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/54012.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "54537": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/54537/54537.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/54537.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "54538": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/54538/54538.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/54538.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "54992": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/54992/54992.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/54992.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "57055": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/57055/57055.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/57055.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "67307": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/67307/67307.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/67307.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "67830": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/67830/67830.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/67830.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "68206": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/68206/68206.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/68206.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "68242": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/68242/68242.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/68242.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "69382": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/69382/69382.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/69382.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "70167": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/70167/70167.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/70167.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "70912": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/70912/70912.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/70912.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "72791": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/72791/72791.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/72791.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "73870": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/73870/73870.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/73870.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "76912": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/76912/76912.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/76912.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "79254": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/79254/79254.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/79254.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "79344": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/79344/79344.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/79344.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "79378": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/79378/79378.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/79378.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "104743": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/104743/104743.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/104743.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "107697": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/107697/107697.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/107697.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "108355": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/108355/108355.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/108355.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "108366": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/108366/108366.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/108366.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "108387": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/108387/108387.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/108387.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "108396": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/108396/108396.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/108396.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "128440": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/128440/128440.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/128440.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "134763": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/134763/134763.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/134763.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "135892": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/135892/135892.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/135892.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "137044": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/137044/137044.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/137044.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "139447": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/139447/139447.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/139447.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "140977": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/140977/140977.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/140977.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "142872": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/142872/142872.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/142872.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "144497": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/144497/144497.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/144497.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "144939": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/144939/144939.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/144939.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "147710": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/147710/147710.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/147710.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "149369": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/149369/149369.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/149369.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "151339": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/151339/151339.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/151339.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "153118": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/153118/153118.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/153118.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "153500": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/153500/153500.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/153500.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "165708": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/165708/165708.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/165708.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "166910": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/166910/166910.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/166910.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "167087": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/167087/167087.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/167087.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "167979": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/167979/167979.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/167979.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "168417": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/168417/168417.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/168417.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "168599": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/168599/168599.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/168599.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "172398": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/172398/172398.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/172398.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "172592": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/172592/172592.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/172592.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "177937": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/177937/177937.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/177937.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "178294": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/178294/178294.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/178294.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "178452": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/178452/178452.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/178452.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "180547": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/180547/180547.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/180547.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "182514": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/182514/182514.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/182514.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "182563": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/182563/182563.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/182563.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "182635": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/182635/182635.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/182635.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "183232": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/183232/183232.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/183232.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "183439": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/183439/183439.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/183439.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "183844": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/183844/183844.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/183844.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "184120": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/184120/184120.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/184120.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "184280": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/184280/184280.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/184280.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "184446": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/184446/184446.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/184446.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "187247": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/187247/187247.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/187247.jpg"
+   },
+   "checked_on": "2026-10-18"
+  },
+  "197943": {
+   "image": {
+    "url": "https://img.travel.rakuten.co.jp/share/HOTEL/197943/197943.jpg",
+    "thumbnail_url": "https://img.travel.rakuten.co.jp/HIMG/90/197943.jpg"
+   },
+   "checked_on": "2026-10-18"
+  }
+ }
+}
