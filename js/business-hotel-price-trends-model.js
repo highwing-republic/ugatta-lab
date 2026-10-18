@@ -202,6 +202,30 @@
     return "mid";
   }
 
+  // 料金が高くなる期間: カレンダーで「10%以上高い」「急騰」が続く宿泊日をひとまとまりにする。
+  // 比べられない日（2施設以下）で区切る。グラフの見出し文と注記に使う
+  function pricePeriods(summary) {
+    const periods = [];
+    let current = null;
+    summary.days.forEach((day) => {
+      const level = calendarClass(day, summary.typical);
+      if (level !== "high" && level !== "spike") {
+        current = null;
+        return;
+      }
+      const ratio = day.median / summary.typical;
+      if (!current) {
+        current = {start: day.date, end: day.date, nights: 0, spike: false, peak: null};
+        periods.push(current);
+      }
+      current.end = day.date;
+      current.nights += 1;
+      current.spike = current.spike || level === "spike";
+      if (!current.peak || day.median > current.peak.median) current.peak = {date: day.date, median: day.median, ratio, reference: day.status === "reference"};
+    });
+    return periods;
+  }
+
   function hotelSummary(hotel) {
     const prices = hotel.prices.filter(isPrice);
     const priced = hotel.meals.filter((code) => MEALS[code] && code !== "-" && code !== "?");
@@ -424,6 +448,7 @@
     dailyMedians,
     marketSummary,
     calendarClass,
+    pricePeriods,
     hotelSummary,
     crossCityBrand,
     weeklyChange,

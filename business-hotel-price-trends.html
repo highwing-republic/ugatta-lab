@@ -44,7 +44,7 @@ tool_related:
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&amp;display=swap">
   <link rel="stylesheet" href="css/useful.css?v=20261012shell">
   <link rel="stylesheet" href="css/tool-standard.css?v=20261015guide">
-  <link rel="stylesheet" href="css/business-hotel-price-trends.css?v=20261017bht7">
+  <link rel="stylesheet" href="css/business-hotel-price-trends.css?v=20261018bht8">
   <meta property="og:type" content="website"><meta property="og:locale" content="ja_JP"><meta property="og:site_name" content="宿泊DXラボ">
   <meta property="og:title" content="ビジネスホテル料金トレンド｜宿泊DXラボ"><meta property="og:description" content="出張の宿は、いくらで、どれだけ動くか。全国10都市・50施設のビジネスホテル料金を毎朝観測します。">
   <meta property="og:url" content="https://lab.ugatta-llc.com/business-hotel-price-trends.html"><meta property="og:image" content="https://lab.ugatta-llc.com/images/og-lab.jpg">
@@ -114,7 +114,9 @@ tool_related:
         </section>
 
         <section class="bht-panel" aria-labelledby="bht-daily-title">
-          <div class="bht-heading"><div><h2 id="bht-daily-title">宿泊日別の料金</h2></div><p>CORE施設の中央値と、最安〜最高の幅</p></div>
+          <div class="bht-heading"><div><h2 id="bht-daily-title">宿泊日別の料金</h2></div><p>泊まる日ごとの1泊の料金（CORE施設の中央値）。今朝の取得で、その日に泊まるといくらか</p></div>
+          <p class="bht-daily-lead" id="bht-daily-lead"></p>
+          <div class="bht-periods" id="bht-periods"></div>
           <div class="bht-legend" id="bht-daily-legend"></div>
           <div class="bht-chart bht-chart--interactive" id="bht-daily-chart" role="img" aria-label="宿泊日別の料金" tabindex="0"></div>
           <div class="bht-accessible-table" id="bht-daily-table"></div>
@@ -167,7 +169,7 @@ tool_related:
 
   {% include site-footer.html %}
   <script src="js/site.js?v=20260912a" defer></script>
-  <script src="js/business-hotel-price-trends-model.js?v=20261017bht7" defer></script>
-  <script src="js/business-hotel-price-trends.js?v=20261017bht7" defer></script>
+  <script src="js/business-hotel-price-trends-model.js?v=20261018bht8" defer></script>
+  <script src="js/business-hotel-price-trends.js?v=20261018bht8" defer></script>
 </body>
 </html>

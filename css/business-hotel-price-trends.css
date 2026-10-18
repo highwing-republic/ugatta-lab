@@ -309,3 +309,31 @@ a.bht-hotel__photo:focus-visible{outline:2px solid var(--lab-focus);outline-offs
 .bht-hotel__photo--empty{display:grid;place-items:center;color:var(--ink-soft);font-size:10px}
 .bht-photo-credit{margin:8px 0 0;color:var(--ink-soft);font-size:11px;text-align:right}
 @media(max-width:620px){.bht-hotel__photo{width:56px}.bht-hotels th[scope=row]{min-width:250px}.bht-photo-credit{text-align:left}}
+
+/* 宿泊日別の料金: 1泊1本の棒。ふだんの料金（代表料金）との比で色分け */
+.bht-daily-lead{margin:0 0 14px;color:var(--ink);font-size:15px;line-height:1.8}
+.bht-daily-lead b{font-weight:700}
+.bht-periods h3{margin:0 0 8px;color:var(--lab-ink-soft);font-size:12px;font-weight:500}
+.bht-periods h3 small{margin-left:4px;font-size:11px}
+.bht-periods ol{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;margin:0 0 20px;padding:0;list-style:none}
+.bht-period{display:flex;padding:10px 12px;border:1px solid var(--line);border-left:4px solid var(--bht-day-high);border-radius:8px;background:#fff;flex-direction:column;gap:2px}
+.bht-period--spike{border-left-color:var(--bht-day-spike)}
+.bht-period__date{color:var(--ink);font-size:14px;font-weight:700}
+.bht-period__peak{color:var(--ink-soft);font-size:12px;font-variant-numeric:tabular-nums}
+.bht-period__peak b{color:var(--ink);font-weight:700}
+:root{--bht-day-low:#2f7ea3;--bht-day-mid:#a3adb5;--bht-day-high:#e0783f;--bht-day-spike:#9e3615}
+.bht-day--low{fill:var(--bht-day-low);background:var(--bht-day-low)}
+.bht-day--mid{fill:var(--bht-day-mid);background:var(--bht-day-mid)}
+.bht-day--high{fill:var(--bht-day-high);background:var(--bht-day-high)}
+.bht-day--spike{fill:var(--bht-day-spike);background:var(--bht-day-spike)}
+.bht-day--reference{fill-opacity:.4;stroke:var(--ink-soft);stroke-width:1;stroke-dasharray:3 2}
+.bht-key-bar{width:12px;height:12px;border-radius:3px 3px 0 0}
+.bht-key-reference-bar{box-sizing:border-box;border:1px dashed var(--ink-soft);background:rgba(163,173,181,.35)}
+.bht-key-typical{width:18px;border-top:2px dashed var(--bht-axis)}
+#bht-daily-chart .bht-typical{stroke-width:1.5;stroke-dasharray:5 4;opacity:.9}
+.bht-bar-none{fill:var(--ink-soft);font:12px var(--sans)}
+.bht-axis--sat{fill:#1f5f8b}
+.bht-axis--sun{fill:#b23b2a}
+.bht-peak-label{fill:var(--ink-soft);font:500 11px var(--sans);paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
+.bht-peak-value{fill:var(--ink);font:700 13px var(--sans);font-variant-numeric:tabular-nums;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
+@media(max-width:620px){.bht-daily-lead{font-size:14px}.bht-periods ol{grid-template-columns:1fr;gap:6px}.bht-period{padding:8px 10px}.bht-period__date{font-size:13px}.bht-peak-value{font-size:12px}.bht-peak-label{font-size:10px}}

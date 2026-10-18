@@ -83,6 +83,20 @@ test("市場の代表料金・値動き・週末差・急騰日", () => {
   assert.equal(model.calendarClass({status: "none"}, summary.typical), "none");
 });
 
+test("料金が上がる期間: 10%以上高い日が続く宿泊日をまとめ、いちばん高い泊を山にする", () => {
+  const summary = model.marketSummary(model.marketView(cohort, snapshot("2026-10-16"), "sapporo"));
+  const periods = model.pricePeriods(summary);
+  assert.equal(periods.length, 2);
+  // 10/16（金）・10/17（土）は参考値の10,100円（代表料金8,200円の1.23倍）
+  assert.deepEqual([periods[0].start, periods[0].end, periods[0].nights, periods[0].spike], ["2026-10-16", "2026-10-17", 2, false]);
+  assert.equal(periods[0].peak.reference, true);
+  // 10/23（金）10,200円と10/24（土）20,200円。山は急騰の10/24
+  assert.deepEqual([periods[1].start, periods[1].end, periods[1].nights, periods[1].spike], ["2026-10-23", "2026-10-24", 2, true]);
+  assert.equal(periods[1].peak.date, "2026-10-24");
+  assert.equal(periods[1].peak.median, 20200);
+  assert.equal(Math.round(periods[1].peak.ratio * 100) / 100, 2.46);
+});
+
 test("期間を絞ると先頭からその泊数だけを使う", () => {
   const view = model.marketView(cohort, snapshot("2026-10-16"), "sapporo", {nights: 7});
   assert.equal(view.dates.length, 7);
