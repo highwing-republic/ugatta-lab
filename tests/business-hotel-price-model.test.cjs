@@ -97,26 +97,32 @@ test("料金が上がる期間: 10%以上高い日が続く宿泊日をまとめ
   assert.equal(Math.round(periods[1].peak.ratio * 100) / 100, 2.46);
 });
 
-test("値段が変わった日: 中央値が±3%以上動いた直近の取得日と、何日前かを出す", () => {
+test("泊まる日ごとの値段の動き: 同じ泊の料金を取得の古い順にたどり、何日前の取得かを付ける", () => {
   const snap = (date, shift, version) => snapshot(date, {start: date, shift, version});
-  // 10/16の取得で全施設+400円 → 10/18（日）泊は8,200円→8,600円（+4.9%）で今朝変わった
-  let rows = model.priceChanges(cohort, [snap("2026-10-16", 400), snap("2026-10-15", 0), snap("2026-10-14", 0)], "sapporo");
-  let day = rows.find((item) => item.date === "2026-10-18");
-  assert.deepEqual([day.status, day.daysAgo, day.changedOn, day.previousOn, day.from, day.to, day.direction], ["changed", 0, "2026-10-16", "2026-10-15", 8200, 8600, "up"]);
-  // 10/15の取得で上がり、10/16は同じ → 1日前に変わった
-  rows = model.priceChanges(cohort, [snap("2026-10-15", 400), snap("2026-10-16", 400), snap("2026-10-14", 0)], "sapporo");
-  day = rows.find((item) => item.date === "2026-10-18");
-  assert.deepEqual([day.status, day.daysAgo, day.changedOn], ["changed", 1, "2026-10-15"]);
-  // +200円（+2.4%）は変わったとしない。記録の3日間は変わらず
-  rows = model.priceChanges(cohort, [snap("2026-10-16", 200), snap("2026-10-15", 0), snap("2026-10-14", 0)], "sapporo");
-  day = rows.find((item) => item.date === "2026-10-18");
-  assert.deepEqual([day.status, day.since, day.sinceDays], ["steady", "2026-10-14", 2]);
-  // 比較施設群が違う取得は比べない。今朝の1日分だけなら unknown
-  rows = model.priceChanges(cohort, [snap("2026-10-16", 400), snap("2026-10-15", 0, "bh-v0")], "sapporo", {nights: 7});
-  assert.equal(rows.length, 7);
-  assert.equal(rows.find((item) => item.date === "2026-10-18").status, "unknown");
-  // 参考値（3施設）の泊も、記録が1日分だけなら unknown
-  assert.equal(rows[0].status, "unknown");
+  const history = model.stayHistory(cohort, [snap("2026-10-16", 400), snap("2026-10-14", 0), snap("2026-10-15", 200), snap("2026-10-13", 0, "bh-v0")], "sapporo", "2026-10-18");
+  // bh-v0 の取得は使わない
+  assert.deepEqual(history.points.map((point) => [point.snapshot, point.daysBefore, point.median]), [["2026-10-14", 4, 8200], ["2026-10-15", 3, 8400], ["2026-10-16", 2, 8600]]);
+  assert.equal(history.points[0].hotels.length, 5);
+  assert.equal(Math.round(history.change * 10) / 10, 4.9);
+  assert.equal(history.direction, "up");
+});
+
+test("値段の動き方: 施設ごとに最初の取得と今朝を比べ、高い泊とその他の泊で数える", () => {
+  const snap = (date, shift) => snapshot(date, {start: date, shift});
+  const latest = snap("2026-10-16", 400);
+  // 10/18（日）泊はD施設が今朝は売り切れ
+  latest.markets[0].hotels[3].price[2] = null;
+  latest.markets[0].hotels[3].meal = "RR-" + "R".repeat(11);
+  const result = model.pricePaths(cohort, [snap("2026-10-14", 0), latest], "sapporo");
+  assert.equal(result.records, 2);
+  const [high, other] = result.groups;
+  // 共通の泊は10/16〜10/27。どの施設も+400円（+3.9〜5%）→ 値上がり。10/24（土）だけ20,000円台で+2%未満 → 横ばい
+  assert.equal(high.key, "high");
+  assert.ok(high.flat >= 4);
+  assert.equal(other.soldOut, 1);
+  assert.ok(other.up > 0);
+  assert.equal(other.down, 0);
+  assert.equal(model.pricePaths(cohort, [latest], "sapporo").groups.length, 0);
 });
 
 test("期間を絞ると先頭からその泊数だけを使う", () => {

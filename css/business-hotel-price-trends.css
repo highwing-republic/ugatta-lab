@@ -337,20 +337,30 @@ a.bht-hotel__photo:focus-visible{outline:2px solid var(--lab-focus);outline-offs
 .bht-peak-label{fill:var(--ink-soft);font:500 11px var(--sans);paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
 .bht-peak-value{fill:var(--ink);font:700 13px var(--sans);font-variant-numeric:tabular-nums;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
 @media(max-width:620px){.bht-daily-lead{font-size:14px}.bht-periods ol{grid-template-columns:1fr;gap:6px}.bht-period{padding:8px 10px}.bht-period__date{font-size:13px}.bht-peak-value{font-size:12px}.bht-peak-label{font-size:10px}}
-/* 棒の色分けの切り替えと、値段が変わった日の色（新しいほど濃い1色の段階） */
-.bht-mode{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
-.bht-mode span{margin-right:4px;color:var(--lab-ink-soft);font-size:12px}
-.bht-mode button{min-height:36px;padding:0 14px;border:1px solid #b8c6cf;border-radius:999px;background:#fff;color:var(--ink);font:500 13px/1 var(--sans);cursor:pointer}
-.bht-mode button[aria-pressed=true]{border-color:var(--lab-navy);background:var(--lab-navy);color:#fff}
-.bht-mode button:focus-visible{outline:2px solid var(--lab-focus);outline-offset:2px}
-.bht-daily-lead__note{display:block;margin-top:4px;color:var(--ink-soft);font-size:12px}
-:root{--bht-age-0:#173f66;--bht-age-1:#3d7cb0;--bht-age-3:#8fb6d6;--bht-age-old:#d3dbe1}
-.bht-day--age-0{fill:var(--bht-age-0);background:var(--bht-age-0)}
-.bht-day--age-1{fill:var(--bht-age-1);background:var(--bht-age-1)}
-.bht-day--age-3{fill:var(--bht-age-3);background:var(--bht-age-3)}
-.bht-day--age-old{fill:var(--bht-age-old);background:var(--bht-age-old)}
-.bht-arrow{font:700 10px var(--sans)}
-text.bht-arrow--up{fill:var(--bht-day-spike)}text.bht-arrow--down{fill:var(--bht-day-low)}
-b.bht-arrow--up{color:var(--bht-day-spike)}b.bht-arrow--down{color:var(--bht-day-low)}
-.bht-change--up{border-left-color:var(--bht-day-spike)}
-.bht-change--down{border-left-color:var(--bht-day-low)}
+/* 泊まる日ごとの値段の動き */
+.bht-stay-controls{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px 16px;margin:0 0 16px}
+.bht-stay-controls label{display:flex;flex:0 1 300px;gap:7px;color:var(--lab-ink-soft);font-size:12px;font-weight:500;flex-direction:column}
+.bht-stay-controls select{width:100%;min-height:44px;padding:0 34px 0 12px;border:1px solid #b8c6cf;border-radius:9px;background:#fff;color:var(--ink);font:500 14px/1.4 var(--sans)}
+.bht-stay-controls select:focus{outline:2px solid var(--lab-focus);outline-offset:2px}
+.bht-stay-controls p{margin:0 0 12px;color:var(--ink-soft);font-size:12px}
+.bht-stay-hotel{fill:none;stroke:#b4c0c8;stroke-width:1.5;stroke-linejoin:round}
+.bht-stay-hotel-dot{fill:#b4c0c8;stroke:#fff;stroke-width:1.5}
+.bht-stay-median{fill:none;stroke:var(--bht-series);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.bht-stay-median-dot{fill:var(--bht-series);stroke:#fff;stroke-width:2}
+.bht-stay-hotel-dot:focus,.bht-stay-median-dot:focus{outline:none;stroke:var(--ink)}
+.bht-stay-value{fill:var(--ink);font:700 12px var(--sans);font-variant-numeric:tabular-nums;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
+.bht-key-line--bold{border-top-width:3px}
+.bht-key-line--hotel{border-top-color:#b4c0c8}
+.bht-paths{margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}
+.bht-paths h3{margin:0 0 6px;font-size:16px}
+.bht-paths__lead{margin:0 0 12px;color:var(--ink);font-size:14px;line-height:1.8}
+.bht-path{display:grid;grid-template-columns:220px 1fr;align-items:center;gap:8px 16px;margin-top:10px}
+.bht-path__label b{display:block;font-size:13px}
+.bht-path__label small{color:var(--ink-soft);font-size:11px}
+.bht-path__bar{display:flex;height:30px;gap:2px;border-radius:6px;overflow:hidden}
+.bht-path__seg{display:grid;min-width:4px;color:#fff;font:700 12px/1 var(--sans);font-variant-numeric:tabular-nums;place-items:center}
+.bht-path__seg--up{background:var(--bht-day-high)}
+.bht-path__seg--flat{background:var(--bht-day-mid);color:var(--ink)}
+.bht-path__seg--down{background:var(--bht-day-low)}
+.bht-path__seg--soldOut{background:var(--ink)}
+@media(max-width:620px){.bht-path{grid-template-columns:1fr;gap:6px}.bht-stay-controls label{flex-basis:100%}.bht-stay-controls p{margin:0}}

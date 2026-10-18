@@ -292,36 +292,73 @@
     return {status: "ok", change, direction, hotels, hotelCount: valid.length};
   }
 
-  // 値段が変わった日: 泊まる日ごとに、毎朝の取得を新しい順にさかのぼり、CORE中央値が
-  // 前の取得から±3%以上動いた直近の取得日を探す。比較施設群が違う取得や、どちらかが
-  // 比較データ不足（2施設以下）の組は比べない。daysAgo は最新の取得日からの日数（0 = 今朝）
-  function priceChanges(cohort, snapshots, code, {nights} = {}) {
-    const ordered = (snapshots || []).filter(Boolean).slice().sort((a, b) => (a.snapshot_date < b.snapshot_date ? 1 : -1));
-    const latest = ordered[0];
-    if (!latest) return [];
-    const usable = ordered.filter((snap) => snap.cohort_version === latest.cohort_version);
-    const byDate = usable.map((snap) => {
-      const view = marketView(cohort, snap, code);
-      return {date: snap.snapshot_date, days: view ? new Map(dailyMedians(view).map((day) => [day.date, day])) : new Map()};
-    });
-    const latestView = marketView(cohort, latest, code, {nights});
-    if (!latestView) return [];
-    const daysBetween = (a, b) => Math.round((Date.parse(`${a}T00:00:00Z`) - Date.parse(`${b}T00:00:00Z`)) / 86400000);
-    return latestView.dates.map((date) => {
-      const series = byDate.map((item) => ({snapshot: item.date, day: item.days.get(date)})).filter((item) => item.day && item.day.status !== "none");
-      const now = series[0] && series[0].snapshot === latest.snapshot_date ? series[0] : null;
-      if (!now) return {date, status: "none"};
-      for (let i = 0; i < series.length - 1; i += 1) {
-        const after = series[i].day.median;
-        const before = series[i + 1].day.median;
-        const change = (after / before - 1) * 100;
-        if (Math.abs(change) >= TREND_THRESHOLD) {
-          return {date, status: "changed", changedOn: series[i].snapshot, previousOn: series[i + 1].snapshot, daysAgo: daysBetween(latest.snapshot_date, series[i].snapshot), from: before, to: after, change, direction: change > 0 ? "up" : "down", now: now.day.median};
+  // 泊まる日ごとの値段の動き: 毎朝の取得を古い順に並べ、同じ泊の料金を施設ごとにたどる。
+  // 比較施設群が今朝と違う取得は使わない。daysBefore は泊まる日の何日前の取得か
+  const daysBetween = (a, b) => Math.round((Date.parse(`${a}T00:00:00Z`) - Date.parse(`${b}T00:00:00Z`)) / 86400000);
+  function usableSnapshots(snapshots) {
+    const ordered = (snapshots || []).filter(Boolean).slice().sort((a, b) => (a.snapshot_date < b.snapshot_date ? -1 : 1));
+    const latest = ordered[ordered.length - 1];
+    return latest ? ordered.filter((snap) => snap.cohort_version === latest.cohort_version) : [];
+  }
+
+  function stayHistory(cohort, snapshots, code, date) {
+    const points = usableSnapshots(snapshots).map((snap) => {
+      const index = snap.stay_dates.indexOf(date);
+      const view = index < 0 ? null : marketView(cohort, snap, code);
+      if (!view) return null;
+      const hotels = view.core.map((hotel) => ({hotel_no: hotel.hotel_no, name: hotel.name, price: hotel.prices[index], soldOut: hotel.meals[index] === "-"}));
+      const prices = hotels.map((hotel) => hotel.price).filter(isPrice);
+      const status = prices.length >= MIN_CORE_FOR_MEDIAN ? "ok" : prices.length === REFERENCE_CORE ? "reference" : "none";
+      return {snapshot: snap.snapshot_date, daysBefore: daysBetween(date, snap.snapshot_date), status, median: status === "none" ? null : median(prices), soldOut: hotels.filter((hotel) => hotel.soldOut).length, hotels};
+    }).filter(Boolean);
+    const valid = points.filter((point) => point.status !== "none");
+    const first = valid[0];
+    const last = valid[valid.length - 1];
+    const change = first && last && first !== last ? (last.median / first.median - 1) * 100 : null;
+    return {date, points, first: first || null, last: last || null, change, direction: change === null ? null : change >= TREND_THRESHOLD ? "up" : change <= -TREND_THRESHOLD ? "down" : "flat"};
+  }
+
+  // 値段の動き方の集計: 今朝の対象期間の泊 × CORE施設ごとに、いちばん古い取得と今朝を比べる。
+  // 途中で料金が見えていて今朝は楽天で売り切れなら「売り切れ」。今朝の料金がふだんの+10%以上の泊と
+  // その他の泊に分けて数える（料金が高いから上がった、という因果は示さない）
+  function pricePaths(cohort, snapshots, code, {nights} = {}) {
+    const usable = usableSnapshots(snapshots);
+    const latest = usable[usable.length - 1];
+    if (!latest || usable.length < 2) return {records: usable.length, groups: []};
+    const summary = marketSummary(marketView(cohort, latest, code, {nights}));
+    const views = usable.map((snap) => ({snap, view: marketView(cohort, snap, code)}));
+    const empty = () => ({up: 0, flat: 0, down: 0, soldOut: 0, total: 0, nights: 0});
+    const groups = {high: empty(), other: empty()};
+    summary.days.forEach((day) => {
+      if (day.status === "none") return;
+      const level = calendarClass(day, summary.typical);
+      const group = groups[level === "high" || level === "spike" ? "high" : "other"];
+      let counted = false;
+      views[views.length - 1].view.core.forEach((hotel) => {
+        let first = null;
+        views.slice(0, -1).some(({snap, view}) => {
+          const index = snap.stay_dates.indexOf(day.date);
+          const old = index < 0 ? null : view.core.find((item) => item.hotel_no === hotel.hotel_no);
+          if (old && isPrice(old.prices[index])) first = old.prices[index];
+          return first !== null;
+        });
+        if (first === null) return;
+        const index = latest.stay_dates.indexOf(day.date);
+        const now = hotel.prices[index];
+        let outcome = null;
+        if (hotel.meals[index] === "-") outcome = "soldOut";
+        else if (isPrice(now)) {
+          const change = (now / first - 1) * 100;
+          outcome = change >= TREND_THRESHOLD ? "up" : change <= -TREND_THRESHOLD ? "down" : "flat";
         }
-      }
-      const oldest = series[series.length - 1].snapshot;
-      return {date, status: series.length > 1 ? "steady" : "unknown", since: oldest, sinceDays: daysBetween(latest.snapshot_date, oldest), now: now.day.median};
+        if (!outcome) return;
+        group[outcome] += 1;
+        group.total += 1;
+        counted = true;
+      });
+      if (counted) group.nights += 1;
     });
+    return {records: usable.length, since: usable[0].snapshot_date, latest: latest.snapshot_date, groups: [{key: "high", ...groups.high}, {key: "other", ...groups.other}]};
   }
 
   // ---------------------------------------------------------------- 全国サマリとランキング
@@ -484,7 +521,8 @@
     hotelSummary,
     crossCityBrand,
     weeklyChange,
-    priceChanges,
+    stayHistory,
+    pricePaths,
     TREND_THRESHOLD,
     eventCandidates,
     EVENT_TOP,
