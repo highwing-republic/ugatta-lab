@@ -63,10 +63,10 @@ python scripts/update_business_hotel_prices.py --dry-run             # 全件取
 
 料金の集計・ページの数字と文はAIを使わず、決まった規則で出す。それとは別に、10都市の向こう2か月に開かれる
 遠方から人が集まる催し（大きな会場での公演、スポーツ大会、マラソン、学会・全国大会、見本市、大規模な祭りなど）を
-月1回 Claude が調べ、`data/business-hotel-price-trends/events.json` に保存する。
+週1回 Claude が調べ、`data/business-hotel-price-trends/events.json` に保存する。
 
 - 調べ方・載せる基準・ファイルの形: [business-hotel-events-research.md](business-hotel-events-research.md)
-- 更新: Claude の予約タスクが毎月1日に調べ、`scripts/business_hotel_events.py merge` でまとめて検証し、PR を作ってマージする。
+- 更新: GitHub Actions（`.github/workflows/research-business-hotel-events.yml`）が毎週日曜の夜に Claude Code で調べ、`scripts/business_hotel_events.py merge` でまとめて検証し、テストが通れば main に反映して公開する。
   APIキーや追加の費用はかからない（Claude の契約の範囲で動く）。
 - ページ: 催しの前日の泊（前泊）から最終日の泊までに急騰日・売り切れが目立つ日があれば「重なる催し」として表示し、
   ランキングに「催し候補あり」、カレンダーの開催日に「催し」を付ける。全国の欄は売り切れ施設数と料金の倍率が大きい順に6件を開いて見せ、

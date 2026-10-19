@@ -5,7 +5,7 @@
   "start": "2026-10-19",
   "end": "2026-12-18"
  },
- "method": "Claude（Anthropic）が月1回、10都市の向こう2か月の催しをWebで調べ、出典ページで開催日と会場を確かめたもの。",
+ "method": "Claude（Anthropic）が週1回、10都市の向こう2か月の催しをWebで調べ、出典ページで開催日と会場を確かめたもの。",
  "events": [
   {
    "market": "kanazawa",

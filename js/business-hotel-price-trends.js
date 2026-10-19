@@ -494,7 +494,7 @@
   }
 
   function researchedText(view) {
-    return view.researchedOn ? `調べた日 ${view.researchedOn}（月1回更新）` : "";
+    return view.researchedOn ? `調べた日 ${view.researchedOn}（週1回更新）` : "";
   }
 
   function renderEvents(view) {

@@ -300,7 +300,7 @@
 
   // ---------------------------------------------------------------- 催しの候補（AI調べ・参考）
 
-  // events.json（月1回調べる催しカレンダー）と、いま表示している期間の急騰日・売り切れが目立つ日を突き合わせる。
+  // events.json（週1回調べる催しカレンダー）と、いま表示している期間の急騰日・売り切れが目立つ日を突き合わせる。
   // 催しの前日の泊（前泊）から最終日の泊までを「催しに重なる泊」とする。料金の集計には使わない。
   function eventCandidates(calendar, national) {
     const events = (Array.isArray(calendar?.events) ? calendar.events : []).filter((event) => event && event.name && parseDate(event.start) && parseDate(event.end) && event.start <= event.end
