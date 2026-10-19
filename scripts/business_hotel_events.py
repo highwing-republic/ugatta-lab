@@ -1,6 +1,6 @@
 """ビジネスホテル版料金トレンドの「催しカレンダー」（events.json）をまとめて検証する。
 
-催しは月1回、docs/business-hotel-events-research.md の手順で調べる（Claude の予約タスク）。
+催しは週1回、docs/business-hotel-events-research.md の手順で調べる（GitHub Actions の research-business-hotel-events.yml）。
 調べた結果は都市ごとの JSON に書き、このスクリプトで1つの events.json にまとめる。
 
   python scripts/business_hotel_events.py merge DIR --researched-on 2026-11-01   # DIR/<code>.json をまとめて保存
@@ -110,7 +110,7 @@ def merge(directory: Path, researched_on: date, cohort: dict) -> dict:
         "schema_version": SCHEMA_VERSION,
         "researched_on": researched_on.isoformat(),
         "coverage": {"start": researched_on.isoformat(), "end": (researched_on + timedelta(days=COVERAGE_DAYS)).isoformat()},
-        "method": "Claude（Anthropic）が月1回、10都市の向こう2か月の催しをWebで調べ、出典ページで開催日と会場を確かめたもの。",
+        "method": "Claude（Anthropic）が週1回、10都市の向こう2か月の催しをWebで調べ、出典ページで開催日と会場を確かめたもの。",
         "events": events,
     }
 

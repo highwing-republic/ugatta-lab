@@ -80,4 +80,4 @@ def test_page_labels_event_candidates_as_ai_reference():
     assert "AI調べ・参考" in box.get_text()
     assert "料金が上がった理由と確かめたものではありません" in box.get_text()
     assert page.select_one("#bht-market-events") is not None
-    assert "月1回" in page.select_one(".bht-method").get_text()
+    assert "週1回" in page.select_one(".bht-method").get_text()

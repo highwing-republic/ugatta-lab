@@ -7,9 +7,12 @@ name: Research business hotel events
 #   delta : 載っている催しの出典を開き直し、新しく範囲に入った日と新発表の催しだけ探す（週の差分）
 # 費用は Claude API（Claude Console のクレジット／従量課金）から引かれ、実行ごとの金額をジョブの概要に出す。
 # 必要なリポジトリシークレット: ANTHROPIC_API_KEY（Claude Console で発行した API キー）
-# まずは手動実行（workflow_dispatch）だけ。費用を確かめてから schedule を足す。
+# 毎週日曜 21:47 JST に full で動く（2026-10-19 の試行で1回約3ドル）。手動実行もできる。
 
 on:
+  schedule:
+    # 日曜 21:47 JST（GitHub の cron は UTC）。翌朝の週次記事より前に終わる。
+    - cron: "47 12 * * 0"
   workflow_dispatch:
     inputs:
       mode:
@@ -30,7 +33,7 @@ on:
       max_budget_usd:
         description: "1回の上限（ドル）。超えたら途中で止まる"
         type: string
-        default: "60"
+        default: "15"
       publish:
         description: "テストが通ったら main に反映して公開する（オフなら費用の計測だけ）"
         type: boolean
@@ -73,12 +76,13 @@ jobs:
         id: claude
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          MODE: ${{ inputs.mode }}
-          MODEL: ${{ inputs.model }}
-          SUBAGENT_MODEL: ${{ inputs.subagent_model }}
-          MAX_BUDGET_USD: ${{ inputs.max_budget_usd }}
+          # schedule で動くときは inputs が空なので既定値を使う
+          MODE: ${{ inputs.mode || 'full' }}
+          MODEL: ${{ inputs.model || 'opus' }}
+          SUBAGENT_MODEL: ${{ inputs.subagent_model || 'sonnet' }}
+          MAX_BUDGET_USD: ${{ inputs.max_budget_usd || '15' }}
           # 都市ごとに調べるサブエージェントのモデルを固定する
-          CLAUDE_CODE_SUBAGENT_MODEL: ${{ inputs.subagent_model }}
+          CLAUDE_CODE_SUBAGENT_MODEL: ${{ inputs.subagent_model || 'sonnet' }}
           CLAUDE_CODE_SUBAGENT_MODEL_FORCE: "1"
           DISABLE_AUTOUPDATER: "1"
         shell: bash
@@ -164,11 +168,11 @@ jobs:
 
       - name: Commit and push events.json
         id: commit
-        if: inputs.publish
+        if: github.event_name == 'schedule' || inputs.publish
         shell: bash
         env:
           TODAY: ${{ steps.claude.outputs.today }}
-          MODE: ${{ inputs.mode }}
+          MODE: ${{ inputs.mode || 'full' }}
         run: |
           if [ -z "$(git status --porcelain -- data/business-hotel-price-trends/events.json)" ]; then
             echo "No event changes"
@@ -191,7 +195,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: events-research-${{ inputs.mode }}-${{ github.run_id }}
+          name: events-research-${{ inputs.mode || 'full' }}-${{ github.run_id }}
           path: |
             ${{ runner.temp }}/claude-result.json
             ${{ runner.temp }}/events-work/
