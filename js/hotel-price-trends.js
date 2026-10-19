@@ -10,7 +10,12 @@
   const MARKET_LOCATIONS = {
     "noboribetsu-onsen": [42.49, 141.15], "atami": [35.10, 139.07], "karuizawa-saku-komoro": [36.35, 138.60],
     "hakuba": [36.70, 137.86], "kaga-onsenkyo": [36.30, 136.33], "gero-onsen": [35.81, 137.24],
-    "ise-shima": [34.45, 136.85], "beppu": [33.28, 131.49], "kirishima": [31.87, 130.85]
+    "ise-shima": [34.45, 136.85], "beppu": [33.28, 131.49], "kirishima": [31.87, 130.85],
+    "jozankei-onsen": [42.97, 141.17], "akiu-onsen": [38.22, 140.66], "kusatsu-onsen": [36.62, 138.60],
+    "takayama": [36.14, 137.25], "kamisuwa-onsen": [36.05, 138.12], "hakone": [35.23, 139.11],
+    "kinosaki-onsen": [35.63, 134.81], "tamatsukuri-onsen": [35.42, 133.01], "arima-onsen": [34.80, 135.25],
+    "dogo-onsen": [33.85, 132.79], "yufuin": [33.26, 131.36], "unzen-onsen": [32.74, 130.26],
+    "ibusuki-onsen": [31.24, 130.64], "yakushima": [30.35, 130.52]
   };
   // Coastline and prefecture borders come from js/japan-map-data.js (Natural Earth, public domain).
   const JAPAN_MAP = window.HotelPriceJapanMap;
