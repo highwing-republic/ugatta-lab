@@ -59,3 +59,10 @@
 
 毎月1日に予約タスクが動き、この手順で調べてファイルを作り直し、テストが通れば PR を作ってマージする。
 手動で更新するときも同じ手順で行う。
+
+## GitHub Actions での更新（試行中）
+
+`.github/workflows/research-business-hotel-events.yml` は、同じ手順を Claude Code（`claude -p`）で動かし、
+費用を Claude API から払う。指示は `docs/business-hotel-events-ci-prompt.md`。
+Actions の画面から手動で実行し、`full`（今と同じ全調査）と `delta`（週の差分チェック）の費用をジョブの概要で確かめる。
+リポジトリシークレット `ANTHROPIC_API_KEY` が必要。費用を確かめたら、週1回の schedule を足すかを決める。
