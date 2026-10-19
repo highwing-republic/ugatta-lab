@@ -94,6 +94,7 @@ html[lang="en"] .typecard:has(input:checked) .nm::after{content:"Selected"}
 .typecard .desc{font-size:13px;color:var(--muted);flex:1 1 200px}
 .typecard .price{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
 .typecard .price small{font-weight:400;color:var(--muted)}
+.typecard .price .roomsum{display:block;font-size:12px;font-weight:400;color:var(--muted);text-align:right}
 .typecard .left{font-size:11px;color:var(--ok);font-weight:600;white-space:nowrap}
 .typecard .left.few{color:var(--warn)}
 .plans{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
@@ -135,6 +136,8 @@ footer.note a{color:var(--gold)}
   .sumbar .acts{flex:1 1 100%;flex-wrap:nowrap}
   .sumbar .acts .btn{padding:10px 14px}
   .sumbar .acts .btn.primary{flex:1 1 auto}
+  .typecard .price{white-space:normal}
+  .typecard .price .roomsum{text-align:left}
   .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;font-size:10.5px;line-height:1.4;padding:10px 8px}
   .flow li{flex-direction:column;text-align:center;gap:3px}
   .flow li+li::before{display:none}
@@ -254,7 +257,7 @@ footer.note a{color:var(--gold)}
   本ページは<a href="/">宿泊DXラボ</a>の体験デモです。空室は<a href="/demo/mini-pms/">簡易PMSデモ</a>と同じ部屋データ（全20室：ツイン8・シングル8・和室4）から判定し、確定した予約はPMSデモの予約一覧に連動します（お使いのブラウザ内のみ）。残室数は「割当済みの部屋・販売止め・未割当の同タイプ希望予約」を差し引いた概算です。料金・ホテル名は架空です。
 </footer>
 
-<script src="/js/suiren-demo-data.js?v=20261017"></script>
+<script src="/js/suiren-demo-data.js?v=20261019"></script>
 <script>
 "use strict";
 /* ---------- i18n (ja/en) ---------- */
@@ -295,14 +298,16 @@ errName:["お名前と電話番号は必須です。","Name and phone number are
 errFull:["申し訳ありません。確定直前に満室になりました。条件を変えてお試しください。","Sorry — the room sold out just now. Please try different dates or rooms."],
 errSave:["このブラウザでは保存できないため、予約デモを完了できませんでした（プライベートモード等）。","This browser blocks storage (private mode?), so the demo booking could not be completed."],
 errNoInput:["予約番号を入力してください。","Please enter a booking number."],
-perNight:["／泊・室"," / night / room"],
-forPax:[n=>"（"+n+"名でのご利用）", n=>" for "+n+" guest"+(n>1?"s":"")],
+perPerson:["1名 ","Per person "],
+perNight:["／泊"," / night"],
+forPax:[(n,bf)=>"（"+n+"名1室利用・"+(bf?"朝食付き":"素泊まり")+"）", (n,bf)=>" ("+n+" per room, "+(bf?"with breakfast":"room only")+")"],
+roomSum:[(n,y)=>n+"名で "+y+"／泊", (n,y)=>y+" / night for "+n],
 capOver:["定員超え","Over capacity"], full:["満室","Sold out"],
 leftN:[n=>"残り"+n+"室", n=>n+" left"],
 nights:[n=>n+"泊", n=>n+" night"+(n>1?"s":"")],
 guests:[n=>n+"名", n=>n+" guest"+(n>1?"s":"")],
 cap:[n=>"定員"+n+"名", n=>"sleeps "+n],
-sumRoom:[(t,r,n)=>t+"（"+r+"×"+n+"泊）",(t,r,n)=>t+" ("+r+" × "+n+" nights)"],
+sumRoom:[(t,r,p,n)=>t+"（"+r+"×"+p+"名×"+n+"泊）",(t,r,p,n)=>t+" ("+r+" × "+p+" × "+n+" nights)"],
 sumBf:[(r,p,n)=>"朝食（"+r+"×"+p+"名×"+n+"泊）",(r,p,n)=>"Breakfast ("+r+" × "+p+" × "+n+")"],
 sumTotal:["合計（税込・デモ）","Total (tax incl., demo)"],
 demoName:["宿泊 花子","Hanako Shukuhaku"],
@@ -349,7 +354,7 @@ const mdLabel = s=>{const d=new Date(s+"T00:00:00");
 const yen = n => "¥" + n.toLocaleString("ja-JP");
 
 const ROOMS = SuirenDemo.ROOMS;
-// 1室1泊の料金（税・サービス料込み、人数で変わる）は /js/suiren-demo-data.js の料金表を PMS の精算と共用
+// 1名1泊の料金（税・サービス料込み、1室の人数で変わる）は /js/suiren-demo-data.js の料金表を PMS の精算と共用
 const TYPES = SuirenDemo.TYPES;
 const BF = SuirenDemo.BREAKFAST;
 const typeName = ty => L ? ROOM_I18N[ty].en : ty;
@@ -406,7 +411,8 @@ function renderTypes(){
   list.textContent = "";
   TYPES.forEach(tp => {
     const capNG = tp.cap < q.pax;
-    const rate = capNG ? 0 : tp.rates[q.pax];
+    const rate = capNG ? 0 : SuirenDemo.personRate(tp.type, q.pax); // 1名1泊（素泊まり）
+    const shown = rate + (q.plan === "bf" ? BF : 0);
     const left = capNG ? 0 : freeCount(state, tp.type, q.inD, q.outD);
     const el = document.createElement("label");
     el.className = "typecard" + (left ? "" : " soldout");
@@ -414,7 +420,8 @@ function renderTypes(){
       '<input type="radio" name="rt" value="' + tp.type + '"' + (left ? "" : " disabled") + '>' +
       '<span class="nm">' + typeName(tp.type) + '</span><span class="desc">' +
         (L ? ROOM_I18N[tp.type].descEn : ROOM_I18N[tp.type].descJa) + " · " + T.cap[L](tp.cap) + "</span>" +
-      (capNG ? "" : '<span class="price">' + yen(rate) + "<small>" + t("perNight") + T.forPax[L](q.pax) + '</small></span>') +
+      (capNG ? "" : '<span class="price"><small>' + t("perPerson") + "</small>" + yen(shown) + "<small>" + t("perNight") + T.forPax[L](q.pax, q.plan === "bf") +
+        '</small><span class="roomsum">' + T.roomSum[L](q.pax, yen(shown * q.pax)) + "</span></span>") +
       '<span class="left' + (left && left <= 2 ? " few" : "") + '">' +
         (capNG ? t("capOver") : left ? T.leftN[L](left) : t("full")) + "</span>";
     el.querySelector("input").addEventListener("change", () => { q.type = tp.type; q.rate = rate; renderSum(); });
@@ -427,9 +434,9 @@ function renderTypes(){
   }
 }
 document.querySelectorAll('input[name="plan"]').forEach(r =>
-  r.addEventListener("change", () => { q.plan = r.value; if(q.type) renderSum(); }));
+  r.addEventListener("change", () => { q.plan = r.value; if(q.inD) renderTypes(); }));
 function calc(){
-  const roomTotal = q.rate * q.nights;
+  const roomTotal = q.rate * q.pax * q.nights;
   const bfTotal = q.plan === "bf" ? BF * q.pax * q.nights : 0;
   return { roomTotal, bfTotal, total: roomTotal + bfTotal };
 }
@@ -438,7 +445,7 @@ function renderSum(){
   const tb = document.getElementById("sumTable");
   tb.hidden = false;
   tb.innerHTML =
-    "<tr><td>" + T.sumRoom[L](typeName(q.type), yen(q.rate), q.nights) + "</td><td>" + yen(c.roomTotal) + "</td></tr>" +
+    "<tr><td>" + T.sumRoom[L](typeName(q.type), yen(q.rate), q.pax, q.nights) + "</td><td>" + yen(c.roomTotal) + "</td></tr>" +
     (c.bfTotal ? "<tr><td>" + T.sumBf[L](yen(BF), q.pax, q.nights) + "</td><td>" + yen(c.bfTotal) + "</td></tr>" : "") +
     '<tr class="total"><td>' + t("sumTotal") + "</td><td>" + yen(c.total) + "</td></tr>";
   document.getElementById("sumLine").innerHTML = escapeHtml(typeName(q.type) + " · " + (q.plan === "bf" ? t("plBf") : t("plRoom")).replace(/（.*|\s\(.*/, "") +

@@ -24,11 +24,12 @@
     addRooms(f+"階", [f+"05"], "和室", 4);
   });
 
-  /* 料金（1室1泊・税とサービス料込み）。泊まる人数で変わる。公式サイト（scripts/build_demo_hotel.py）と同じ値 */
+  /* 料金（1名1泊・素泊まり・税とサービス料込み）。1室に泊まる人数で1人あたりの料金が変わる
+     （例：ツインを2名で使うと1名12,000円、1名で使うと18,000円）。公式サイト（scripts/build_demo_hotel.py）と同じ値 */
   const TYPES = [
-    {type:"シングル", cap:1, rates:{1:8000}},
-    {type:"ツイン",   cap:2, rates:{1:12000, 2:16000}},
-    {type:"和室",     cap:4, rates:{1:16000, 2:20000, 3:22000, 4:24000}}
+    {type:"シングル", cap:1, perPerson:{1:12000}},
+    {type:"ツイン",   cap:2, perPerson:{1:18000, 2:12000}},
+    {type:"和室",     cap:4, perPerson:{1:24000, 2:15000, 3:12000, 4:10000}}
   ];
   const BREAKFAST = 1500; // 朝食 1名1泊（税込）
   const BATH_TAX = 150;   // 入湯税 1名1泊（消費税の対象外）
@@ -40,20 +41,28 @@
     {key:"shop",   label:"売店・お飲み物",     price:null, unit:"点"}
   ];
   const nightsOf = r => Math.round((new Date(r.outDate+"T00:00:00") - new Date(r.inDate+"T00:00:00"))/86400000);
+  /* 1名1泊の料金。人数は1〜定員に丸める */
+  function personRate(type, pax){
+    const tp = TYPES.find(x => x.type === type);
+    if(!tp) return 0;
+    return tp.perPerson[Math.min(Math.max(pax, 1), tp.cap)] || 0;
+  }
+  /* 1室1泊の合計（1名あたり × 人数） */
   function nightRate(type, pax){
     const tp = TYPES.find(x => x.type === type);
     if(!tp) return 0;
-    return tp.rates[Math.min(Math.max(pax, 1), tp.cap)] || 0;
+    const n = Math.min(Math.max(pax, 1), tp.cap);
+    return personRate(type, n) * n;
   }
   /* 精算の明細。公式サイト予約は予約時に示した宿泊料金（roomTotal）をそのまま使う */
   function folio(r){
     const n = nightsOf(r);
     const room = r.room ? ROOMS.find(x => x.no === r.room) : null;
     const type = room ? room.type : (r.typePref || "");
-    const rate = nightRate(type, r.pax);
     const lines = [];
-    const roomTotal = typeof r.roomTotal === "number" ? r.roomTotal : rate * n;
-    lines.push({kind:"room", label:"宿泊料金（" + (type || "部屋未定") + "・" + r.pax + "名）", unit: n ? Math.round(roomTotal / n) : rate, qty:n, qtyLabel:n + "泊", amount:roomTotal, taxable:true});
+    const roomTotal = typeof r.roomTotal === "number" ? r.roomTotal : nightRate(type, r.pax) * n;
+    const unit = r.pax * n ? Math.round(roomTotal / (r.pax * n)) : personRate(type, r.pax);
+    lines.push({kind:"room", label:"宿泊料金（" + (type || "部屋未定") + "・" + r.pax + "名1室利用）", unit, qty:r.pax * n, qtyLabel:r.pax + "名×" + n + "泊", amount:roomTotal, taxable:true});
     if(r.plan === "bf") lines.push({kind:"bf", label:"朝食", unit:BREAKFAST, qty:r.pax * n, qtyLabel:r.pax + "名×" + n + "泊", amount:BREAKFAST * r.pax * n, taxable:true});
     (r.extras || []).forEach(x => lines.push({kind:"extra", id:x.id, label:x.label, unit:x.price, qty:x.qty, qtyLabel:x.qty + (x.unit || ""), amount:x.price * x.qty, taxable:true}));
     lines.push({kind:"bathtax", label:"入湯税", unit:BATH_TAX, qty:r.pax * n, qtyLabel:r.pax + "名×" + n + "泊", amount:BATH_TAX * r.pax * n, taxable:false});
@@ -119,5 +128,5 @@
     return s.seedDate === today() ? s : refreshSamples(s);
   }
 
-  window.SuirenDemo = { KEY, ROOMS, TYPES, BREAKFAST, BATH_TAX, EXTRAS, nightRate, folio, seed, load };
+  window.SuirenDemo = { KEY, ROOMS, TYPES, BREAKFAST, BATH_TAX, EXTRAS, personRate, nightRate, folio, seed, load };
 })();
