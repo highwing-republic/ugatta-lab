@@ -1,0 +1,192 @@
+name: Research business hotel events
+
+# ビジネスホテル版料金トレンドの「催しカレンダー」（data/business-hotel-price-trends/events.json）を
+# Claude Code（claude -p）で調べ直す。手順は docs/business-hotel-events-ci-prompt.md と
+# docs/business-hotel-events-research.md。
+#   full  : 今の月次更新と同じ丁寧さの全調査（サブエージェント5つ）
+#   delta : 載っている催しの出典を開き直し、新しく範囲に入った日と新発表の催しだけ探す（週の差分）
+# 費用は Claude API（Claude Console のクレジット／従量課金）から引かれ、実行ごとの金額をジョブの概要に出す。
+# 必要なリポジトリシークレット: ANTHROPIC_API_KEY（Claude Console で発行した API キー）
+# まずは手動実行（workflow_dispatch）だけ。費用を確かめてから schedule を足す。
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "full = 全調査 / delta = 週の差分チェック"
+        type: choice
+        options: [full, delta]
+        default: full
+      model:
+        description: "全体をまとめ、抜き取り確認するモデル"
+        type: choice
+        options: [opus, sonnet]
+        default: opus
+      subagent_model:
+        description: "都市ごとに調べるサブエージェントのモデル"
+        type: choice
+        options: [sonnet, opus, haiku]
+        default: sonnet
+      publish:
+        description: "テストが通ったら main に反映して公開する（オフなら費用の計測だけ）"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: research-business-hotel-events
+  cancel-in-progress: false
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -r requirements.txt
+          npm install -g @anthropic-ai/claude-code
+
+      - name: Research events with Claude
+        id: claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MODE: ${{ inputs.mode }}
+          MODEL: ${{ inputs.model }}
+          SUBAGENT_MODEL: ${{ inputs.subagent_model }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TODAY="$(TZ=Asia/Tokyo date +%F)"
+          WORK_DIR="$RUNNER_TEMP/events-work"
+          mkdir -p "$WORK_DIR"
+          echo "today=$TODAY" >> "$GITHUB_OUTPUT"
+          {
+            cat docs/business-hotel-events-ci-prompt.md
+            echo
+            echo "## 今回の実行条件"
+            echo "- モード: $MODE"
+            echo "- 今日の日付（日本時間）: $TODAY"
+            echo "- 作業用ディレクトリ: $WORK_DIR"
+            echo "- サブエージェントのモデル: $SUBAGENT_MODEL（Agent ツールの model に指定する）"
+          } > "$RUNNER_TEMP/prompt.md"
+
+          # 使える道具を絞る: 読み書き・Web 調べ・サブエージェント・merge とテストだけ。git や gh は使わせない。
+          claude -p "$(cat "$RUNNER_TEMP/prompt.md")" \
+            --model "$MODEL" \
+            --output-format json \
+            --max-turns 400 \
+            --allowedTools "Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Agent,Task,TodoWrite,Bash(python scripts/business_hotel_events.py:*),Bash(python -m pytest:*)" \
+            --disallowedTools "Bash(git:*),Bash(gh:*),Bash(curl:*),Bash(wget:*)" \
+            > "$RUNNER_TEMP/claude-result.json"
+
+          # 実行の結果と費用をジョブの概要に出す
+          python - "$RUNNER_TEMP/claude-result.json" "$MODE" "$MODEL" "$SUBAGENT_MODEL" >> "$GITHUB_STEP_SUMMARY" <<'PY'
+          import json, sys
+          path, mode, model, sub = sys.argv[1:5]
+          data = json.load(open(path, encoding="utf-8"))
+          cost = data.get("total_cost_usd")
+          minutes = (data.get("duration_ms") or 0) / 60000
+          print(f"## 催しカレンダー調査（{mode}）")
+          print()
+          print(f"- モデル: {model} / サブエージェント: {sub}")
+          print(f"- 費用（Claude API）: ${cost:.2f}" if isinstance(cost, (int, float)) else "- 費用: 取得できず")
+          print(f"- 所要時間: {minutes:.0f}分 / ターン数: {data.get('num_turns')}")
+          print(f"- 結果: {'エラー' if data.get('is_error') else '完了'}")
+          print()
+          print("### Claude の報告")
+          print()
+          print(data.get("result") or "（報告なし）")
+          PY
+
+          if python -c "import json,sys; sys.exit(1 if json.load(open('$RUNNER_TEMP/claude-result.json')).get('is_error') else 0)"; then
+            echo "Claude finished"
+          else
+            echo "::error::Claude の実行がエラーで終わりました（概要を確認）"
+            exit 1
+          fi
+
+      - name: Check that only events.json changed
+        shell: bash
+        run: |
+          changed="$(git status --porcelain | awk '{print $2}')"
+          echo "$changed"
+          other="$(echo "$changed" | grep -v '^data/business-hotel-price-trends/events.json$' | grep -v '^$' || true)"
+          if [ -n "$other" ]; then
+            echo "::error::events.json 以外のファイルが変わっています: $other"
+            exit 1
+          fi
+
+      - name: Validate events and run all tests
+        run: |
+          python scripts/business_hotel_events.py check
+          python -m pytest -q
+          node --test tests/*.test.cjs
+
+      - name: Commit and push events.json
+        id: commit
+        if: inputs.publish
+        shell: bash
+        env:
+          TODAY: ${{ steps.claude.outputs.today }}
+          MODE: ${{ inputs.mode }}
+        run: |
+          if [ -z "$(git status --porcelain -- data/business-hotel-price-trends/events.json)" ]; then
+            echo "No event changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/business-hotel-price-trends/events.json
+          git commit -m "data: 催しカレンダーを更新（$TODAY・$MODE）"
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push; then
+              echo "changed=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1
+
+      - name: Keep the result for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: events-research-${{ inputs.mode }}-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/claude-result.json
+            ${{ runner.temp }}/events-work/
+            data/business-hotel-price-trends/events.json
+          if-no-files-found: ignore
+
+  publish:
+    needs: research
+    if: needs.research.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pages: write
+    steps:
+      # GITHUB_TOKEN pushes do not trigger a Pages build automatically.
+      - name: Publish the updated data
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds"
