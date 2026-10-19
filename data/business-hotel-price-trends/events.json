@@ -1,57 +1,12 @@
 {
  "schema_version": 2,
- "researched_on": "2026-10-16",
+ "researched_on": "2026-10-19",
  "coverage": {
-  "start": "2026-10-16",
-  "end": "2026-12-15"
+  "start": "2026-10-19",
+  "end": "2026-12-18"
  },
  "method": "Claude（Anthropic）が月1回、10都市の向こう2か月の催しをWebで調べ、出典ページで開催日と会場を確かめたもの。",
  "events": [
-  {
-   "market": "sapporo",
-   "name": "自動車技術会 2026年秋季大会",
-   "start": "2026-10-14",
-   "end": "2026-10-16",
-   "venue": "札幌コンベンションセンター",
-   "category": "convention",
-   "note": "自動車技術会の全国大会。学術講演436件",
-   "sources": [
-    {
-     "url": "https://preopening.jsae.or.jp/files_publish/page/1507/2026aki_program_0803.pdf",
-     "title": "自動車技術会 2026年秋季大会 プログラム"
-    }
-   ]
-  },
-  {
-   "market": "hiroshima",
-   "name": "第69回秋季日本歯周病学会学術大会",
-   "start": "2026-10-16",
-   "end": "2026-10-17",
-   "venue": "広島国際会議場",
-   "category": "convention",
-   "note": "歯周病の全国学会。国内参加者約2,500人",
-   "sources": [
-    {
-     "url": "https://www.hiroshimacvb.jp/about/news/kikanshi_2026_7_vol143.pdf",
-     "title": "ひろしま観光コンベンション No.143（広島観光コンベンションビューロー）"
-    }
-   ]
-  },
-  {
-   "market": "kagoshima",
-   "name": "第54回 日本磁気共鳴医学会大会（JSMRM2026）",
-   "start": "2026-10-16",
-   "end": "2026-10-18",
-   "venue": "城山ホテル鹿児島",
-   "category": "convention",
-   "note": "MRI分野の全国規模の医学会",
-   "sources": [
-    {
-     "url": "https://www.c-linkage.co.jp/jsmrm2026/",
-     "title": "第54回日本磁気共鳴医学会大会 | 株式会社コンベンションリンケージ"
-    }
-   ]
-  },
   {
    "market": "kanazawa",
    "name": "第77回全日本学生バドミントン選手権大会",
@@ -64,78 +19,6 @@
     {
      "url": "https://www.ishikawa-spc.jp/event/pdf/2026/202610.pdf",
      "title": "令和８年度 いしかわ総合スポーツセンター大会予定表（10月）"
-    }
-   ]
-  },
-  {
-   "market": "hiroshima",
-   "name": "NEWS LIVE TOUR 2026 /// KMK",
-   "start": "2026-10-17",
-   "end": "2026-10-18",
-   "venue": "広島グリーンアリーナ",
-   "category": "concert",
-   "note": "NEWSの全国アリーナツアー広島公演（2日間）",
-   "sources": [
-    {
-     "url": "https://ticketjam.jp/tickets/news/event/1185552",
-     "title": "NEWS LIVE TOUR 2026 /// KMK 10/17 広島グリーンアリーナ | チケジャム"
-    },
-    {
-     "url": "https://ticketjam.jp/venues/1812",
-     "title": "広島グリーンアリーナ(広島県立総合体育館) 座席・キャパ・アクセス情報や開催される公演一覧"
-    }
-   ]
-  },
-  {
-   "market": "kagoshima",
-   "name": "KAGOSHIMA JAZZ FESTIVAL 2026",
-   "start": "2026-10-17",
-   "end": "2026-10-18",
-   "venue": "天文館一帯の各ステージ",
-   "category": "festival",
-   "note": "天文館の街なかで開く第10回のジャズ祭",
-   "sources": [
-    {
-     "url": "https://www.kagoshima-yokanavi.jp/event",
-     "title": "イベント | 【公式】鹿児島市の観光・旅行情報サイト｜かごしま市観光ナビ"
-    },
-    {
-     "url": "https://www.kagoshimajazzfestival.com/",
-     "title": "TOP│鹿児島ジャズフェスティバル"
-    }
-   ]
-  },
-  {
-   "market": "nagoya",
-   "name": "第72回名古屋まつり",
-   "start": "2026-10-17",
-   "end": "2026-10-18",
-   "venue": "久屋大通公園・名古屋城ほか",
-   "category": "festival",
-   "note": "名古屋の秋の大祭。2026年は郷土英傑行列なし",
-   "sources": [
-    {
-     "url": "https://www.city.nagoya.jp/houdou/3003942/3003945/3004676.html",
-     "title": "第72回（令和8年度）名古屋まつりの実施概要について｜名古屋市公式ウェブサイト"
-    }
-   ]
-  },
-  {
-   "market": "sapporo",
-   "name": "BUMP OF CHICKEN TOUR 2026-2027 Ratio Clavis 北海道公演",
-   "start": "2026-10-17",
-   "end": "2026-10-18",
-   "venue": "北海きたえーる",
-   "category": "concert",
-   "note": "全国アリーナツアーの北海道2公演",
-   "sources": [
-    {
-     "url": "https://www.bumpofchicken.com/news/news/4087",
-     "title": "「BUMP OF CHICKEN TOUR 2026-2027 Ratio Clavis」北海道公演のエリアマップを公開しました"
-    },
-    {
-     "url": "https://tinpanblog.com/?p=62091",
-     "title": "【BUMP OF CHICKEN】仙台初日セトリ全曲|ツアー日程"
     }
    ]
   },
@@ -155,17 +38,17 @@
    ]
   },
   {
-   "market": "naha",
-   "name": "一万人のエイサー踊り隊",
-   "start": "2026-10-18",
-   "end": "2026-10-18",
-   "venue": "那覇市 国際通り",
-   "category": "festival",
-   "note": "県内最大級のエイサーの祭典",
+   "market": "okayama",
+   "name": "令和8年 秋巡業 大相撲 岡山",
+   "start": "2026-10-21",
+   "end": "2026-10-21",
+   "venue": "シゲトーアリーナ岡山",
+   "category": "sports",
+   "note": "大相撲の秋巡業・岡山市の公演",
    "sources": [
     {
-     "url": "https://www.jalan.net/event/evt_364076/",
-     "title": "【一万人のエイサー踊り隊】アクセス・イベント情報 - じゃらんnet"
+     "url": "https://ticketjam.jp/tickets/sumo-jan/prefecture/okayama",
+     "title": "大相撲 令和8年 秋巡業 岡山県の公演一覧（チケジャム）"
     }
    ]
   },
@@ -206,7 +89,7 @@
    "end": "2026-10-25",
    "venue": "奥武山公園・沖縄県立武道館",
    "category": "trade_show",
-   "note": "県内最大の産業の祭典。県産品の展示・販売",
+   "note": "経営革新展などを開く県の産業の祭典",
    "sources": [
     {
      "url": "https://www.pref.okinawa.jp/shigoto/shien/1010056/1022724/1025044/1010070/1022948.html",
@@ -246,7 +129,7 @@
   },
   {
    "market": "fukuoka",
-   "name": "マカロニえんぴつ マカロックツアーvol.22 ～いま、きみがすき！篇～",
+   "name": "マカロニえんぴつ マカロックツアーvol.22",
    "start": "2026-10-24",
    "end": "2026-10-25",
    "venue": "マリンメッセ福岡",
@@ -271,21 +154,6 @@
     {
      "url": "https://www.nta.co.jp/kokunai/special/eventinfo/10644706.htm",
      "title": "広島県のひろしまフードフェスティバル2026情報なら日本旅行"
-    }
-   ]
-  },
-  {
-   "market": "hiroshima",
-   "name": "第20回日本禁煙学会学術総会",
-   "start": "2026-10-24",
-   "end": "2026-10-25",
-   "venue": "広島県医師会館ほか",
-   "category": "convention",
-   "note": "禁煙・たばこ対策の全国学会。参加者約1,000人",
-   "sources": [
-    {
-     "url": "https://www.hiroshimacvb.jp/about/news/kikanshi_2026_7_vol143.pdf",
-     "title": "ひろしま観光コンベンション No.143（広島観光コンベンションビューロー）"
     }
    ]
   },
@@ -350,6 +218,21 @@
    ]
   },
   {
+   "market": "fukuoka",
+   "name": "CUTIE STREET JAPAN ARENA TOUR 2026 -AUTUMN-",
+   "start": "2026-10-28",
+   "end": "2026-10-29",
+   "venue": "マリンメッセ福岡",
+   "category": "concert",
+   "note": "アリーナツアーの福岡公演（2日間）",
+   "sources": [
+    {
+     "url": "https://live-events.a-jp.org/soko/plc/71.html",
+     "title": "マリンメッセ福岡 ライブ・コンサート、イベント 日程 2026 - 2027"
+    }
+   ]
+  },
+  {
    "market": "sapporo",
    "name": "Snow Man DOME TOUR 2026-2027 ALL SUITE",
    "start": "2026-10-30",
@@ -379,7 +262,7 @@
    "sources": [
     {
      "url": "https://www.honkakushochu.or.jp/7697/",
-     "title": "【2026/10/31～11/1開催決定！】焼酎ストリート2026 | イベント告知 | 鹿児島本格焼酎を楽しむ みんなの鹿児島焼酎 | 鹿児島県酒造組合"
+     "title": "【2026/10/31～11/1開催決定！】焼酎ストリート2026 | 鹿児島県酒造組合"
     }
    ]
   },
@@ -395,10 +278,6 @@
     {
      "url": "https://macaroniempitsu.com/live/19676.html",
      "title": "マカロックツアーvol.22 〜いま、きみがすき！篇〜 全公演SOLD OUT!!｜マカロニえんぴつ Official Website"
-    },
-    {
-     "url": "https://live-events.a-jp.org/soko/plc/91.html",
-     "title": "真駒内セキスイハイムアイスアリーナ ライブ・コンサート、イベント 日程 2026 - 2027"
     }
    ]
   },
@@ -439,15 +318,26 @@
    "end": "2026-11-03",
    "venue": "天文館電車通り一帯",
    "category": "festival",
-   "note": "約1万8千人が踊る南九州最大の祭り",
+   "note": "天文館電車通りで踊る前夜祭と本祭",
    "sources": [
     {
      "url": "https://www.pref.kagoshima.jp/ak01/ohara2026.html",
      "title": "鹿児島県／西郷隆盛生誕２００年・没後１５０年カウントダウン記念 第７５回おはら祭"
-    },
+    }
+   ]
+  },
+  {
+   "market": "fukuoka",
+   "name": "GENERATIONS 全国アリーナツアー \"PARALLEL QUEST\"",
+   "start": "2026-11-03",
+   "end": "2026-11-03",
+   "venue": "マリンメッセ福岡",
+   "category": "concert",
+   "note": "全国アリーナツアーの福岡公演",
+   "sources": [
     {
-     "url": "https://www.kagoshima-yokanavi.jp/event/10001",
-     "title": "【2026年最新版】おはら祭 | イベント | 【公式】鹿児島市の観光・旅行情報サイト｜かごしま市観光ナビ"
+     "url": "https://live-events.a-jp.org/soko/plc/71.html",
+     "title": "マリンメッセ福岡 ライブ・コンサート、イベント 日程 2026 - 2027"
     }
    ]
   },
@@ -491,16 +381,16 @@
   },
   {
    "market": "fukuoka",
-   "name": "Mr.Children Tour 2026 \"Saturday in the park\"（追加公演）",
+   "name": "Mr.Children Tour 2026 \"Saturday in the park\"",
    "start": "2026-11-07",
    "end": "2026-11-08",
-   "venue": "マリンメッセ福岡A館",
+   "venue": "マリンメッセ福岡",
    "category": "concert",
-   "note": "アリーナツアーの福岡追加公演（2日間）",
+   "note": "アリーナツアーの福岡公演（2日間）",
    "sources": [
     {
-     "url": "https://www.sakigake.jp/news/article/20260609OR0215/",
-     "title": "Mr.Children、大阪公演の振替日程&追加公演を発表【報告ほぼ全文】"
+     "url": "https://live-events.a-jp.org/soko/plc/71.html",
+     "title": "マリンメッセ福岡 ライブ・コンサート、イベント 日程 2026 - 2027"
     }
    ]
   },
@@ -513,10 +403,6 @@
    "category": "concert",
    "note": "YOASOBIのドームツアー名古屋公演（2日間）",
    "sources": [
-    {
-     "url": "https://eplus.jp/sf/detail/3369690001",
-     "title": "YOASOBI チケット | イープラス"
-    },
     {
      "url": "https://live-events.a-jp.org/soko/evg/14605.html",
      "title": "YOASOBI バンテリンドームナゴヤ ライブ・コンサート情報 2026年11月7日～8日"
@@ -543,7 +429,7 @@
    "name": "福岡マラソン2026",
    "start": "2026-11-08",
    "end": "2026-11-08",
-   "venue": "福岡市天神スタート～糸島市志摩フィニッシュ",
+   "venue": "福岡市天神スタート～糸島市志摩初付近フィニッシュ",
    "category": "marathon",
    "note": "天神から糸島へ走る市民フルマラソン",
    "sources": [
@@ -565,10 +451,6 @@
     {
      "url": "https://iwn2026.jp/",
      "title": "IWN2026 International Workshop on Nitride Semiconductors 2026"
-    },
-    {
-     "url": "https://iwn2026.jp/information/travel-information/",
-     "title": "Travel information ｜ International Workshop on Nitride Semiconductors 2026"
     }
    ]
   },
@@ -599,10 +481,6 @@
     {
      "url": "https://www.okayamamarathon.jp/event-information/guideline/",
      "title": "大会要項 | おかやまマラソン2026"
-    },
-    {
-     "url": "https://www.jalan.net/event/evt_356455/",
-     "title": "おかやまマラソン｜じゃらんnet"
     }
    ]
   },
@@ -665,10 +543,6 @@
    "note": "緑黄色社会の全国アリーナツアー名古屋公演",
    "sources": [
     {
-     "url": "https://eplus.jp/sf/venue/4620050/events",
-     "title": "IGアリーナ イベント一覧 | イープラス"
-    },
-    {
      "url": "https://live-events.a-jp.org/soko/plc/763.html",
      "title": "IGアリーナ ライブ・コンサート、イベント 日程 2026 - 2027"
     }
@@ -686,10 +560,6 @@
     {
      "url": "https://www.softbankhawks.co.jp/stadium/event_schedule/2026/",
      "title": "2026年みずほPayPayドームイベント日程 | 福岡ソフトバンクホークス"
-    },
-    {
-     "url": "https://live-events.a-jp.org/soko/evg/14594.html",
-     "title": "藤井風 みずほPayPayドーム福岡 ライブ・コンサート情報 2026年 11月14日(土) ～ 15日(日)"
     }
    ]
   },
@@ -705,10 +575,6 @@
     {
      "url": "https://live-events.a-jp.org/soko/evg/15419.html",
      "title": "CUTIE STREET 広島グリーンアリーナ ライブ・コンサート情報 2026年11月14日(土)～15日(日)"
-    },
-    {
-     "url": "https://zaseki.music-mdata.com/detail/18823/1",
-     "title": "広島グリーンアリーナ 座席・公演一覧"
     }
    ]
   },
@@ -724,10 +590,6 @@
     {
      "url": "https://live-events.a-jp.org/soko/evg/15114.html",
      "title": "15周年 ラブライブ!フェス バンテリンドームナゴヤ 2026年11月14日(土)～15日(日)"
-    },
-    {
-     "url": "https://ticketjam.jp/venues/2",
-     "title": "バンテリンドーム ナゴヤ 座席・キャパ・アクセス情報や開催される公演一覧"
     }
    ]
   },
@@ -748,6 +610,21 @@
   },
   {
    "market": "sendai",
+   "name": "高嶋ちさ子のザワつく！昭和歌謡祭 2026・音楽会 2026",
+   "start": "2026-11-14",
+   "end": "2026-11-15",
+   "venue": "セキスイハイムスーパーアリーナ（利府町）",
+   "category": "concert",
+   "note": "アリーナでの2日間のコンサート",
+   "sources": [
+    {
+     "url": "https://eplus.jp/sf/venue/9810020/events",
+     "title": "セキスイハイムスーパーアリーナ 公演一覧 | e+"
+    }
+   ]
+  },
+  {
+   "market": "sendai",
    "name": "日本人類遺伝学会 第71回大会",
    "start": "2026-11-18",
    "end": "2026-11-21",
@@ -758,6 +635,21 @@
     {
      "url": "https://www.congre.co.jp/jshg2026/index.html",
      "title": "日本人類遺伝学会第71回大会"
+    }
+   ]
+  },
+  {
+   "market": "kanazawa",
+   "name": "第18回全国女子選抜フットサル大会（トリムカップ2026）",
+   "start": "2026-11-19",
+   "end": "2026-11-22",
+   "venue": "いしかわ総合スポーツセンター",
+   "category": "sports",
+   "note": "女子フットサルの全国大会",
+   "sources": [
+    {
+     "url": "https://www.ishikawa-spc.jp/event/pdf/2026/202611.pdf",
+     "title": "令和８年度 いしかわ総合スポーツセンター大会予定表（11月）"
     }
    ]
   },
@@ -777,21 +669,62 @@
    ]
   },
   {
+   "market": "nagoya",
+   "name": "令和8年度全国学校保健・安全研究大会",
+   "start": "2026-11-19",
+   "end": "2026-11-20",
+   "venue": "Niterra日本特殊陶業市民会館 名古屋市音楽プラザ",
+   "category": "convention",
+   "note": "学校保健・安全の全国大会。参加者1,000人規模",
+   "sources": [
+    {
+     "url": "https://www.nagoya-info.jp/convention/calender/",
+     "title": "コンベンションカレンダー | 名古屋観光コンベンションビューロー"
+    }
+   ]
+  },
+  {
+   "market": "nagoya",
+   "name": "建設技術フェア2026in中部",
+   "start": "2026-11-19",
+   "end": "2026-11-20",
+   "venue": "ポートメッセなごや 第1展示館",
+   "category": "trade_show",
+   "note": "建設分野の技術展示会",
+   "sources": [
+    {
+     "url": "https://portmesse.com/events",
+     "title": "イベント一覧 | ポートメッセなごや"
+    }
+   ]
+  },
+  {
    "market": "naha",
    "name": "ResorTech EXPO 2026 in Okinawa",
    "start": "2026-11-19",
    "end": "2026-11-20",
    "venue": "沖縄サントリーアリーナ（沖縄市）",
    "category": "trade_show",
-   "note": "沖縄県最大級のIT・DX展示会",
+   "note": "リゾート・観光業向けのIT・DX展示会",
    "sources": [
     {
      "url": "https://ryukyushimpo.jp/prtimes/entry-5450493.html",
      "title": "「ResorTech EXPO 2026 in Okinawa」事前来場登録受付中！"
-    },
+    }
+   ]
+  },
+  {
+   "market": "nagoya",
+   "name": "第52回全国語学教育学会年次国際大会（JALT2026）",
+   "start": "2026-11-20",
+   "end": "2026-11-22",
+   "venue": "ウインクあいち（愛知県産業労働センター）",
+   "category": "convention",
+   "note": "語学教育の国際大会。参加者1,350人規模",
+   "sources": [
     {
-     "url": "https://dime.jp/company_news/detail/?pr=2665837",
-     "title": "「ResorTech EXPO 2026 in Okinawa」事前来場登録受付中！｜企業ニュース｜@DIME アットダイム"
+     "url": "https://www.nagoya-info.jp/convention/calender/",
+     "title": "コンベンションカレンダー | 名古屋観光コンベンションビューロー"
     }
    ]
   },
@@ -805,10 +738,6 @@
    "note": "ミスチルのアリーナツアー最終公演（2日間）",
    "sources": [
     {
-     "url": "https://t.pia.jp/pia/events/mrchildren-tour2026/",
-     "title": "Mr.Children Tour 2026 “Saturday in the park” | チケットぴあ"
-    },
-    {
      "url": "https://live-events.a-jp.org/soko/evg/14541.html",
      "title": "Mr.Children 広島グリーンアリーナ ライブ・コンサート情報 2026年11月21日～22日"
     }
@@ -821,15 +750,15 @@
    "end": "2026-11-23",
    "venue": "石川県立音楽堂 他（ホテル日航金沢・金沢市アートホール等）",
    "category": "convention",
-   "note": "薬剤師らの全国学会 参加予定9,600名",
+   "note": "薬剤師らの全国学会",
    "sources": [
     {
      "url": "https://www.c-linkage.co.jp/36jsphcs/",
      "title": "第36回日本医療薬学会年会 - コンベンションリンケージ"
     },
     {
-     "url": "https://www.c-linkage.co.jp/36jsphcs/data/36jsphcs_prospectus.pdf",
-     "title": "第36回日本医療薬学会年会 各種協賛趣意書"
+     "url": "https://www.c-linkage.co.jp/36jsphcs/outline.html",
+     "title": "開催概要 第36回日本医療薬学会年会"
     }
    ]
   },
@@ -845,10 +774,6 @@
     {
      "url": "https://molkky.jp/info-jma/33333/",
      "title": "第80回全国レクリエーション大会2026 くまもと スポーツレクリエーション交流大会（モルック）開催のお知らせ"
-    },
-    {
-     "url": "https://recreation.or.jp/WP_ORJP/wp-content/uploads/business-plan_2026.pdf",
-     "title": "日本レクリエーション協会 2026年度事業計画"
     }
    ]
   },
@@ -964,10 +889,6 @@
    "note": "Snow Manの5大ドームツアー名古屋公演（4日間）",
    "sources": [
     {
-     "url": "https://ticketjam.jp/venues/2",
-     "title": "バンテリンドーム ナゴヤ 座席・キャパ・アクセス情報や開催される公演一覧"
-    },
-    {
      "url": "https://live-events.a-jp.org/soko/evg/15669.html",
      "title": "Snow Man バンテリンドームナゴヤ ライブ・コンサート情報"
     }
@@ -983,8 +904,8 @@
    "note": "国内外のバイヤーを招く食の輸出商談会",
    "sources": [
     {
-     "url": "https://www.jetro.go.jp/events/yac/8f4e276ec985a75d.html",
-     "title": "【オンライン併催】沖縄大交易会2026 | イベント情報 - ジェトロ"
+     "url": "https://gotf.jp/2026/access.html",
+     "title": "沖縄大交易会2026 会場アクセス"
     }
    ]
   },
@@ -993,13 +914,28 @@
    "name": "米津玄師 2026 TOUR / GHOST",
    "start": "2026-11-27",
    "end": "2026-11-28",
-   "venue": "マリンメッセ福岡A館",
+   "venue": "マリンメッセ福岡",
    "category": "concert",
    "note": "全国アリーナツアーの福岡公演（2日間）",
    "sources": [
     {
-     "url": "https://www.fashion-press.net/news/134166",
-     "title": "米津玄師の全国ライブツアー2026「GHOST」Kアリーナ横浜や大阪城ホール、長野ビッグハットで"
+     "url": "https://live-events.a-jp.org/soko/plc/71.html",
+     "title": "マリンメッセ福岡 ライブ・コンサート、イベント 日程 2026 - 2027"
+    }
+   ]
+  },
+  {
+   "market": "kanazawa",
+   "name": "KOGEI Art Fair Kanazawa 2026",
+   "start": "2026-11-27",
+   "end": "2026-11-29",
+   "venue": "ハイアット セントリック 金沢",
+   "category": "trade_show",
+   "note": "工芸特化のアートフェア。49ギャラリーが出展",
+   "sources": [
+    {
+     "url": "https://www.tokyoartbeat.com/articles/-/kogei-art-fair-kanazawa-2026-news-202608",
+     "title": "KOGEI Art Fair Kanazawa 2026 | Tokyo Art Beat"
     }
    ]
   },
@@ -1045,10 +981,36 @@
     {
      "url": "https://live-events.a-jp.org/soko/evg/14496.html",
      "title": "BUMP OF CHICKEN 広島グリーンアリーナ ライブ・コンサート情報 2026年11月28日(土)～29日(日)"
-    },
+    }
+   ]
+  },
+  {
+   "market": "nagoya",
+   "name": "CUTIE STREET 2026年 アリーナツアー 名古屋公演",
+   "start": "2026-11-28",
+   "end": "2026-11-29",
+   "venue": "IGアリーナ",
+   "category": "concert",
+   "note": "CUTIE STREETの全国アリーナツアー名古屋公演",
+   "sources": [
     {
-     "url": "https://zaseki.music-mdata.com/detail/18823/1",
-     "title": "広島グリーンアリーナ 座席・公演一覧"
+     "url": "https://live-events.a-jp.org/soko/plc/763.html",
+     "title": "IGアリーナ ライブ・コンサート、イベント 日程 2026 - 2027"
+    }
+   ]
+  },
+  {
+   "market": "nagoya",
+   "name": "第32回日本腹膜透析医学会学術集会・総会",
+   "start": "2026-11-28",
+   "end": "2026-11-29",
+   "venue": "ウインクあいち（愛知県産業労働センター）",
+   "category": "convention",
+   "note": "腹膜透析の全国学会。参加者1,510人規模",
+   "sources": [
+    {
+     "url": "https://www.nagoya-info.jp/convention/calender/",
+     "title": "コンベンションカレンダー | 名古屋観光コンベンションビューロー"
     }
    ]
   },
@@ -1104,7 +1066,7 @@
    "end": "2026-12-06",
    "venue": "みずほPayPayドーム福岡",
    "category": "concert",
-   "note": "5大ドームツアーの福岡公演（3日間）",
+   "note": "ドームツアーの福岡公演（3日間）",
    "sources": [
     {
      "url": "https://www.softbankhawks.co.jp/stadium/event_schedule/2026/",
@@ -1124,10 +1086,6 @@
     {
      "url": "https://jhs54.umin.jp/annai.html",
      "title": "参加者へのご案内 | 第54回日本頭痛学会総会"
-    },
-    {
-     "url": "https://jhs54.umin.jp/",
-     "title": "第54回日本頭痛学会総会"
     }
    ]
   },
@@ -1176,11 +1134,11 @@
    "sources": [
     {
      "url": "https://ticketjam.jp/tickets/hiroshima-continew/event/1137068",
-     "title": "HIROSHIMA CONTI-NeW FeS 2026【1日券】 12/05 広島グリーンアリーナ | チケジャム"
+     "title": "HIROSHIMA CONTI-NeW FeS 2026【1日券】 12/05(土) 広島グリーンアリーナ"
     },
     {
-     "url": "https://zaseki.music-mdata.com/detail/18823/1",
-     "title": "広島グリーンアリーナ 座席・公演一覧"
+     "url": "https://ticketjam.jp/tickets/hiroshima-continew/event/1137069",
+     "title": "HIROSHIMA CONTI-NeW FeS 2026【1日券】 12/06(日) 広島グリーンアリーナ"
     }
    ]
   },
@@ -1200,13 +1158,28 @@
    ]
   },
   {
+   "market": "fukuoka",
+   "name": "TOMOHISA YAMASHITA TOUR 2026 DREAMING",
+   "start": "2026-12-06",
+   "end": "2026-12-06",
+   "venue": "マリンメッセ福岡",
+   "category": "concert",
+   "note": "全国アリーナツアーの福岡公演",
+   "sources": [
+    {
+     "url": "https://live-events.a-jp.org/soko/plc/71.html",
+     "title": "マリンメッセ福岡 ライブ・コンサート、イベント 日程 2026 - 2027"
+    }
+   ]
+  },
+  {
    "market": "kagoshima",
    "name": "第46回 ランニング桜島大会",
    "start": "2026-12-06",
    "end": "2026-12-06",
    "venue": "桜島（鹿児島市）",
    "category": "marathon",
-   "note": "定員3,500人のハーフ・10km大会",
+   "note": "桜島で開くハーフ・10kmの市民ランニング大会",
    "sources": [
     {
      "url": "https://www.runningsakurajima.jp/",
@@ -1216,16 +1189,16 @@
   },
   {
    "market": "naha",
-   "name": "第40回 NAHAマラソン",
+   "name": "第40回記念 NAHAマラソン",
    "start": "2026-12-06",
    "end": "2026-12-06",
-   "venue": "奥武山公園発着",
+   "venue": "那覇市内のコース（沖縄県）",
    "category": "marathon",
-   "note": "定員3万人の市民マラソン",
+   "note": "第40回を迎える大規模な市民マラソン",
    "sources": [
     {
-     "url": "https://www.sportsentry.ne.jp/entry/t/105493/e",
-     "title": "The 40th NAHA MARATHON | Sports Entry"
+     "url": "https://naha-marathon.jp/",
+     "title": "NAHAマラソン公式サイト"
     }
    ]
   },
@@ -1234,13 +1207,13 @@
    "name": "Mrs. GREEN APPLE Ringo Jam Tour \"SHADOWS\"",
    "start": "2026-12-09",
    "end": "2026-12-10",
-   "venue": "マリンメッセ福岡A館",
+   "venue": "マリンメッセ福岡",
    "category": "concert",
-   "note": "約3年ぶり全国アリーナツアーの福岡公演",
+   "note": "全国アリーナツアーの福岡公演（2日間）",
    "sources": [
     {
-     "url": "https://realsound.jp/2026/06/post-2428818.html",
-     "title": "Mrs. GREEN APPLE、6thフルアルバムリリース日決定 約3年ぶりの全国アリーナツアー開催も"
+     "url": "https://live-events.a-jp.org/soko/plc/71.html",
+     "title": "マリンメッセ福岡 ライブ・コンサート、イベント 日程 2026 - 2027"
     }
    ]
   },
@@ -1249,13 +1222,13 @@
    "name": "BUMP OF CHICKEN TOUR 2026",
    "start": "2026-12-12",
    "end": "2026-12-13",
-   "venue": "マリンメッセ福岡A館",
+   "venue": "マリンメッセ福岡",
    "category": "concert",
    "note": "全国ツアーの福岡公演（2日間）",
    "sources": [
     {
-     "url": "https://www.ticketjam.jp/tickets/bumpofchicken/prefecture/fukuoka",
-     "title": "福岡県 BUMP OF CHICKEN（バンプオブチキン）のライブ・チケット一覧｜チケジャム"
+     "url": "https://live-events.a-jp.org/soko/plc/71.html",
+     "title": "マリンメッセ福岡 ライブ・コンサート、イベント 日程 2026 - 2027"
     }
    ]
   },
@@ -1271,6 +1244,21 @@
     {
      "url": "https://www.softbankhawks.co.jp/stadium/event_schedule/2026/",
      "title": "2026年みずほPayPayドームイベント日程 | 福岡ソフトバンクホークス"
+    }
+   ]
+  },
+  {
+   "market": "nagoya",
+   "name": "M!LK ARENA TOUR 2026-2027「シャカリキ レボリューション」",
+   "start": "2026-12-12",
+   "end": "2026-12-13",
+   "venue": "Aichi Sky Expo（常滑市）ホールA",
+   "category": "concert",
+   "note": "M!LKの全国アリーナツアー愛知公演（2日間）",
+   "sources": [
+    {
+     "url": "https://www.aichiskyexpo.com/ase-event/?ym=202612",
+     "title": "イベント情報 | Aichi Sky Expo（愛知県国際展示場）"
     }
    ]
   },
@@ -1293,7 +1281,7 @@
    "market": "sendai",
    "name": "TOMOHISA YAMASHITA TOUR 2026 DREAMING 宮城公演",
    "start": "2026-12-12",
-   "end": "2026-12-13",
+   "end": "2026-12-12",
    "venue": "ゼビオアリーナ仙台",
    "category": "concert",
    "note": "山下智久の全国アリーナツアー仙台公演",
