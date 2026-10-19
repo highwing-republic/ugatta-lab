@@ -69,13 +69,13 @@ test("精算の明細：宿泊料金は1名あたり×人数×泊数、朝食・
   const demo = demoOn("2026-10-16");
   const takahashi = demo.load().reservations.find((r) => r.id === 2);
   const f = demo.folio(takahashi);
-  // ツイン2名利用 8,000×2名×2泊、朝食 1,500×2名×2泊、夕食 7,700×2名、入湯税 150×2名×2泊
-  assert.equal(f.lines.map((l) => l.amount).join(","), "32000,6000,15400,600");
-  assert.equal(f.total, 54000);
-  assert.equal(f.taxableTotal, 53400);
-  assert.equal(f.consumptionTax, 4854);
+  // ツイン2名利用 12,000×2名×2泊、朝食 1,500×2名×2泊、夕食 7,700×2名、入湯税 150×2名×2泊
+  assert.equal(f.lines.map((l) => l.amount).join(","), "48000,6000,15400,600");
+  assert.equal(f.total, 70000);
+  assert.equal(f.taxableTotal, 69400);
+  assert.equal(f.consumptionTax, 6309);
   const room = f.lines[0];
-  assert.equal(room.unit, 8000);
+  assert.equal(room.unit, 12000);
   assert.equal(room.qtyLabel, "2名×2泊");
   assert.equal(room.label, "宿泊料金（ツイン・2名1室利用）");
 });
@@ -83,17 +83,17 @@ test("精算の明細：宿泊料金は1名あたり×人数×泊数、朝食・
 test("料金表：1名あたりの料金は1室の人数で変わり、人数は定員までに丸める", () => {
   const demo = demoOn("2026-10-16");
   const cap = (type) => demo.TYPES.find((t) => t.type === type).cap;
-  assert.deepEqual([1, 2, 3, 4].map((n) => demo.personRate("和室", n)), [16000, 10000, 7500, 6000]);
-  assert.deepEqual([1, 2].map((n) => demo.personRate("ツイン", n)), [12000, 8000]);
-  assert.equal(demo.personRate("シングル", 1), 8000);
+  assert.deepEqual([1, 2, 3, 4].map((n) => demo.personRate("和室", n)), [24000, 15000, 12000, 10000]);
+  assert.deepEqual([1, 2].map((n) => demo.personRate("ツイン", n)), [18000, 12000]);
+  assert.equal(demo.personRate("シングル", 1), 12000);
   assert.equal(cap("和室"), 4);
-  assert.equal(demo.nightRate("和室", 3), 22500);
-  assert.equal(demo.nightRate("和室", 4), 24000);
-  assert.equal(demo.nightRate("ツイン", 4), 16000);
-  assert.equal(demo.personRate("ツイン", 0), 12000);
+  assert.equal(demo.nightRate("和室", 3), 36000);
+  assert.equal(demo.nightRate("和室", 4), 40000);
+  assert.equal(demo.nightRate("ツイン", 4), 24000);
+  assert.equal(demo.personRate("ツイン", 0), 18000);
 });
 
-test("精算の明細：公式サイト予約は予約時の宿泊料金を使い、1名でも部屋の料金表どおり", () => {
+test("精算の明細：公式サイト予約は予約時に示した宿泊料金を使う（料金表を変えた後も変わらない）", () => {
   const demo = demoOn("2026-10-16");
   const web = { pax: 1, inDate: "2026-10-16", outDate: "2026-10-17", room: "502", plan: "room", roomTotal: 12000 };
   assert.equal(demo.folio(web).total, 12000 + 150);
