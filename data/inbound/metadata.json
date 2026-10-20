@@ -2,11 +2,11 @@
   "metadata": {
     "source": "観光庁 宿泊旅行統計調査",
     "source_url": "https://www.mlit.go.jp/kankocho/tokei_hakusyo/shukuhakutokei.html",
-    "excel_url": "https://www.mlit.go.jp/kankocho/content/002024478.xlsx",
+    "excel_url": "https://www.mlit.go.jp/kankocho/content/002025568.xlsx",
     "year": 2026,
     "month": 7,
     "release_type": "第2次速報",
-    "updated_at": "2026-09-30",
+    "updated_at": "2026-10-15",
     "unit": "人泊",
     "survey_note": "2026年1月から集計・層化基準変更",
     "survey_scope": "客室数20室以上の施設",
