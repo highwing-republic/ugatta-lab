@@ -27,6 +27,7 @@ if __package__ in (None, ""):
 from scripts import update_business_hotel_prices as bh
 
 SIMPLE_ENDPOINT = "https://openapi.rakuten.co.jp/engine/api/Travel/SimpleHotelSearch/20260731"
+DETAIL_ENDPOINT = "https://openapi.rakuten.co.jp/engine/api/Travel/HotelDetailSearch/20260731"
 MAX_PAGES = 12
 
 
@@ -39,11 +40,31 @@ def merge_parts(entry) -> dict:
     return merged
 
 
+def describe(payload: dict) -> str:
+    """応答の形だけをログに出す（施設名や料金は出さない）。"""
+    hotels = payload.get("hotels") or []
+    first = hotels[0] if hotels else None
+    kinds = [sorted(p.keys()) for p in bh._hotel_parts(first) if isinstance(p, dict)] if first is not None else []
+    return f"keys={sorted(payload.keys())} hotels={len(hotels)} first={type(first).__name__} parts={kinds}"
+
+
+def find_target(client: bh.RakutenClient, hotel_no: int) -> dict | None:
+    payload = client.search({"hotelNo": hotel_no, "formatVersion": 2, "responseType": "large", "datumType": 1}, endpoint=DETAIL_ENDPOINT)
+    for entry in payload.get("hotels") or []:
+        hotel = merge_parts(entry)
+        if int((hotel.get("hotelBasicInfo") or {}).get("hotelNo") or 0) == hotel_no:
+            return hotel
+    print("施設情報APIの応答:", describe(payload))
+    return None
+
+
 def search_hotels(client: bh.RakutenClient, params: dict) -> list[dict]:
     hotels: list[dict] = []
     page = 1
     while True:
-        payload = client.search({**params, "responseType": "large", "datumType": 1, "hits": 30, "page": page}, endpoint=SIMPLE_ENDPOINT)
+        payload = client.search({**params, "formatVersion": 2, "responseType": "large", "datumType": 1, "hits": 30, "page": page}, endpoint=SIMPLE_ENDPOINT)
+        if page == 1 and not payload.get("hotels"):
+            print("施設検索APIの応答:", describe(payload))
         hotels.extend(merge_parts(entry) for entry in payload.get("hotels") or [])
         page_count = int((payload.get("pagingInfo") or {}).get("pageCount") or 1)
         if page >= page_count or page >= 5:
@@ -126,8 +147,7 @@ def main(argv: list[str] | None = None) -> int:
     started = datetime.now(bh.JST)
     today = started.date()
 
-    target_hits = search_hotels(client, {"hotelNo": target_no})
-    target = next((h for h in target_hits if int((h.get("hotelBasicInfo") or {}).get("hotelNo") or 0) == target_no), None)
+    target = find_target(client, target_no)
     if target is None:
         print("対象施設が見つかりませんでした")
         return 1
