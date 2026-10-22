@@ -1,0 +1,9 @@
+{
+  "note": "料金ポジション診断の試作。公開しない。結果は暗号化して results/ に置く。取得し直すときは run を1つ増やして push する。",
+  "run": 1,
+  "target_hotel_no": 29167,
+  "radius_km": 3.0,
+  "horizon_days": 90,
+  "max_competitors": 14,
+  "adults": [1, 2]
+}

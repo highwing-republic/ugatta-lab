@@ -1,0 +1,71 @@
+name: Price position trial (private)
+
+# 料金ポジション診断の試作。trial/price-position ブランチで request.json を更新して push したときだけ動く。
+# main には入れない。結果は公開鍵で暗号化してからこのブランチに保存し、ログには件数しか出さない。
+# 必要なリポジトリシークレット: RAKUTEN_APPLICATION_ID, RAKUTEN_ACCESS_KEY
+
+on:
+  push:
+    branches: [trial/price-position]
+    paths: [trial/price-position/request.json]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: price-position-trial
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Fetch from Rakuten Travel
+        env:
+          RAKUTEN_APPLICATION_ID: ${{ secrets.RAKUTEN_APPLICATION_ID }}
+          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
+        run: python scripts/price_position_trial.py --request trial/price-position/request.json --out "$RUNNER_TEMP/result.json"
+
+      - name: Encrypt the result
+        shell: bash
+        run: |
+          set -euo pipefail
+          stamp=$(TZ=Asia/Tokyo date +%Y%m%d-%H%M)
+          out="trial/price-position/results/$stamp"
+          mkdir -p "$out"
+          gzip -9 -c "$RUNNER_TEMP/result.json" > "$RUNNER_TEMP/result.json.gz"
+          openssl rand -hex 32 > "$RUNNER_TEMP/key.txt"
+          openssl enc -aes-256-cbc -pbkdf2 -salt -in "$RUNNER_TEMP/result.json.gz" -out "$out/result.json.gz.enc" -pass file:"$RUNNER_TEMP/key.txt"
+          openssl pkeyutl -encrypt -pubin -inkey trial/price-position/recipient.pem \
+            -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256 \
+            -in "$RUNNER_TEMP/key.txt" -out "$out/key.txt.enc"
+          rm -f "$RUNNER_TEMP/result.json" "$RUNNER_TEMP/result.json.gz" "$RUNNER_TEMP/key.txt"
+          ls -l "$out"
+
+      - name: Commit the encrypted result
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add trial/price-position/results
+          git commit -m "trial: encrypted price position result [skip ci]"
+          for attempt in 1 2 3; do
+            if git pull --rebase origin "$GITHUB_REF_NAME" && git push origin "HEAD:$GITHUB_REF_NAME"; then
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1
