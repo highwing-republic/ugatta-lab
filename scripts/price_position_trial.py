@@ -28,6 +28,8 @@ from scripts import update_business_hotel_prices as bh
 
 SIMPLE_ENDPOINT = "https://openapi.rakuten.co.jp/engine/api/Travel/SimpleHotelSearch/20260731"
 DETAIL_ENDPOINT = "https://openapi.rakuten.co.jp/engine/api/Travel/HotelDetailSearch/20260731"
+KEYWORD_ENDPOINT = "https://openapi.rakuten.co.jp/engine/api/Travel/KeywordHotelSearch/20260731"
+AREA_ENDPOINT = "https://openapi.rakuten.co.jp/engine/api/Travel/GetAreaClass/20260731"
 MAX_PAGES = 12
 
 
@@ -49,13 +51,35 @@ def describe(payload: dict) -> str:
 
 
 def find_target(client: bh.RakutenClient, hotel_no: int) -> dict | None:
-    payload = client.search({"hotelNo": hotel_no, "formatVersion": 2, "responseType": "large", "datumType": 1}, endpoint=DETAIL_ENDPOINT)
-    for entry in payload.get("hotels") or []:
-        hotel = merge_parts(entry)
-        if int((hotel.get("hotelBasicInfo") or {}).get("hotelNo") or 0) == hotel_no:
-            return hotel
-    print("施設情報APIの応答:", describe(payload))
+    for extra in ({}, {"datumType": 1}):
+        payload = client.search({"hotelNo": hotel_no, "formatVersion": 2, "responseType": "large", **extra}, endpoint=DETAIL_ENDPOINT)
+        for entry in payload.get("hotels") or []:
+            hotel = merge_parts(entry)
+            if int((hotel.get("hotelBasicInfo") or {}).get("hotelNo") or 0) == hotel_no:
+                return hotel
+        print("施設情報APIの応答:", extra, describe(payload))
     return None
+
+
+def discover(client: bh.RakutenClient, request: dict) -> None:
+    """対象施設や地区コードを探すための下調べ。施設番号と施設名だけをログに出す（料金は出さない）。"""
+    for keyword in request.get("discover_keywords", []):
+        try:
+            payload = client.search({"keyword": keyword, "middleClassCode": request.get("middle_class_code", "kagoshima"), "formatVersion": 2, "responseType": "small", "hits": 30}, endpoint=KEYWORD_ENDPOINT)
+        except bh.ApiError as exc:
+            print(f"キーワード {keyword}: エラー {exc}")
+            continue
+        hotels = [merge_parts(e).get("hotelBasicInfo") or {} for e in payload.get("hotels") or []]
+        print(f"キーワード {keyword}: {len(hotels)} 件")
+        for b in hotels:
+            print("  ", b.get("hotelNo"), b.get("hotelName"), b.get("address2"))
+    try:
+        payload = client.search({"formatVersion": 2}, endpoint=AREA_ENDPOINT)
+        text = json.dumps(payload, ensure_ascii=False)
+        start = text.find("kagoshima")
+        print("地区コード（鹿児島付近）:", text[start:start + 1500] if start >= 0 else describe(payload))
+    except bh.ApiError as exc:
+        print("地区コード: エラー", exc)
 
 
 def search_hotels(client: bh.RakutenClient, params: dict) -> list[dict]:
@@ -147,6 +171,8 @@ def main(argv: list[str] | None = None) -> int:
     started = datetime.now(bh.JST)
     today = started.date()
 
+    if request.get("discover_keywords"):
+        discover(client, request)
     target = find_target(client, target_no)
     if target is None:
         print("対象施設が見つかりませんでした")
