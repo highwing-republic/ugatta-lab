@@ -202,6 +202,30 @@
     return "mid";
   }
 
+  // 料金が高くなる期間: カレンダーで「10%以上高い」「急騰」が続く宿泊日をひとまとまりにする。
+  // 比べられない日（2施設以下）で区切る。グラフの見出し文と注記に使う
+  function pricePeriods(summary) {
+    const periods = [];
+    let current = null;
+    summary.days.forEach((day) => {
+      const level = calendarClass(day, summary.typical);
+      if (level !== "high" && level !== "spike") {
+        current = null;
+        return;
+      }
+      const ratio = day.median / summary.typical;
+      if (!current) {
+        current = {start: day.date, end: day.date, nights: 0, spike: false, peak: null};
+        periods.push(current);
+      }
+      current.end = day.date;
+      current.nights += 1;
+      current.spike = current.spike || level === "spike";
+      if (!current.peak || day.median > current.peak.median) current.peak = {date: day.date, median: day.median, ratio, reference: day.status === "reference"};
+    });
+    return periods;
+  }
+
   function hotelSummary(hotel) {
     const prices = hotel.prices.filter(isPrice);
     const priced = hotel.meals.filter((code) => MEALS[code] && code !== "-" && code !== "?");
@@ -266,6 +290,82 @@
     const change = medianOfNumbers(valid.map((hotel) => hotel.change));
     const direction = change >= TREND_THRESHOLD ? "up" : change <= -TREND_THRESHOLD ? "down" : "flat";
     return {status: "ok", change, direction, hotels, hotelCount: valid.length};
+  }
+
+  // 泊まる日ごとの値段の動き: 毎朝の取得を古い順に並べ、同じ泊の料金を施設ごとにたどる。
+  // 比較施設群が今朝と違う取得は使わない。daysBefore は泊まる日の何日前の取得か
+  const daysBetween = (a, b) => Math.round((Date.parse(`${a}T00:00:00Z`) - Date.parse(`${b}T00:00:00Z`)) / 86400000);
+  function usableSnapshots(snapshots) {
+    const ordered = (snapshots || []).filter(Boolean).slice().sort((a, b) => (a.snapshot_date < b.snapshot_date ? -1 : 1));
+    const latest = ordered[ordered.length - 1];
+    return latest ? ordered.filter((snap) => snap.cohort_version === latest.cohort_version) : [];
+  }
+
+  // dates の泊ごとに、取得ごとの料金（施設ごと・中央値）をたどる。各取得の marketView は1回だけ作る
+  function stayHistories(cohort, snapshots, code, dates) {
+    const views = usableSnapshots(snapshots).map((snap) => ({snap, view: marketView(cohort, snap, code), index: new Map(snap.stay_dates.map((date, i) => [date, i]))}));
+    return dates.map((date) => {
+      const points = views.map(({snap, view, index: byDate}) => {
+        const index = byDate.get(date);
+        if (index === undefined || !view) return null;
+        const hotels = view.core.map((hotel) => ({hotel_no: hotel.hotel_no, name: hotel.name, price: hotel.prices[index], soldOut: hotel.meals[index] === "-"}));
+        const prices = hotels.map((hotel) => hotel.price).filter(isPrice);
+        const status = prices.length >= MIN_CORE_FOR_MEDIAN ? "ok" : prices.length === REFERENCE_CORE ? "reference" : "none";
+        return {snapshot: snap.snapshot_date, daysBefore: daysBetween(date, snap.snapshot_date), status, median: status === "none" ? null : median(prices), soldOut: hotels.filter((hotel) => hotel.soldOut).length, hotels};
+      }).filter(Boolean);
+      const valid = points.filter((point) => point.status !== "none");
+      const first = valid[0] || null;
+      const last = valid.length && valid[valid.length - 1].snapshot === (points[points.length - 1] || {}).snapshot ? valid[valid.length - 1] : null;
+      const change = first && last && first !== last ? (last.median / first.median - 1) * 100 : null;
+      return {date, points, first, last, change, direction: change === null ? null : change >= TREND_THRESHOLD ? "up" : change <= -TREND_THRESHOLD ? "down" : "flat"};
+    });
+  }
+
+  function stayHistory(cohort, snapshots, code, date) {
+    return stayHistories(cohort, snapshots, code, [date])[0];
+  }
+
+  // 値段の動き方の集計: 今朝の対象期間の泊 × CORE施設ごとに、いちばん古い取得と今朝を比べる。
+  // 途中で料金が見えていて今朝は楽天で売り切れなら「売り切れ」。今朝の料金がふだんの+10%以上の泊と
+  // その他の泊に分けて数える（料金が高いから上がった、という因果は示さない）
+  function pricePaths(cohort, snapshots, code, {nights} = {}) {
+    const usable = usableSnapshots(snapshots);
+    const latest = usable[usable.length - 1];
+    if (!latest || usable.length < 2) return {records: usable.length, groups: []};
+    const summary = marketSummary(marketView(cohort, latest, code, {nights}));
+    const views = usable.map((snap) => ({snap, view: marketView(cohort, snap, code)}));
+    const empty = () => ({up: 0, flat: 0, down: 0, soldOut: 0, total: 0, nights: 0});
+    const groups = {high: empty(), other: empty()};
+    summary.days.forEach((day) => {
+      if (day.status === "none") return;
+      const level = calendarClass(day, summary.typical);
+      const group = groups[level === "high" || level === "spike" ? "high" : "other"];
+      let counted = false;
+      views[views.length - 1].view.core.forEach((hotel) => {
+        let first = null;
+        views.slice(0, -1).some(({snap, view}) => {
+          const index = snap.stay_dates.indexOf(day.date);
+          const old = index < 0 ? null : view.core.find((item) => item.hotel_no === hotel.hotel_no);
+          if (old && isPrice(old.prices[index])) first = old.prices[index];
+          return first !== null;
+        });
+        if (first === null) return;
+        const index = latest.stay_dates.indexOf(day.date);
+        const now = hotel.prices[index];
+        let outcome = null;
+        if (hotel.meals[index] === "-") outcome = "soldOut";
+        else if (isPrice(now)) {
+          const change = (now / first - 1) * 100;
+          outcome = change >= TREND_THRESHOLD ? "up" : change <= -TREND_THRESHOLD ? "down" : "flat";
+        }
+        if (!outcome) return;
+        group[outcome] += 1;
+        group.total += 1;
+        counted = true;
+      });
+      if (counted) group.nights += 1;
+    });
+    return {records: usable.length, since: usable[0].snapshot_date, latest: latest.snapshot_date, groups: [{key: "high", ...groups.high}, {key: "other", ...groups.other}]};
   }
 
   // ---------------------------------------------------------------- 全国サマリとランキング
@@ -424,9 +524,14 @@
     dailyMedians,
     marketSummary,
     calendarClass,
+    pricePeriods,
     hotelSummary,
     crossCityBrand,
     weeklyChange,
+    stayHistory,
+    stayHistories,
+    pricePaths,
+    TREND_THRESHOLD,
     eventCandidates,
     EVENT_TOP,
     formatPeriod,

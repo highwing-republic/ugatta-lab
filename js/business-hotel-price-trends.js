@@ -4,7 +4,7 @@
   const M = globalThis.BusinessHotelPriceModel;
   const DATA = "data/business-hotel-price-trends/";
   const $ = (selector) => document.querySelector(selector);
-  const state = {cohort: null, manifest: null, latest: null, previous: null, events: null, images: null, eventView: null, market: null, nights: 30, rankTab: "volatileMarkets"};
+  const state = {cohort: null, manifest: null, latest: null, previous: null, history: [], historyLoaded: false, events: null, images: null, eventView: null, market: null, nights: 30, rankTab: "volatileMarkets"};
 
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
   const yen = M.formatYen;
@@ -43,6 +43,7 @@
       setupControls();
       show("dashboard");
       render();
+      loadHistory(manifest, latestEntry, previous);
     } catch (error) {
       if (error.status === 404) {
         $("#bht-error-title").textContent = "データを準備中です";
@@ -54,6 +55,18 @@
       }
       show("error");
     }
+  }
+
+  // 泊まる日ごとの値段の動きに使う過去の取得（今日から60泊分の泊が観測された期間）。
+  // 最初の表示を待たせないよう後から読み、読めた分だけで値段の動きを描く
+  const HISTORY_DAYS = 60;
+  async function loadHistory(manifest, latestEntry, previous) {
+    const oldest = M.addDays(latestEntry.date, -HISTORY_DAYS);
+    const entries = manifest.snapshots.filter((item) => item.date < latestEntry.date && item.date >= oldest);
+    const loaded = await Promise.all(entries.map((item) => (previous && item.date === previous.snapshot_date ? previous : getJson(DATA + item.file).catch(() => null))));
+    state.history = loaded.filter(Boolean);
+    state.historyLoaded = true;
+    render();
   }
 
   function show(which) {
@@ -117,6 +130,7 @@
     if (!current || !current.summary) return;
     renderMarket(current);
     renderDaily(current.summary);
+    renderStay(current.summary);
     renderWeekday(current.summary);
     renderMeals(current.view);
     renderCalendar(current.summary);
@@ -313,71 +327,260 @@
     $("#bht-kpis").innerHTML = kpis.map((kpi) => `<article class="bht-kpi${kpi.lead ? " bht-kpi--lead" : ""}"><span>${escapeHtml(kpi.label)}</span><strong class="${kpi.status ? "bht-kpi__status" : ""}">${escapeHtml(kpi.value)}</strong><small>${escapeHtml(kpi.note)}</small></article>`).join("");
   }
 
-  // 宿泊日別: 中央値の線（2px）と最安〜最高の帯。金土泊は背景を薄く。急騰日に印。
+  // 宿泊日別: 1泊ごとに1本の棒。ふだんの料金（代表料金）より高いか安いかで色を分け、
+  // 高くなる期間の山に日付と料金を直接書く。休前日は背景を薄く、売り切れが目立つ日は下に「売」
+  const LEVEL_TEXT = {low: "ふだんより10%以上安い", mid: "ふだん並み（±10%以内）", high: "ふだんより10%以上高い", spike: "急騰（ふだんの1.5倍以上）", none: "比較データ不足"};
+  const shortDate = (date) => `${Number(date.slice(5, 7))}/${Number(date.slice(8, 10))}`;
+  const weekdayChar = (date) => "日月火水木金土"[M.weekdayIndex(date)];
+  const manYen = (value) => `${(value / 10000).toFixed(1)}万円`;
+  const periodText = (period) => `${M.formatDate(period.start)}${period.end !== period.start ? `〜${M.formatDate(period.end)}` : ""}泊`;
+
+  // 高くなる期間のうち、山の高い順に limit 件（表示は日付順）
+  function topPeriods(periods, limit) {
+    return periods.slice().sort((a, b) => b.peak.ratio - a.peak.ratio).slice(0, limit).sort((a, b) => (a.start < b.start ? -1 : 1));
+  }
+
+  function renderDailyLead(summary, periods) {
+    const name = $("#bht-market-name").textContent;
+    const lead = $("#bht-daily-lead");
+    const list = $("#bht-periods");
+    if (!summary.typical) {
+      lead.textContent = "";
+      list.innerHTML = "";
+      return;
+    }
+    if (!periods.length) {
+      lead.innerHTML = `${escapeHtml(name)}は今日から${state.nights}泊のあいだ、ふだんの料金（<b>${escapeHtml(yen(summary.typical))}</b>）より10%以上高くなる日はありません。`;
+      list.innerHTML = "";
+      return;
+    }
+    const top = periods.slice().sort((a, b) => b.peak.ratio - a.peak.ratio)[0];
+    lead.innerHTML = `${escapeHtml(name)}では、ふだんの料金（<b>${escapeHtml(yen(summary.typical))}</b>）より高くなる期間が${periods.length}つあります。いちばん高いのは<b>${escapeHtml(M.formatDate(top.peak.date))}泊の${escapeHtml(manYen(top.peak.median))}</b>で、ふだんの${escapeHtml(top.peak.ratio.toFixed(1))}倍です。`;
+    const shown = topPeriods(periods, 6);
+    list.innerHTML = `<h3>料金が上がる期間${periods.length > shown.length ? `<small>（山の高い${shown.length}件）</small>` : ""}</h3><ol>${shown.map((period) => `<li class="bht-period${period.spike ? " bht-period--spike" : ""}"><span class="bht-period__date">${escapeHtml(periodText(period))}</span><span class="bht-period__peak">最高 <b>${escapeHtml(manYen(period.peak.median))}</b>（${escapeHtml(shortDate(period.peak.date))}・ふだんの${escapeHtml(period.peak.ratio.toFixed(1))}倍${period.peak.reference ? "・参考値" : ""}）</span></li>`).join("")}</ol>`;
+  }
+
   function renderDaily(summary) {
     const days = summary.days;
     const chart = $("#bht-daily-chart");
+    const periods = M.pricePeriods(summary);
+    renderDailyLead(summary, periods);
     const width = chartWidth(chart, 960);
-    const height = width < 560 ? 280 : 330, top = 24, right = 16, bottom = 46, left = width < 560 ? 44 : 64;
-    const values = days.flatMap((day) => [day.min, day.max]).filter(M.isPrice);
+    const narrow = width < 560;
+    const height = narrow ? 300 : 360, top = 34, right = 16, bottom = 64, left = narrow ? 40 : 56;
+    const values = days.map((day) => day.median).filter(M.isPrice);
     if (!values.length) {
       chart.innerHTML = `<p class="bht-empty">比較データが不足しています</p>`;
+      $("#bht-daily-legend").innerHTML = "";
       $("#bht-daily-table").innerHTML = "";
       return;
     }
-    const max = niceMax(Math.max(...values));
-    const min = Math.max(0, niceFloor(Math.min(...values)));
-    const step = (width - left - right) / Math.max(1, days.length - 1);
-    const x = (index) => left + index * step;
-    const y = (value) => top + (1 - (value - min) / (max - min)) * (height - top - bottom);
-    const ticks = niceTicks(min, max, 5);
-    const grid = ticks.map((tick) => `<line class="bht-grid" x1="${left}" x2="${width - right}" y1="${y(tick)}" y2="${y(tick)}"/><text class="bht-axis" x="${left - 10}" y="${y(tick) + 4}" text-anchor="end">${compactYen(tick)}</text>`).join("");
-    const weekend = days.map((day, index) => {
-      if (day.nightType !== "eve") return "";
-      const x0 = Math.max(left, x(index) - step / 2);
-      const x1 = Math.min(width - right, x(index) + step / 2);
-      return `<rect class="bht-weekend" x="${x0}" y="${top}" width="${x1 - x0}" height="${height - top - bottom}"/>`;
+    // 棒は0円から伸ばす（下を切ると高さの比が実際とずれるため）
+    const max = niceMax(Math.max(...values) * 1.08);
+    const plotBottom = height - bottom;
+    const step = (width - left - right) / days.length;
+    const cx = (index) => left + step * index + step / 2;
+    const y = (value) => top + (1 - value / max) * (plotBottom - top);
+    const ticks = niceTicks(0, max, narrow ? 4 : 5);
+    const grid = ticks.map((tick) => `<line class="${tick === 0 ? "bht-baseline" : "bht-grid"}" x1="${left}" x2="${width - right}" y1="${y(tick)}" y2="${y(tick)}"/><text class="bht-axis" x="${left - 8}" y="${y(tick) + 4}" text-anchor="end">${tick === 0 ? "0" : compactYen(tick)}</text>`).join("");
+    const unit = `<text class="bht-axis" x="${left - 8}" y="${top - 16}" text-anchor="end">円</text>`;
+    const weekend = days.map((day, index) => (day.nightType === "eve" ? `<rect class="bht-weekend" x="${cx(index) - step / 2}" y="${top}" width="${step}" height="${plotBottom - top}"/>` : "")).join("");
+    const barWidth = Math.max(2, Math.min(22, step - 2));
+    const bars = days.map((day, index) => {
+      if (day.status === "none") return `<text class="bht-bar-none" x="${cx(index)}" y="${plotBottom - 4}" text-anchor="middle">–</text>`;
+      const level = M.calendarClass(day, summary.typical);
+      const h = Math.max(1, plotBottom - y(day.median));
+      return `<path class="bht-day bht-day--${level}${day.status === "reference" ? " bht-day--reference" : ""}" d="${roundedBar(cx(index) - barWidth / 2, plotBottom - h, barWidth, h, true)}"/>`;
     }).join("");
-    const fit = Math.max(2, Math.floor((width - left - right) / 72));
-    const labelEvery = [1, 2, 3, 7, 14].find((n) => Math.ceil(days.length / n) <= fit) || 14;
-    const xLabels = days.map((day, index) => (index % labelEvery === 0 ? `<text class="bht-axis" x="${x(index)}" y="${height - bottom + 20}" text-anchor="middle">${escapeHtml(M.formatDate(day.date).replace("（", " ").replace("）", ""))}</text>` : "")).join("");
-    const segments = splitSegments(days);
-    const band = segments.map((segment) => `<path class="bht-band" d="M${segment.map((i) => `${x(i)},${y(days[i].max)}`).join("L")}L${segment.slice().reverse().map((i) => `${x(i)},${y(days[i].min)}`).join("L")}Z"/>`).join("");
-    const line = segments.map((segment) => (segment.length > 1 ? `<polyline class="bht-line" points="${segment.map((i) => `${x(i)},${y(days[i].median)}`).join(" ")}"/>` : `<circle class="bht-dot" cx="${x(segment[0])}" cy="${y(days[segment[0]].median)}" r="4"/>`)).join("");
-    const reference = days.map((day, index) => (day.status === "reference" ? `<circle class="bht-dot bht-dot--reference" cx="${x(index)}" cy="${y(day.median)}" r="4"/>` : "")).join("");
-    const spikeSet = new Set(summary.spikes.map((day) => day.date));
-    // 連続する急騰日はラベルを1つにまとめ、点だけを並べる
-    const spikes = days.map((day, index) => {
-      if (!spikeSet.has(day.date)) return "";
-      const first = index === 0 || !spikeSet.has(days[index - 1].date);
-      const label = first ? `<text class="bht-spike-label" x="${x(index)}" y="${Math.max(top + 10, y(day.median) - 12)}" text-anchor="middle">急騰</text>` : "";
-      return `<circle class="bht-dot bht-dot--spike" cx="${x(index)}" cy="${y(day.median)}" r="5"/>${label}`;
+    const typical = summary.typical ? `<line class="bht-typical" x1="${left}" x2="${width - right}" y1="${y(summary.typical)}" y2="${y(summary.typical)}"/>`: "";
+    // 山の高い期間だけ、いちばん高い泊に日付と料金を書く
+    const peakLabels = topPeriods(periods, narrow ? 3 : 6).map((period) => {
+      const index = days.findIndex((day) => day.date === period.peak.date);
+      const x = Math.min(width - right - 24, Math.max(left + 24, cx(index)));
+      const y0 = y(period.peak.median);
+      return `<text class="bht-peak-label" x="${x}" y="${y0 - 20}" text-anchor="middle">${escapeHtml(shortDate(period.peak.date))}（${weekdayChar(period.peak.date)}）</text><text class="bht-peak-value" x="${x}" y="${y0 - 6}" text-anchor="middle">${escapeHtml(compactYen(period.peak.median))}</text>`;
     }).join("");
-    // 売り切れが目立つ日は、グラフ下端に「売」の印（料金が比べられない日も含む）
-    const busyMarks = days.map((day, index) => (day.busy ? `<g class="bht-busy-mark"><rect x="${x(index) - 8}" y="${height - bottom - 18}" width="16" height="16" rx="3"/><text x="${x(index)}" y="${height - bottom - 6}" text-anchor="middle">売</text></g>` : "")).join("");
-    const typical = summary.typical ? `<line class="bht-typical" x1="${left}" x2="${width - right}" y1="${y(summary.typical)}" y2="${y(summary.typical)}"/><text class="bht-typical-label" x="${left + 6}" y="${y(summary.typical) + 15}">代表料金 ${yen(summary.typical)}</text>` : "";
-    chart.innerHTML = `<svg viewBox="0 0 ${width} ${height}" aria-hidden="true">${weekend}${grid}${typical}${band}${line}${reference}${spikes}${busyMarks}${xLabels}<line class="bht-crosshair" id="bht-crosshair" x1="${left}" x2="${left}" y1="${top}" y2="${height - bottom}"/></svg>`;
-    $("#bht-daily-legend").innerHTML = `<span><i class="bht-key-line"></i>中央値（CORE）</span><span><i class="bht-key-band"></i>最安〜最高</span><span><i class="bht-key-weekend"></i>休前日（金・土・祝前日の泊）</span><span><i class="bht-key-reference"></i>参考値（3施設）</span><span><i class="bht-key-busy">売</i>売り切れが目立つ日</span>`;
-    bindCrosshair(chart, days, x, step, (day) => {
+    // 横軸: 日付（月が変わる所と先頭は「月/日」）。1日おきに入らないときは間引く
+    const fit = Math.max(2, Math.floor((width - left - right) / (narrow ? 26 : 30)));
+    const labelEvery = [1, 2, 3, 7].find((n) => Math.ceil(days.length / n) <= fit) || 7;
+    const xLabels = days.map((day, index) => {
+      if (index % labelEvery !== 0) return "";
+      const dayNumber = Number(day.date.slice(8, 10));
+      const text = index === 0 || dayNumber <= labelEvery ? shortDate(day.date) : String(dayNumber);
+      const wd = M.weekdayIndex(day.date);
+      const wdClass = day.holiday || wd === 0 ? " bht-axis--sun" : wd === 6 ? " bht-axis--sat" : "";
+      return `<text class="bht-axis" x="${cx(index)}" y="${plotBottom + 16}" text-anchor="middle">${escapeHtml(text)}</text><text class="bht-axis${wdClass}" x="${cx(index)}" y="${plotBottom + 30}" text-anchor="middle">${weekdayChar(day.date)}</text>`;
+    }).join("");
+    const busyMarks = days.map((day, index) => (day.busy ? `<g class="bht-busy-mark"><rect x="${cx(index) - 7}" y="${plotBottom + 38}" width="14" height="14" rx="3"/><text x="${cx(index)}" y="${plotBottom + 49}" text-anchor="middle">売</text></g>` : "")).join("");
+    chart.innerHTML = `<svg viewBox="0 0 ${width} ${height}" aria-hidden="true">${weekend}${grid}${unit}${bars}${typical}${peakLabels}${xLabels}${busyMarks}<line class="bht-crosshair" id="bht-crosshair" x1="${left}" x2="${left}" y1="${top}" y2="${plotBottom}"/></svg>`;
+    chart.setAttribute("aria-label", `宿泊日別の料金。${$("#bht-daily-lead").textContent}`);
+    $("#bht-daily-legend").innerHTML = `<span><i class="bht-key-bar bht-day--low"></i>ふだんより安い</span><span><i class="bht-key-bar bht-day--mid"></i>ふだん並み</span><span><i class="bht-key-bar bht-day--high"></i>高い（+10%以上）</span><span><i class="bht-key-bar bht-day--spike"></i>急騰（1.5倍以上）</span>${summary.typical ? `<span><i class="bht-key-typical"></i>ふだんの料金（代表料金 ${escapeHtml(yen(summary.typical))}）</span>` : ""}<span><i class="bht-key-weekend"></i>休前日（金・土・祝前日の泊）</span><span><i class="bht-key-bar bht-key-reference-bar"></i>参考値（3施設）</span><span><i class="bht-key-busy">売</i>売り切れが目立つ日</span>`;
+    bindCrosshair(chart, days, cx, step, (day) => {
       const tag = [day.holiday, day.eveOf ? `${day.eveOf}の前日` : ""].filter(Boolean).join("・");
       const sold = day.soldOut ? `\n楽天で売り切れ ${day.soldOut}/${day.total}施設${day.busy ? "（売り切れが目立つ日）" : ""}` : "";
-      if (day.status === "none") return `${M.formatDate(day.date)}${tag ? ` ${tag}` : ""}\n比較データ不足（料金確認 ${day.count}/${day.total}施設）${sold}`;
-      return `${yen(day.median)}\n${M.formatDate(day.date)}${tag ? ` ${tag}` : ""}・中央値${day.status === "reference" ? "（参考）" : ""}\n最安 ${yen(day.min)}〜最高 ${yen(day.max)}\n料金確認 ${day.count}/${day.total}施設${sold}`;
+      if (day.status === "none") return `${M.formatDate(day.date)}泊${tag ? ` ${tag}` : ""}\n比較データ不足（料金確認 ${day.count}/${day.total}施設）${sold}`;
+      const ratio = summary.typical ? `\n${LEVEL_TEXT[M.calendarClass(day, summary.typical)]}（ふだんの${(day.median / summary.typical).toFixed(2)}倍）` : "";
+      return `${yen(day.median)}\n${M.formatDate(day.date)}泊${tag ? ` ${tag}` : ""}・中央値${day.status === "reference" ? "（参考）" : ""}${ratio}\n5施設の最安 ${yen(day.min)}〜最高 ${yen(day.max)}\n料金確認 ${day.count}/${day.total}施設${sold}`;
     });
-    $("#bht-daily-table").innerHTML = tableTwin("表で見る", ["宿泊日", "中央値", "最安", "最高", "料金確認", "売り切れ"], days.map((day) => [`${M.formatDate(day.date)}${day.holiday ? ` ${day.holiday}` : ""}`, day.status === "none" ? "—" : `${yen(day.median)}${day.status === "reference" ? "（参考）" : ""}`, yen(day.min), yen(day.max), `${day.count}/${day.total}`, `${day.soldOut}/${day.total}${day.busy ? "（目立つ）" : ""}`]));
+    $("#bht-daily-table").innerHTML = tableTwin("表で見る", ["宿泊日", "中央値", "ふだんとの比", "最安", "最高", "料金確認", "売り切れ"], days.map((day) => [`${M.formatDate(day.date)}${day.holiday ? ` ${day.holiday}` : ""}`, day.status === "none" ? "—" : `${yen(day.median)}${day.status === "reference" ? "（参考）" : ""}`, day.status === "none" || !summary.typical ? "—" : `${(day.median / summary.typical).toFixed(2)}倍`, yen(day.min), yen(day.max), `${day.count}/${day.total}`, `${day.soldOut}/${day.total}${day.busy ? "（目立つ）" : ""}`]));
   }
 
-  function splitSegments(days) {
-    const segments = [];
-    let current = [];
-    days.forEach((day, index) => {
-      if (day.status === "none") {
-        if (current.length) segments.push(current);
-        current = [];
-      } else current.push(index);
+  // ---------------------------------------------------------------- 泊まる日ごとの値段の動き
+
+  const signedPct = (value) => `${value > 0 ? "+" : value < 0 ? "−" : "±"}${Math.abs(value).toFixed(0)}%`;
+
+  // 施設ごとに、料金が見えた最初の取得と今朝を比べる（今朝が楽天で売り切れなら「売り切れ」）
+  function hotelMoves(history) {
+    const last = history.points[history.points.length - 1];
+    const counts = {up: 0, flat: 0, down: 0, soldOut: 0};
+    if (!last || history.points.length < 2) return counts;
+    last.hotels.forEach((hotel) => {
+      const firstPoint = history.points.slice(0, -1).find((point) => M.isPrice(point.hotels.find((item) => item.hotel_no === hotel.hotel_no)?.price));
+      if (!firstPoint) return;
+      const first = firstPoint.hotels.find((item) => item.hotel_no === hotel.hotel_no).price;
+      if (hotel.soldOut) counts.soldOut += 1;
+      else if (M.isPrice(hotel.price)) {
+        const change = (hotel.price / first - 1) * 100;
+        counts[change >= M.TREND_THRESHOLD ? "up" : change <= -M.TREND_THRESHOLD ? "down" : "flat"] += 1;
+      }
     });
-    if (current.length) segments.push(current);
-    return segments;
+    return counts;
+  }
+
+  // ツールチップに入れる小さな折れ線（毎朝の中央値）。数値だけで組み立てる
+  function sparkline(points) {
+    const list = points.filter((point) => point.status !== "none");
+    if (list.length < 2) return "";
+    const w = 220, h = 64, pad = 6;
+    const values = list.map((point) => point.median);
+    const lo = Math.min(...values), hi = Math.max(...values);
+    const first = list[0].daysBefore, last = list[list.length - 1].daysBefore;
+    const x = (db) => pad + ((first - db) / Math.max(1, first - last)) * (w - pad * 2);
+    const y = (value) => (hi === lo ? h / 2 : pad + (1 - (value - lo) / (hi - lo)) * (h - pad * 2));
+    const d = list.map((point, i) => `${i ? "L" : "M"}${x(point.daysBefore).toFixed(1)},${y(point.median).toFixed(1)}`).join("");
+    return `<svg class="bht-spark" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" aria-hidden="true"><path d="${d}"/>${list.map((point) => `<circle cx="${x(point.daysBefore).toFixed(1)}" cy="${y(point.median).toFixed(1)}" r="2.5"/>`).join("")}</svg>`;
+  }
+
+  function moveTip(day, history) {
+    const head = `${M.formatDate(day.date)}泊`;
+    if (!history || !history.first || !history.last || history.first === history.last) {
+      return {text: `${head}\n${history && history.points.length > 1 ? "今朝は比較データ不足（売り切れなど）" : "記録がまだ今朝の1日分です"}`};
+    }
+    const moves = hotelMoves(history);
+    const moveText = [["up", "値上がり"], ["flat", "横ばい"], ["down", "値下がり"], ["soldOut", "売り切れ"]].filter(([key]) => moves[key]).map(([key, label]) => `${label}${moves[key]}`).join("・");
+    // 毎朝の値段（多いときは間引いて最大8行）
+    const valid = history.points.filter((point) => point.status !== "none");
+    const every = Math.max(1, Math.ceil(valid.length / 8));
+    const rows = valid.filter((point, index) => index % every === 0 || index === valid.length - 1).map((point) => `${point.snapshot === history.last.snapshot ? "今朝" : `${point.daysBefore}日前`}（${shortDate(point.snapshot)}）${yen(point.median)}${point.soldOut ? `・売切${point.soldOut}` : ""}`);
+    return {
+      text: [`${signedPct(history.change)}　${head}`, `${history.first.daysBefore}日前 ${yen(history.first.median)} → 今朝 ${yen(history.last.median)}`, ...rows, moveText ? `施設ごと: ${moveText}` : ""].filter(Boolean).join("\n"),
+      svg: sparkline(history.points),
+    };
+  }
+
+  // 30泊（60泊）を1本ずつ。記録の最初の取得から今朝までの中央値の変化率を、0を中央に上下へ
+  function renderStay(summary) {
+    const chart = $("#bht-moves-chart");
+    const lead = $("#bht-moves-lead");
+    const clear = () => ["#bht-moves-chart", "#bht-moves-legend", "#bht-moves-table"].forEach((id) => ($(id).innerHTML = ""));
+    renderPaths();
+    if (!state.historyLoaded) {
+      lead.textContent = "毎朝の取得の記録を読み込んでいます…";
+      clear();
+      return;
+    }
+    const days = summary.days;
+    const histories = M.stayHistories(state.cohort, [state.latest, ...state.history], state.market, days.map((day) => day.date));
+    const withChange = histories.filter((item) => item.change !== null);
+    if (!withChange.length) {
+      lead.textContent = "取得の記録が2日分以上になると、泊まる日ごとの値段の動きを表示します。";
+      clear();
+      return;
+    }
+    const count = (direction) => withChange.filter((item) => item.direction === direction).length;
+    // 動いた泊がほとんど無いときは、平たんなグラフで場所を取らず一文だけにする
+    const FLAT_LIMIT = 3;
+    if (count("up") + count("down") < FLAT_LIMIT) {
+      lead.innerHTML = `記録の最初の取得から今朝までに、値段が±${M.TREND_THRESHOLD}%以上動いた泊は${count("up") + count("down")}泊だけで、<b>この期間は値段がほぼ動いていません</b>（比べた${withChange.length}泊）。`;
+      clear();
+      return;
+    }
+    const highest = withChange.slice().sort((a, b) => b.change - a.change)[0];
+    const lowest = withChange.slice().sort((a, b) => a.change - b.change)[0];
+    const since = [state.latest, ...state.history].map((snap) => snap.snapshot_date).sort()[0];
+    lead.innerHTML = `記録の最初の取得から今朝までに、<b>値上がりした泊 ${count("up")}</b>・<b>値下がりした泊 ${count("down")}</b>・ほぼ同じ泊 ${count("flat")}（±${M.TREND_THRESHOLD}%未満）。${highest.change > 0 ? `いちばん上がったのは<b>${escapeHtml(M.formatDate(highest.date))}泊（${escapeHtml(signedPct(highest.change))}）</b>、` : ""}${lowest.change < 0 ? `いちばん下がったのは<b>${escapeHtml(M.formatDate(lowest.date))}泊（${escapeHtml(signedPct(lowest.change))}）</b>です。` : ""}<span class="bht-daily-lead__note">記録は${escapeHtml(M.formatDate(since))}から${state.history.length + 1}日分。棒に触れると、その泊の毎朝の値段が出ます。</span>`;
+
+    const width = chartWidth(chart, 960);
+    const narrow = width < 560;
+    const height = narrow ? 300 : 340, top0 = 30, right = 16, bottom = 64, left = narrow ? 44 : 56;
+    const limit = Math.max(10, ...withChange.map((item) => Math.abs(item.change)));
+    const scale = niceMax(limit * 1.1);
+    const plotH = height - top0 - bottom;
+    const zero = top0 + plotH / 2;
+    const y = (value) => zero - (value / scale) * (plotH / 2);
+    const step = (width - left - right) / days.length;
+    const cx = (index) => left + step * index + step / 2;
+    const tickStep = niceStep(scale, 2);
+    const ticks = [];
+    for (let t = -scale; t <= scale + 1e-9; t += tickStep) ticks.push(Math.round(t));
+    const grid = ticks.map((tick) => `<line class="${tick === 0 ? "bht-baseline" : "bht-grid"}" x1="${left}" x2="${width - right}" y1="${y(tick)}" y2="${y(tick)}"/><text class="bht-axis" x="${left - 8}" y="${y(tick) + 4}" text-anchor="end">${tick > 0 ? "+" : ""}${tick}%</text>`).join("");
+    const weekend = days.map((day, index) => (day.nightType === "eve" ? `<rect class="bht-weekend" x="${cx(index) - step / 2}" y="${top0}" width="${step}" height="${plotH}"/>` : "")).join("");
+    const barWidth = Math.max(2, Math.min(22, step - 2));
+    const bars = histories.map((item, index) => {
+      if (item.change === null) return `<text class="bht-bar-none" x="${cx(index)}" y="${zero + 4}" text-anchor="middle">–</text>`;
+      const h = Math.max(2, Math.abs(y(item.change) - zero));
+      const up = item.change >= 0;
+      return `<path class="bht-move bht-move--${item.direction}" d="${roundedBar(cx(index) - barWidth / 2, up ? zero - h : zero, barWidth, h, up)}"/>`;
+    }).join("");
+    // いちばん上がった泊・下がった泊に値を書く
+    const labels = [highest.change >= M.TREND_THRESHOLD ? highest : null, lowest.change <= -M.TREND_THRESHOLD ? lowest : null].filter(Boolean).map((item) => {
+      const index = histories.indexOf(item);
+      const up = item.change > 0;
+      const xx = Math.min(width - right - 20, Math.max(left + 20, cx(index)));
+      return `<text class="bht-peak-value" x="${xx}" y="${up ? y(item.change) - 8 : y(item.change) + 18}" text-anchor="middle">${escapeHtml(signedPct(item.change))}</text>`;
+    }).join("");
+    const fit = Math.max(2, Math.floor((width - left - right) / (narrow ? 26 : 30)));
+    const labelEvery = [1, 2, 3, 7].find((n) => Math.ceil(days.length / n) <= fit) || 7;
+    const xLabels = days.map((day, index) => {
+      if (index % labelEvery !== 0) return "";
+      const dayNumber = Number(day.date.slice(8, 10));
+      const text = index === 0 || dayNumber <= labelEvery ? shortDate(day.date) : String(dayNumber);
+      const wd = M.weekdayIndex(day.date);
+      const wdClass = day.holiday || wd === 0 ? " bht-axis--sun" : wd === 6 ? " bht-axis--sat" : "";
+      return `<text class="bht-axis" x="${cx(index)}" y="${height - bottom + 18}" text-anchor="middle">${escapeHtml(text)}</text><text class="bht-axis${wdClass}" x="${cx(index)}" y="${height - bottom + 32}" text-anchor="middle">${weekdayChar(day.date)}</text>`;
+    }).join("");
+    const busyMarks = days.map((day, index) => (day.busy ? `<g class="bht-busy-mark"><rect x="${cx(index) - 7}" y="${height - bottom + 40}" width="14" height="14" rx="3"/><text x="${cx(index)}" y="${height - bottom + 51}" text-anchor="middle">売</text></g>` : "")).join("");
+    chart.innerHTML = `<svg viewBox="0 0 ${width} ${height}" aria-hidden="true">${weekend}${grid}${bars}${labels}${xLabels}${busyMarks}<text class="bht-axis" x="${left + 4}" y="${top0 - 12}">↑ 値上がり</text><text class="bht-axis" x="${left + 4}" y="${height - bottom - 6}">↓ 値下がり</text><line class="bht-crosshair" id="bht-moves-crosshair" x1="${left}" x2="${left}" y1="${top0}" y2="${top0 + plotH}"/></svg>`;
+    chart.setAttribute("aria-label", `泊まる日ごとの値段の動き。${lead.textContent}`);
+    $("#bht-moves-legend").innerHTML = `<span><i class="bht-key-bar bht-move--up"></i>値上がり（+${M.TREND_THRESHOLD}%以上）</span><span><i class="bht-key-bar bht-move--flat"></i>ほぼ同じ</span><span><i class="bht-key-bar bht-move--down"></i>値下がり（−${M.TREND_THRESHOLD}%以上）</span><span><i class="bht-key-weekend"></i>休前日</span><span><i class="bht-key-busy">売</i>今朝、売り切れが目立つ日</span>`;
+    const byDate = new Map(histories.map((item) => [item.date, item]));
+    bindCrosshair(chart, days, cx, step, (day) => moveTip(day, byDate.get(day.date)), "#bht-moves-crosshair");
+    $("#bht-moves-table").innerHTML = tableTwin("表で見る", ["宿泊日", "最初の取得", "そのときの中央値", "今朝の中央値", "変化", "施設ごと"], histories.map((item) => {
+      const moves = hotelMoves(item);
+      return [M.formatDate(item.date), item.first ? `${shortDate(item.first.snapshot)}（${item.first.daysBefore}日前）` : "—", item.first ? yen(item.first.median) : "—", item.last ? yen(item.last.median) : "—", item.change === null ? "—" : signedPct(item.change), item.change === null ? "—" : `上${moves.up}・同${moves.flat}・下${moves.down}・売${moves.soldOut}`];
+    }));
+  }
+
+  // 値段の動き方のまとめ: 高い泊とその他の泊で、施設ごとの動きの割合を横棒で並べる
+  function renderPaths() {
+    const box = $("#bht-paths");
+    if (!state.historyLoaded) {
+      box.innerHTML = "";
+      return;
+    }
+    const result = M.pricePaths(state.cohort, [state.latest, ...state.history], state.market, {nights: state.nights});
+    const groups = result.groups.filter((group) => group.total);
+    if (!groups.length) {
+      box.innerHTML = `<h3>値段の動き方のまとめ</h3><p class="bht-note">取得の記録が2日分以上になると表示します。</p>`;
+      return;
+    }
+    const parts = [["up", "値上がり"], ["flat", "横ばい（±3%未満）"], ["down", "値下がり"], ["soldOut", "売り切れに"]];
+    const label = {high: "料金が高い泊", other: "その他の泊"};
+    const note = {high: "今朝の料金がふだんの+10%以上", other: "ふだん並み・安い"};
+    const share = (group, key) => (group[key] / group.total) * 100;
+    const rows = groups.map((group) => `<div class="bht-path"><div class="bht-path__label"><b>${escapeHtml(label[group.key])}</b><small>${escapeHtml(note[group.key])}・${group.nights}泊・のべ${group.total}施設</small></div><div class="bht-path__bar">${parts.map(([key, text]) => (group[key] ? `<span class="bht-path__seg bht-path__seg--${key}" style="flex-grow:${group[key]}" title="${escapeHtml(`${text} ${group[key]}（${share(group, key).toFixed(0)}%）`)}">${share(group, key) >= 12 ? `${share(group, key).toFixed(0)}%` : ""}</span>` : "")).join("")}</div></div>`).join("");
+    const sentence = groups.map((group) => `${label[group.key]}は値上がり${share(group, "up").toFixed(0)}%・値下がり${share(group, "down").toFixed(0)}%・売り切れ${share(group, "soldOut").toFixed(0)}%`).join("、");
+    box.innerHTML = `<h3>値段の動き方のまとめ（今日から${state.nights}泊）</h3><p class="bht-paths__lead">記録の最初の取得と今朝を、施設ごとに比べました。${escapeHtml(sentence)}です。</p><div class="bht-legend">${parts.map(([key, text]) => `<span><i class="bht-key-bar bht-path__seg--${key}"></i>${text}</span>`).join("")}</div>${rows}<p class="bht-note">記録は${escapeHtml(M.formatDate(result.since))}からの${result.records}日分です。泊まる日が近づくにつれて値上げしていくのか、値下げしていくのかは、記録が増えるほどはっきりします。売り切れは楽天での状況で、施設全体の満室とは限りません。値段が動いた理由までは分かりません。</p>`;
   }
 
   // 曜日別: 代表料金との差（%）。0を基準に上下へ伸びる1系列の棒。
@@ -612,8 +815,10 @@
   }
 
   const tooltip = () => $("#bht-tooltip");
-  function showTip(text, clientX, clientY) {
+  // text は1行目を太字にした複数行。{text, svg} を渡すと末尾に小さな折れ線（数値だけで作ったSVG）を付ける
+  function showTip(content, clientX, clientY) {
     const tip = tooltip();
+    const text = typeof content === "string" ? content : content.text;
     const [first, ...rest] = text.split("\n");
     tip.replaceChildren();
     const strong = document.createElement("strong");
@@ -624,6 +829,12 @@
       span.textContent = line;
       tip.append(span);
     });
+    if (content.svg) {
+      const chart = document.createElement("span");
+      chart.className = "bht-tooltip__spark";
+      chart.innerHTML = content.svg;
+      tip.append(chart);
+    }
     tip.hidden = false;
     const box = tip.getBoundingClientRect();
     const left = Math.min(window.innerWidth - box.width - 12, Math.max(12, clientX + 14));
@@ -646,9 +857,9 @@
     });
   }
 
-  function bindCrosshair(chart, days, x, step, format) {
+  function bindCrosshair(chart, days, x, step, format, lineSelector = "#bht-crosshair") {
     const svg = chart.querySelector("svg");
-    const line = svg.querySelector("#bht-crosshair");
+    const line = svg.querySelector(lineSelector);
     let current = null;
     const place = (index, clientX, clientY) => {
       current = Math.max(0, Math.min(days.length - 1, index));
@@ -664,12 +875,15 @@
       }
       showTip(format(days[current]), clientX, clientY);
     };
-    svg.addEventListener("pointermove", (event) => {
+    // スマホでは指で触れた時点（pointerdown）でも出す
+    const onPointer = (event) => {
       const rect = svg.getBoundingClientRect();
       const scale = svg.viewBox.baseVal.width / rect.width;
       const local = (event.clientX - rect.left) * scale;
       place(Math.round((local - x(0)) / step), event.clientX, event.clientY);
-    });
+    };
+    svg.addEventListener("pointermove", onPointer);
+    svg.addEventListener("pointerdown", onPointer);
     svg.addEventListener("pointerleave", () => {
       line.classList.remove("is-visible");
       hideTip();
