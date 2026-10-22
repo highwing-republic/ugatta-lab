@@ -5,7 +5,7 @@ tool: hotel-price-trends
 tool_purpose: 同じ宿泊条件の料金を毎日継続観測し、市場ごとの比較施設群が直近7日間でどう動いたかを可視化します。宿泊日別の料金、30日カレンダー、価格ポジション、施設情報と利用者評価も確認できます。
 tool_scope:
   - label: 対象
-    text: 全国9市場（登別温泉・熱海・軽井沢・白馬・加賀温泉郷・下呂温泉・伊勢志摩・別府・霧島）の、固定した比較施設群（CORE施設）45施設。大人2名・1室・1泊の指定条件で、1施設1料金として集計します。
+    text: 全国23市場（登別温泉・熱海・軽井沢・白馬・加賀温泉郷・下呂温泉・伊勢志摩・別府・霧島・定山渓・秋保温泉・草津温泉・高山・上諏訪温泉・箱根・城崎温泉・玉造温泉・有馬温泉・道後温泉・由布院・雲仙温泉・指宿温泉・屋久島）の、固定した比較施設群（CORE施設）115施設。大人2名・1室・1泊の指定条件で、1施設1料金として集計します。
   - label: データ
     text: 楽天トラベル空室検索APIから取得した指定条件の最低料金を毎日観測。施設基本情報と利用者評価は月次に取得します。
   - label: 条件
@@ -37,7 +37,7 @@ tool_guides:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>宿泊料金トレンド｜比較施設群の料金推移・施設比較｜宿泊DXラボ</title>
-  <meta name="description" content="全国9市場の固定比較施設群を大人2名1室の同一条件で毎日観測し、直近7日間の宿泊料金の値動きを市場と施設ごとに確認できる無料分析ツールです。">
+  <meta name="description" content="全国23市場の固定比較施設群を大人2名1室の同一条件で毎日観測し、直近7日間の宿泊料金の値動きを市場と施設ごとに確認できる無料分析ツールです。">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta name="theme-color" content="#17324d">
   <link rel="canonical" href="https://lab.ugatta-llc.com/hotel-price-trends.html">
@@ -49,7 +49,7 @@ tool_guides:
   <link rel="stylesheet" href="css/tool-standard.css?v=20261015guide">
   <link rel="stylesheet" href="css/hotel-price-trends.css?v=20261012map1">
   <meta property="og:type" content="website"><meta property="og:locale" content="ja_JP"><meta property="og:site_name" content="宿泊DXラボ">
-  <meta property="og:title" content="宿泊料金トレンド｜宿泊DXラボ"><meta property="og:description" content="この1週間、市場は上げたか。下げたか。全国9市場・比較45施設の宿泊料金の値動きを可視化します。">
+  <meta property="og:title" content="宿泊料金トレンド｜宿泊DXラボ"><meta property="og:description" content="この1週間、市場は上げたか。下げたか。全国23市場・比較115施設の宿泊料金の値動きを可視化します。">
   <meta property="og:url" content="https://lab.ugatta-llc.com/hotel-price-trends.html"><meta property="og:image" content="https://lab.ugatta-llc.com/images/og-lab.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://lab.ugatta-llc.com/"},{"@type":"ListItem","position":2,"name":"分析・ツール","item":"https://lab.ugatta-llc.com/#analysis-tools"},{"@type":"ListItem","position":3,"name":"宿泊料金トレンド","item":"https://lab.ugatta-llc.com/hotel-price-trends.html"}]},{"@type":"WebApplication","name":"宿泊料金トレンド","url":"https://lab.ugatta-llc.com/hotel-price-trends.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"provider":{"@type":"Organization","@id":"https://lab.ugatta-llc.com/#organization","name":"宿泊DXラボ","url":"https://lab.ugatta-llc.com/","logo":"https://lab.ugatta-llc.com/images/lab-logo.png"}}]}</script>
@@ -65,7 +65,7 @@ tool_guides:
 
     <section class="page-hero price-trends-hero"><div class="container price-trends-hero__grid">
       <div><h1>宿泊料金<br>トレンド</h1><p class="price-trends-hero__copy">この1週間、市場は上げたか。下げたか。</p><p class="price-trends-hero__lead">同じ宿泊条件の料金を継続観測し、直近7日間でどう動いたかを可視化します。</p></div>
-      <section class="price-trends-scope" aria-label="観測範囲"><span>観測範囲</span><strong>全国9市場・比較45施設</strong><small>大人2名・1室・1泊／固定した比較施設群を毎日観測</small></section>
+      <section class="price-trends-scope" aria-label="観測範囲"><span>観測範囲</span><strong>全国23市場・比較115施設</strong><small>大人2名・1室・1泊／固定した比較施設群を毎日観測</small></section>
     </div></section>
     {% include tool-overview.html %}
 

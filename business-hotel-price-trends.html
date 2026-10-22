@@ -44,7 +44,7 @@ tool_related:
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&amp;display=swap">
   <link rel="stylesheet" href="css/useful.css?v=20261012shell">
   <link rel="stylesheet" href="css/tool-standard.css?v=20261015guide">
-  <link rel="stylesheet" href="css/business-hotel-price-trends.css?v=20261018bht11">
+  <link rel="stylesheet" href="css/business-hotel-price-trends.css?v=20261023bht12">
   <meta property="og:type" content="website"><meta property="og:locale" content="ja_JP"><meta property="og:site_name" content="宿泊DXラボ">
   <meta property="og:title" content="ビジネスホテル料金トレンド｜宿泊DXラボ"><meta property="og:description" content="出張の宿は、いくらで、どれだけ動くか。全国10都市・50施設のビジネスホテル料金を毎朝観測します。">
   <meta property="og:url" content="https://lab.ugatta-llc.com/business-hotel-price-trends.html"><meta property="og:image" content="https://lab.ugatta-llc.com/images/og-lab.jpg">
@@ -92,7 +92,7 @@ tool_related:
           <div class="bht-panel bht-events" id="bht-events" hidden>
             <div class="bht-heading"><div><h2 id="bht-events-title">急騰・売り切れの日に重なる催し</h2><span class="bht-ai-badge">AI調べ・参考</span></div><p id="bht-events-meta"></p></div>
             <div id="bht-events-list"></div>
-            <p class="bht-note">AI（Anthropic の Claude）が月1回、10都市の向こう2か月の大きな催しをWebで調べ、出典のページで開催日と会場を確かめたものです。その泊または翌日に催しがある急騰日・売り切れが目立つ日を並べています。料金が上がった理由と確かめたものではありません。開催日や内容は出典でご確認ください。</p>
+            <p class="bht-note">AI（Anthropic の Claude）が週1回、10都市の向こう2か月の大きな催しをWebで調べ、出典のページで開催日と会場を確かめたものです。その泊または翌日に催しがある急騰日・売り切れが目立つ日を並べています。料金が上がった理由と確かめたものではありません。開催日や内容は出典でご確認ください。</p>
           </div>
         </section>
 
@@ -161,7 +161,7 @@ tool_related:
           <p>宿泊日ごとの値は、市場ごとに固定したCORE施設5施設の中央値です。4施設以上で料金を確認できた日を集計に使い、3施設の日は参考値、2施設以下の日は表示しません。代表料金は、集計に使った宿泊日の中央値のさらに中央値です。値動きの大きさは、宿泊日ごとの中央値（施設の場合はその施設の料金）を並べ、上位1割と下位1割の日を除いたうえで「高い日は安い日の何倍か」を出したものです。安い部屋が売り切れて高い部屋だけが残った1日の極端な値に引っぱられないよう、この方法にしています。10泊以上ある場合だけ表示します。休前日の差は、金・土曜と祝日の前日の泊（休前日）の中央値と、それ以外の平日の泊の中央値の差です。曜日別の料金は、祝日と祝前日の泊を除いて集計しています。</p>
           <p>売り切れが目立つ日は、CORE 5施設のうち2施設以上で、楽天トラベルに大人1名・1泊で予約できるプランが無かった日です。楽天での売り切れであり、施設全体の満室とは限りません。急騰日は宿泊日ごとの中央値が代表料金の1.5倍以上の日で、売り切れで料金を確認できたのが3施設だけの日（参考値）も含めます。</p>
           <p>7日変化は、ちょうど7日前の取得と今日の取得で同じ宿泊日（今日以降）の料金を施設ごとに比べ、共通の宿泊日が10泊以上ある施設の変化率の中央値を出し、さらに4施設以上の中央値を市場の値とします。±3%以上を上昇・低下とします。比較施設群が入れ替わった場合は比べません。</p>
-          <p>催しは、料金の集計とは別に、AI（Anthropic の Claude）が月1回、10都市の向こう2か月に開かれる遠方から人が集まる催し（大きな会場での公演、スポーツの大会、マラソン、学会・全国大会、見本市、大規模な祭りなど）をWebで調べたものです。出典のページで開催日と会場を確かめられたものだけを載せ、料金や満室に触れた文は載せません。催しの前日の泊から最終日の泊までに急騰日・売り切れが目立つ日があれば「重なる」としています。月の途中で決まった催しは次の更新まで載りません。催しの有無は料金が動いた理由を示すものではありません。</p>
+          <p>催しは、料金の集計とは別に、AI（Anthropic の Claude）が週1回、10都市の向こう2か月に開かれる遠方から人が集まる催し（大きな会場での公演、スポーツの大会、マラソン、学会・全国大会、見本市、大規模な祭りなど）をWebで調べたものです。出典のページで開催日と会場を確かめられたものだけを載せ、料金や満室に触れた文は載せません。催しの前日の泊から最終日の泊までに急騰日・売り切れが目立つ日があれば「重なる」としています。更新のあとに決まった催しは次の更新まで載りません。催しの有無は料金が動いた理由を示すものではありません。</p>
           <p>販売プランが見つからない状態だけを理由に満室とは判定しません。表示内容は料金判断の参考情報であり、需要・稼働率・売上や因果関係を保証するものではありません。</p>
           <!-- Rakuten Web Services Attribution Snippet FROM HERE -->
           <a href="https://developers.rakuten.com/" target="_blank">Supported by Rakuten Developers</a>
@@ -178,7 +178,7 @@ tool_related:
 
   {% include site-footer.html %}
   <script src="js/site.js?v=20260912a" defer></script>
-  <script src="js/business-hotel-price-trends-model.js?v=20261018bht11" defer></script>
-  <script src="js/business-hotel-price-trends.js?v=20261018bht11" defer></script>
+  <script src="js/business-hotel-price-trends-model.js?v=20261023bht12" defer></script>
+  <script src="js/business-hotel-price-trends.js?v=20261023bht12" defer></script>
 </body>
 </html>
