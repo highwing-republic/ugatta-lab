@@ -1,6 +1,6 @@
 {
   "note": "料金ポジション診断の試作。公開しない。結果は暗号化して results/ に置く。取得し直すときは run を1つ増やして push する。",
-  "run": 3,
+  "run": 4,
   "target_hotel_no": 29167,
   "radius_km": 3.0,
   "horizon_days": 90,
@@ -9,10 +9,11 @@
     1,
     2
   ],
-  "discover_keywords": [
-    "あらき",
+  "discover_keywords": [],
+  "middle_class_code": "kagoshima",
+  "target_keyword": "あらき",
+  "nearby_keywords": [
     "西之表",
     "種子島"
-  ],
-  "middle_class_code": "kagoshima"
+  ]
 }

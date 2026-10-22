@@ -61,6 +61,23 @@ def find_target(client: bh.RakutenClient, hotel_no: int) -> dict | None:
     return None
 
 
+def keyword_hotels(client: bh.RakutenClient, keyword: str, middle_class_code: str, search_field: int = 0, max_pages: int = 3) -> list[dict]:
+    """キーワード検索（施設情報つき）。施設情報APIで引けない施設もここには出る。"""
+    hotels: list[dict] = []
+    for page in range(1, max_pages + 1):
+        try:
+            payload = client.search({"keyword": keyword, "middleClassCode": middle_class_code, "searchField": search_field, "formatVersion": 2, "responseType": "large", "datumType": 1, "hits": 30, "page": page}, endpoint=KEYWORD_ENDPOINT)
+        except bh.AuthError:
+            raise
+        except bh.ApiError as exc:
+            print(f"キーワード検索のエラー: {exc}")
+            break
+        hotels.extend(merge_parts(entry) for entry in payload.get("hotels") or [])
+        if page >= int((payload.get("pagingInfo") or {}).get("pageCount") or 1):
+            break
+    return hotels
+
+
 def discover(client: bh.RakutenClient, request: dict) -> None:
     """対象施設や地区コードを探すための下調べ。施設番号と施設名だけをログに出す（料金は出さない）。"""
     for keyword in request.get("discover_keywords", []):
@@ -173,15 +190,34 @@ def main(argv: list[str] | None = None) -> int:
 
     if request.get("discover_keywords"):
         discover(client, request)
+    middle = request.get("middle_class_code", "kagoshima")
     target = find_target(client, target_no)
+    if target is None and request.get("target_keyword"):
+        target = next((h for h in keyword_hotels(client, request["target_keyword"], middle, search_field=1) if int((h.get("hotelBasicInfo") or {}).get("hotelNo") or 0) == target_no), None)
     if target is None:
         print("対象施設が見つかりませんでした")
         return 1
     tb = target["hotelBasicInfo"]
-    nearby = search_hotels(client, {"latitude": tb["latitude"], "longitude": tb["longitude"], "searchRadius": radius})
-    for hotel in nearby:
-        hotel["distance_km"] = round(distance_km(tb, hotel["hotelBasicInfo"]), 2)
-    nearby = [h for h in nearby if int(h["hotelBasicInfo"]["hotelNo"]) != target_no]
+    candidates: dict[int, dict] = {}
+    try:
+        for hotel in search_hotels(client, {"latitude": tb["latitude"], "longitude": tb["longitude"], "searchRadius": radius}):
+            candidates[int(hotel["hotelBasicInfo"]["hotelNo"])] = hotel
+    except bh.AuthError:
+        raise
+    except bh.ApiError as exc:
+        print(f"半径検索のエラー: {exc}")
+    print(f"半径検索 {len(candidates)} 件")
+    for keyword in request.get("nearby_keywords", []):
+        for hotel in keyword_hotels(client, keyword, middle):
+            candidates.setdefault(int(hotel["hotelBasicInfo"]["hotelNo"]), hotel)
+    nearby = []
+    for hotel_no, hotel in candidates.items():
+        basic = hotel.get("hotelBasicInfo") or {}
+        if hotel_no == target_no or basic.get("latitude") in (None, "") or basic.get("longitude") in (None, ""):
+            continue
+        hotel["distance_km"] = round(distance_km(tb, basic), 2)
+        if hotel["distance_km"] <= radius:
+            nearby.append(hotel)
     nearby.sort(key=lambda h: h["distance_km"])
     competitors = [int(h["hotelBasicInfo"]["hotelNo"]) for h in nearby[:max_competitors]]
     print(f"周辺施設 {len(nearby)} 件、料金を取る施設 {len(competitors) + 1} 件")
