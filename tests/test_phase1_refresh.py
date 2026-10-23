@@ -31,7 +31,7 @@ def test_lab_notes_link_is_kept_out_of_headers_and_small_at_page_bottom():
 def test_every_html_page_loads_the_canonical_site_shell():
     # Demo pages are standalone mock sites with their own header and footer.
     pages = [path for path in filter(is_published, ROOT.rglob("*.html")) if not {"demo", "tourism-market-signal"} & set(path.relative_to(ROOT).parts) and not is_redirect_stub(path)]
-    assert len(pages) == 22
+    assert len(pages) == 23
     for path in pages:
         page = BeautifulSoup(rendered(path), "html.parser")
         assert page.find("link", href="/css/site-shell.css?v=20261012shell"), path
@@ -69,7 +69,7 @@ def test_home_is_concise_and_groups_all_tools_by_purpose():
     ]
     for name in ("hotel-price-trends", "inbound-analysis", "dx-diagnosis", "mini-pms"):
         assert (ROOT / "images" / "thumbs" / f"{name}.svg").exists()
-    assert len(page.select("#analysis-tools .analysis-card")) == 15
+    assert len(page.select("#analysis-tools .analysis-card")) == 16
     assert len(page.select("#analysis-tools .tool-group")) == 4
     # Card wrappers are block elements: no heading, paragraph or div may sit inside a span.
     assert page.select("span h3, span p, span div") == []
@@ -91,7 +91,7 @@ def test_home_is_concise_and_groups_all_tools_by_purpose():
 def test_home_is_only_tool_directory_and_legacy_page_is_removed():
     assert not (ROOT / "useful.html").exists()
     home = soup("index.html")
-    assert len(home.select("#analysis-tools .analysis-card")) == 15
+    assert len(home.select("#analysis-tools .analysis-card")) == 16
     assert home.select_one('a[href="/report.html"]')
 
     report = soup("report.html")
@@ -270,7 +270,7 @@ def test_lab_pages_get_the_shared_header_and_footer_at_build_time():
     # Every Lab page except the standalone demos and the synced signal report
     # is built by Jekyll from the shared includes.
     pages = [path for path in filter(is_published, ROOT.rglob("*.html")) if not {"demo", "tourism-market-signal"} & set(path.relative_to(ROOT).parts) and not is_redirect_stub(path)]
-    assert len(pages) == 22
+    assert len(pages) == 23
     for path in pages:
         source = path.read_text(encoding="utf-8")
         assert source.startswith("---\n"), path
