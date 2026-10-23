@@ -160,7 +160,8 @@ def test_hotel_price_trends_script_keeps_browser_history_available():
     script = (ROOT / "js" / "hotel-price-trends.js").read_text(encoding="utf-8")
     assert "window.history.replaceState" in script
     assert "let history" not in script
-    assert "snapshotHistory" in script
+    assert "trendHistory" in script
+    assert "snapshotHistory" not in script
     assert 'getJson(`${DATA_ROOT}profiles.json`)' in script
     assert "HotelPriceTrendsModel" in script
     assert "makeProfileInsights" not in script

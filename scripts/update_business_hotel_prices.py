@@ -11,9 +11,10 @@ data/business-hotel-price-trends/cohort.json の比較施設群（CORE・BACKUP�
   2. 1回目に出なかった施設だけ、施設ごとに検索し直す。
      それでも出ない施設は「販売プランなし」（満室とは判定しない）。
 
-出力:
-  data/business-hotel-price-trends/snapshots/YYYY-MM-DD.json
-  data/business-hotel-price-trends/manifest.json
+出力（公開しない保管場所。リポジトリにはコミットしない）:
+  .private/business-hotel-price-trends/raw/YYYY-MM-DD.json  … 施設ごとの日別料金。直近 RAW_KEEP_DAYS 日分だけ残す
+GitHub Actions ではこの保管場所をキャッシュで次の実行へ引き継ぐ。公開するファイル（今朝の取得・集計・manifest）は
+scripts/build_business_hotel_public.cjs がここから作る。
 
 環境変数 RAKUTEN_APPLICATION_ID と RAKUTEN_ACCESS_KEY が必要。
 """
@@ -33,6 +34,9 @@ import requests
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data" / "business-hotel-price-trends"
+RAW_DIR = ROOT / ".private" / "business-hotel-price-trends" / "raw"
+# 公開ページの「泊まる日ごとの値段の動き」は60日前までの取得を使う。それより古い日別料金は保管しない
+RAW_KEEP_DAYS = 60
 ENDPOINT = "https://openapi.rakuten.co.jp/engine/api/Travel/VacantHotelSearch/20170426"
 JST = timezone(timedelta(hours=9))
 # 楽天のアプリに登録した「許可されたWebサイト」。新しい楽天APIは Referer が無いと 403 を返す。
@@ -277,29 +281,23 @@ def error_ratio(snapshot: dict) -> float:
     return codes.count(ERROR) / len(codes) if codes else 1.0
 
 
-def write_snapshot(snapshot: dict, cohort: dict, data_dir: Path = DATA_DIR) -> Path:
-    snapshots = data_dir / "snapshots"
-    snapshots.mkdir(parents=True, exist_ok=True)
-    path = snapshots / f"{snapshot['snapshot_date']}.json"
+def write_snapshot(snapshot: dict, raw_dir: Path = RAW_DIR, keep_days: int = RAW_KEEP_DAYS) -> Path:
+    """日別料金を非公開の保管場所に書き、keep_days 日より前の取得を消す。"""
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    path = raw_dir / f"{snapshot['snapshot_date']}.json"
     path.write_text(json.dumps(snapshot, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-    update_manifest(data_dir, cohort, snapshot["generated_at"])
+    prune_raw(raw_dir, date.fromisoformat(snapshot["snapshot_date"]), keep_days)
     return path
 
 
-def update_manifest(data_dir: Path, cohort: dict, generated_at: str) -> dict:
-    files = sorted((data_dir / "snapshots").glob("????-??-??.json"), reverse=True)
-    manifest = {
-        "schema_version": SCHEMA_VERSION,
-        "generated_at": generated_at,
-        "latest_snapshot": files[0].stem if files else None,
-        "cohort_file": "cohort.json",
-        "cohort_version": cohort["cohort_version"],
-        "conditions": cohort["conditions"],
-        "source": {"name": "楽天トラベル空室検索API", "url": "https://webservice.rakuten.co.jp/documentation/vacant-hotel-search"},
-        "snapshots": [{"date": path.stem, "file": f"snapshots/{path.name}"} for path in files],
-    }
-    (data_dir / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    return manifest
+def prune_raw(raw_dir: Path, latest: date, keep_days: int = RAW_KEEP_DAYS) -> list[Path]:
+    oldest = latest - timedelta(days=keep_days)
+    removed = []
+    for path in sorted(raw_dir.glob("????-??-??.json")):
+        if date.fromisoformat(path.stem) < oldest:
+            path.unlink()
+            removed.append(path)
+    return removed
 
 
 # --------------------------------------------------------------------------- 実行
@@ -329,6 +327,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dry-run", action="store_true", help="保存せず結果の概要だけ表示する")
     parser.add_argument("--probe", type=int, metavar="HOTEL_NO", help="1施設・翌日分の検索結果をそのまま表示する（応答の形の確認用）")
     parser.add_argument("--max-error-ratio", type=float, default=0.2, help="取得エラーの割合がこれを超えたら保存しない")
+    parser.add_argument("--raw-dir", type=Path, default=RAW_DIR, help="日別料金の保管場所（公開しない）")
     args = parser.parse_args(argv)
 
     application_id = os.environ.get("RAKUTEN_APPLICATION_ID", "").strip()
@@ -363,8 +362,8 @@ def main(argv: list[str] | None = None) -> int:
     if ratio > args.max_error_ratio:
         print(f"エラー率 {ratio:.1%} が上限 {args.max_error_ratio:.0%} を超えたため保存しません。", file=sys.stderr)
         return 1
-    path = write_snapshot(snapshot, cohort)
-    print(f"保存: {path.relative_to(ROOT)}")
+    path = write_snapshot(snapshot, args.raw_dir)
+    print(f"保存（非公開）: {path}")
     return 0
 
 

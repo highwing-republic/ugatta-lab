@@ -2,8 +2,10 @@
 // ビジネスホテル料金トレンドの「週次データパック」を Markdown で出す。
 // note の週次記事を書くための材料。数字はすべてページと同じ集計（js/business-hotel-price-trends-model.js）で出す。
 //
+// 過去の取得は施設ごとの料金を公開していないので、公開している最新の取得日（latest.json と history.json）だけを扱う。
+//
 //   node scripts/build_business_hotel_weekly.cjs                 # 最新の取得日
-//   node scripts/build_business_hotel_weekly.cjs --date 2026-10-26 --out /tmp/pack.md
+//   node scripts/build_business_hotel_weekly.cjs --out /tmp/pack.md
 "use strict";
 
 const fs = require("fs");
@@ -24,18 +26,15 @@ const yen = M.formatYen;
 const pct = (value) => M.formatPercent(value);
 const ratio = (value) => (typeof value === "number" && Number.isFinite(value) ? `${value.toFixed(1)}倍` : "—");
 
-function load(date) {
+function load() {
   const manifest = readJson(path.join(DATA, "manifest.json"));
   const cohort = readJson(path.join(DATA, "cohort.json"));
-  const target = date || manifest.latest_snapshot;
-  const entry = manifest.snapshots.find((item) => item.date === target);
-  if (!entry) throw new Error(`取得日 ${target} のスナップショットがありません`);
-  const prevEntry = manifest.snapshots.find((item) => item.date === M.addDays(target, -7));
-  const latest = readJson(path.join(DATA, entry.file));
-  const previous = prevEntry ? readJson(path.join(DATA, prevEntry.file)) : null;
+  const latest = readJson(path.join(DATA, manifest.latest_file));
+  const historyFile = manifest.history_file && path.join(DATA, manifest.history_file);
+  const history = historyFile && fs.existsSync(historyFile) ? M.historyFor(readJson(historyFile), latest) : null;
   const eventsFile = path.join(DATA, "events.json");
   const events = fs.existsSync(eventsFile) ? readJson(eventsFile) : null;
-  return {cohort, latest, previous, events};
+  return {cohort, latest, history, events};
 }
 
 function nightLabel(date) {
@@ -47,8 +46,9 @@ function nightLabel(date) {
   return type === "eve" ? "休前日" : "平日";
 }
 
-function build({cohort, latest, previous, events}) {
-  const national = M.nationalSummary(cohort, latest, previous, {nights: NIGHTS});
+function build({cohort, latest, history, events}) {
+  const national = M.nationalSummary(cohort, latest, history, {nights: NIGHTS});
+  const previous = national.weekly.available ? M.addDays(latest.snapshot_date, -7) : null;
   const ranks = M.rankings(national);
   const points = M.highlights(national);
   const eventView = M.eventCandidates(events, national);
@@ -60,7 +60,7 @@ function build({cohort, latest, previous, events}) {
   push(`- 条件: 大人1名・1室・1泊、楽天トラベルで販売中の最安プラン（食事条件は問わない）`);
   push(`- 集計: 各都市のCORE 5施設の中央値。今日から${NIGHTS}泊分（${M.formatDate(today)}〜${M.formatDate(M.addDays(today, NIGHTS - 1))}の泊）`);
   push(`- 比較施設群: ${latest.cohort_version}（${national.marketCount}都市・CORE ${national.markets.reduce((n, m) => n + m.view.core.length, 0)}施設）`);
-  push(`- 7日前との比較: ${previous ? `${previous.snapshot_date} の取得と比較` : "7日前の取得がないため比較なし"}`);
+  push(`- 7日前との比較: ${previous ? `${previous} の取得と比較` : "7日前の取得がないため比較なし"}`);
   push(`- ページ: ${PAGE}`, "");
 
   push("## 今週のポイント（ページと同じ文）", "");
@@ -166,12 +166,11 @@ function build({cohort, latest, previous, events}) {
 }
 
 function main(argv) {
-  const args = {date: null, out: null};
+  const args = {out: null};
   for (let i = 0; i < argv.length; i += 1) {
-    if (argv[i] === "--date") args.date = argv[++i];
-    else if (argv[i] === "--out") args.out = argv[++i];
+    if (argv[i] === "--out") args.out = argv[++i];
   }
-  const text = build(load(args.date));
+  const text = build(load());
   if (args.out) fs.writeFileSync(args.out, text);
   else process.stdout.write(text);
 }
