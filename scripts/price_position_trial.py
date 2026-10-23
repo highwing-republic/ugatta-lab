@@ -184,7 +184,7 @@ def main(argv: list[str] | None = None) -> int:
     max_competitors = min(int(request.get("max_competitors", 14)), bh.MAX_HOTELS_PER_REQUEST - 1)
     adults_list = [int(a) for a in request.get("adults", [1, 2])]
 
-    client = bh.RakutenClient(os.environ["RAKUTEN_APPLICATION_ID"], os.environ["RAKUTEN_ACCESS_KEY"], referer=os.getenv("RAKUTEN_REFERER", bh.DEFAULT_REFERER))
+    client = bh.RakutenClient(os.environ["RAKUTEN_APPLICATION_ID"], os.environ["RAKUTEN_ACCESS_KEY"], referer=os.getenv("RAKUTEN_REFERER", bh.DEFAULT_REFERER), min_interval=float(request.get("min_interval", 1.1)))
     started = datetime.now(bh.JST)
     today = started.date()
 
@@ -219,7 +219,13 @@ def main(argv: list[str] | None = None) -> int:
         if hotel["distance_km"] <= radius:
             nearby.append(hotel)
     nearby.sort(key=lambda h: h["distance_km"])
-    competitors = [int(h["hotelBasicInfo"]["hotelNo"]) for h in nearby[:max_competitors]]
+    chosen = [int(n) for n in request.get("competitor_hotel_nos", [])]
+    if chosen:
+        known = {int(h["hotelBasicInfo"]["hotelNo"]) for h in nearby}
+        competitors = [n for n in chosen if n in known][:max_competitors]
+        print(f"指定の比較施設 {len(chosen)} 件のうち周辺にあった施設 {len(competitors)} 件")
+    else:
+        competitors = [int(h["hotelBasicInfo"]["hotelNo"]) for h in nearby[:max_competitors]]
     print(f"周辺施設 {len(nearby)} 件、料金を取る施設 {len(competitors) + 1} 件")
 
     hotel_nos = [target_no, *competitors]
