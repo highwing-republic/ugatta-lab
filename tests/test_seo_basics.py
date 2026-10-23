@@ -68,11 +68,11 @@ def test_home_structured_data_links_site_operator_and_note():
 
 def test_home_tool_count_matches_the_tool_registry():
     tools = yaml.safe_load((ROOT / "_data/tools.yml").read_text(encoding="utf-8"))
-    samples = [tool for tool in tools if "サンプル" in tool["tag"]]
+    reports = [tool for tool in tools if "サンプル" in tool["tag"] or "調査レポート" in tool["tag"]]
     text = soup("index.html").select_one(".tool-groups > p").get_text()
     count = int(re.search(r"公開中の(\d+)ツール", text).group(1))
-    assert count == len(tools) - len(samples)
-    assert samples and "サンプルレポート" in text
+    assert count == len(tools) - len(reports)
+    assert reports and "サンプルレポート" in text and "調査レポート" in text
 
 
 def test_tool_pages_have_breadcrumbs_and_name_the_lab_as_provider():

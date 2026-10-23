@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T08:57:25+00:00",
+  "generated_at": "2026-10-23T11:09:15+00:00",
   "models": [
     "claude-haiku-5-5"
   ],
@@ -49,7 +49,14 @@
         "applicable": 107,
         "answered": 36,
         "ask_inn": 71,
-        "answered_rate": 0.336
+        "answered_rate": 0.336,
+        "one_short": {
+          "count": 54,
+          "missing": {
+            "源泉かけ流しかどうか": 42,
+            "泉質": 12
+          }
+        }
       },
       "Q03": {
         "text": "露天風呂付きの客室はある？",
@@ -67,7 +74,14 @@
         "applicable": 108,
         "answered": 8,
         "ask_inn": 100,
-        "answered_rate": 0.074
+        "answered_rate": 0.074,
+        "one_short": {
+          "count": 83,
+          "missing": {
+            "1泊の料金": 80,
+            "部屋の広さ": 3
+          }
+        }
       },
       "Q05": {
         "text": "貸切風呂（家族風呂）はある？",
@@ -85,7 +99,14 @@
         "applicable": 108,
         "answered": 54,
         "ask_inn": 54,
-        "answered_rate": 0.5
+        "answered_rate": 0.5,
+        "one_short": {
+          "count": 43,
+          "missing": {
+            "部屋食かどうか": 38,
+            "夕食付きで泊まれるか": 5
+          }
+        }
       },
       "Q07": {
         "text": "食物アレルギーに対応してもらえる？",
@@ -103,7 +124,14 @@
         "applicable": 108,
         "answered": 9,
         "ask_inn": 99,
-        "answered_rate": 0.083
+        "answered_rate": 0.083,
+        "one_short": {
+          "count": 31,
+          "missing": {
+            "添い寝": 23,
+            "子ども料金": 8
+          }
+        }
       },
       "Q09": {
         "text": "キャンセル料はいつから？",
@@ -121,7 +149,13 @@
         "applicable": 108,
         "answered": 62,
         "ask_inn": 46,
-        "answered_rate": 0.574
+        "answered_rate": 0.574,
+        "one_short": {
+          "count": 21,
+          "missing": {
+            "送迎の有無": 21
+          }
+        }
       },
       "Q11": {
         "text": "チェックインは何時まで？",
@@ -130,7 +164,13 @@
         "applicable": 108,
         "answered": 22,
         "ask_inn": 86,
-        "answered_rate": 0.204
+        "answered_rate": 0.204,
+        "one_short": {
+          "count": 46,
+          "missing": {
+            "チェックインの締め切り": 46
+          }
+        }
       },
       "Q12": {
         "text": "大浴場は何時まで入れる？",
@@ -722,7 +762,14 @@
           "applicable": 12,
           "answered": 3,
           "ask_inn": 9,
-          "answered_rate": 0.25
+          "answered_rate": 0.25,
+          "one_short": {
+            "count": 7,
+            "missing": {
+              "源泉かけ流しかどうか": 5,
+              "泉質": 2
+            }
+          }
         },
         "Q03": {
           "text": "露天風呂付きの客室はある？",
@@ -740,7 +787,13 @@
           "applicable": 12,
           "answered": 1,
           "ask_inn": 11,
-          "answered_rate": 0.083
+          "answered_rate": 0.083,
+          "one_short": {
+            "count": 8,
+            "missing": {
+              "1泊の料金": 8
+            }
+          }
         },
         "Q05": {
           "text": "貸切風呂（家族風呂）はある？",
@@ -758,7 +811,13 @@
           "applicable": 12,
           "answered": 8,
           "ask_inn": 4,
-          "answered_rate": 0.667
+          "answered_rate": 0.667,
+          "one_short": {
+            "count": 3,
+            "missing": {
+              "部屋食かどうか": 3
+            }
+          }
         },
         "Q07": {
           "text": "食物アレルギーに対応してもらえる？",
@@ -776,7 +835,13 @@
           "applicable": 12,
           "answered": 2,
           "ask_inn": 10,
-          "answered_rate": 0.167
+          "answered_rate": 0.167,
+          "one_short": {
+            "count": 2,
+            "missing": {
+              "添い寝": 2
+            }
+          }
         },
         "Q09": {
           "text": "キャンセル料はいつから？",
@@ -794,7 +859,13 @@
           "applicable": 12,
           "answered": 6,
           "ask_inn": 6,
-          "answered_rate": 0.5
+          "answered_rate": 0.5,
+          "one_short": {
+            "count": 2,
+            "missing": {
+              "送迎の有無": 2
+            }
+          }
         },
         "Q11": {
           "text": "チェックインは何時まで？",
@@ -803,7 +874,13 @@
           "applicable": 12,
           "answered": 3,
           "ask_inn": 9,
-          "answered_rate": 0.25
+          "answered_rate": 0.25,
+          "one_short": {
+            "count": 4,
+            "missing": {
+              "チェックインの締め切り": 4
+            }
+          }
         },
         "Q12": {
           "text": "大浴場は何時まで入れる？",
@@ -1054,7 +1131,14 @@
           "applicable": 16,
           "answered": 4,
           "ask_inn": 12,
-          "answered_rate": 0.25
+          "answered_rate": 0.25,
+          "one_short": {
+            "count": 8,
+            "missing": {
+              "源泉かけ流しかどうか": 6,
+              "泉質": 2
+            }
+          }
         },
         "Q03": {
           "text": "露天風呂付きの客室はある？",
@@ -1072,7 +1156,13 @@
           "applicable": 16,
           "answered": 0,
           "ask_inn": 16,
-          "answered_rate": 0.0
+          "answered_rate": 0.0,
+          "one_short": {
+            "count": 16,
+            "missing": {
+              "1泊の料金": 16
+            }
+          }
         },
         "Q05": {
           "text": "貸切風呂（家族風呂）はある？",
@@ -1090,7 +1180,13 @@
           "applicable": 16,
           "answered": 9,
           "ask_inn": 7,
-          "answered_rate": 0.562
+          "answered_rate": 0.562,
+          "one_short": {
+            "count": 5,
+            "missing": {
+              "部屋食かどうか": 5
+            }
+          }
         },
         "Q07": {
           "text": "食物アレルギーに対応してもらえる？",
@@ -1108,7 +1204,13 @@
           "applicable": 16,
           "answered": 0,
           "ask_inn": 16,
-          "answered_rate": 0.0
+          "answered_rate": 0.0,
+          "one_short": {
+            "count": 4,
+            "missing": {
+              "添い寝": 4
+            }
+          }
         },
         "Q09": {
           "text": "キャンセル料はいつから？",
@@ -1126,7 +1228,13 @@
           "applicable": 16,
           "answered": 6,
           "ask_inn": 10,
-          "answered_rate": 0.375
+          "answered_rate": 0.375,
+          "one_short": {
+            "count": 7,
+            "missing": {
+              "送迎の有無": 7
+            }
+          }
         },
         "Q11": {
           "text": "チェックインは何時まで？",
@@ -1135,7 +1243,13 @@
           "applicable": 16,
           "answered": 3,
           "ask_inn": 13,
-          "answered_rate": 0.188
+          "answered_rate": 0.188,
+          "one_short": {
+            "count": 7,
+            "missing": {
+              "チェックインの締め切り": 7
+            }
+          }
         },
         "Q12": {
           "text": "大浴場は何時まで入れる？",
@@ -1395,7 +1509,14 @@
           "applicable": 17,
           "answered": 8,
           "ask_inn": 9,
-          "answered_rate": 0.471
+          "answered_rate": 0.471,
+          "one_short": {
+            "count": 7,
+            "missing": {
+              "源泉かけ流しかどうか": 6,
+              "泉質": 1
+            }
+          }
         },
         "Q03": {
           "text": "露天風呂付きの客室はある？",
@@ -1413,7 +1534,14 @@
           "applicable": 17,
           "answered": 1,
           "ask_inn": 16,
-          "answered_rate": 0.059
+          "answered_rate": 0.059,
+          "one_short": {
+            "count": 15,
+            "missing": {
+              "1泊の料金": 14,
+              "部屋の広さ": 1
+            }
+          }
         },
         "Q05": {
           "text": "貸切風呂（家族風呂）はある？",
@@ -1431,7 +1559,14 @@
           "applicable": 17,
           "answered": 6,
           "ask_inn": 11,
-          "answered_rate": 0.353
+          "answered_rate": 0.353,
+          "one_short": {
+            "count": 9,
+            "missing": {
+              "部屋食かどうか": 7,
+              "夕食付きで泊まれるか": 2
+            }
+          }
         },
         "Q07": {
           "text": "食物アレルギーに対応してもらえる？",
@@ -1449,7 +1584,14 @@
           "applicable": 17,
           "answered": 1,
           "ask_inn": 16,
-          "answered_rate": 0.059
+          "answered_rate": 0.059,
+          "one_short": {
+            "count": 5,
+            "missing": {
+              "添い寝": 4,
+              "子ども料金": 1
+            }
+          }
         },
         "Q09": {
           "text": "キャンセル料はいつから？",
@@ -1467,7 +1609,13 @@
           "applicable": 17,
           "answered": 12,
           "ask_inn": 5,
-          "answered_rate": 0.706
+          "answered_rate": 0.706,
+          "one_short": {
+            "count": 3,
+            "missing": {
+              "送迎の有無": 3
+            }
+          }
         },
         "Q11": {
           "text": "チェックインは何時まで？",
@@ -1476,7 +1624,13 @@
           "applicable": 17,
           "answered": 2,
           "ask_inn": 15,
-          "answered_rate": 0.118
+          "answered_rate": 0.118,
+          "one_short": {
+            "count": 10,
+            "missing": {
+              "チェックインの締め切り": 10
+            }
+          }
         },
         "Q12": {
           "text": "大浴場は何時まで入れる？",
@@ -1735,7 +1889,14 @@
           "applicable": 27,
           "answered": 9,
           "ask_inn": 18,
-          "answered_rate": 0.333
+          "answered_rate": 0.333,
+          "one_short": {
+            "count": 17,
+            "missing": {
+              "源泉かけ流しかどうか": 13,
+              "泉質": 4
+            }
+          }
         },
         "Q03": {
           "text": "露天風呂付きの客室はある？",
@@ -1753,7 +1914,14 @@
           "applicable": 27,
           "answered": 1,
           "ask_inn": 26,
-          "answered_rate": 0.037
+          "answered_rate": 0.037,
+          "one_short": {
+            "count": 22,
+            "missing": {
+              "1泊の料金": 21,
+              "部屋の広さ": 1
+            }
+          }
         },
         "Q05": {
           "text": "貸切風呂（家族風呂）はある？",
@@ -1771,7 +1939,14 @@
           "applicable": 27,
           "answered": 10,
           "ask_inn": 17,
-          "answered_rate": 0.37
+          "answered_rate": 0.37,
+          "one_short": {
+            "count": 14,
+            "missing": {
+              "部屋食かどうか": 13,
+              "夕食付きで泊まれるか": 1
+            }
+          }
         },
         "Q07": {
           "text": "食物アレルギーに対応してもらえる？",
@@ -1789,7 +1964,14 @@
           "applicable": 27,
           "answered": 4,
           "ask_inn": 23,
-          "answered_rate": 0.148
+          "answered_rate": 0.148,
+          "one_short": {
+            "count": 10,
+            "missing": {
+              "添い寝": 7,
+              "子ども料金": 3
+            }
+          }
         },
         "Q09": {
           "text": "キャンセル料はいつから？",
@@ -1807,7 +1989,13 @@
           "applicable": 27,
           "answered": 20,
           "ask_inn": 7,
-          "answered_rate": 0.741
+          "answered_rate": 0.741,
+          "one_short": {
+            "count": 3,
+            "missing": {
+              "送迎の有無": 3
+            }
+          }
         },
         "Q11": {
           "text": "チェックインは何時まで？",
@@ -1816,7 +2004,13 @@
           "applicable": 27,
           "answered": 5,
           "ask_inn": 22,
-          "answered_rate": 0.185
+          "answered_rate": 0.185,
+          "one_short": {
+            "count": 15,
+            "missing": {
+              "チェックインの締め切り": 15
+            }
+          }
         },
         "Q12": {
           "text": "大浴場は何時まで入れる？",
@@ -2082,7 +2276,14 @@
           "applicable": 35,
           "answered": 12,
           "ask_inn": 23,
-          "answered_rate": 0.343
+          "answered_rate": 0.343,
+          "one_short": {
+            "count": 15,
+            "missing": {
+              "源泉かけ流しかどうか": 12,
+              "泉質": 3
+            }
+          }
         },
         "Q03": {
           "text": "露天風呂付きの客室はある？",
@@ -2100,7 +2301,14 @@
           "applicable": 36,
           "answered": 5,
           "ask_inn": 31,
-          "answered_rate": 0.139
+          "answered_rate": 0.139,
+          "one_short": {
+            "count": 22,
+            "missing": {
+              "1泊の料金": 21,
+              "部屋の広さ": 1
+            }
+          }
         },
         "Q05": {
           "text": "貸切風呂（家族風呂）はある？",
@@ -2118,7 +2326,14 @@
           "applicable": 36,
           "answered": 21,
           "ask_inn": 15,
-          "answered_rate": 0.583
+          "answered_rate": 0.583,
+          "one_short": {
+            "count": 12,
+            "missing": {
+              "部屋食かどうか": 10,
+              "夕食付きで泊まれるか": 2
+            }
+          }
         },
         "Q07": {
           "text": "食物アレルギーに対応してもらえる？",
@@ -2136,7 +2351,14 @@
           "applicable": 36,
           "answered": 2,
           "ask_inn": 34,
-          "answered_rate": 0.056
+          "answered_rate": 0.056,
+          "one_short": {
+            "count": 10,
+            "missing": {
+              "添い寝": 6,
+              "子ども料金": 4
+            }
+          }
         },
         "Q09": {
           "text": "キャンセル料はいつから？",
@@ -2154,7 +2376,13 @@
           "applicable": 36,
           "answered": 18,
           "ask_inn": 18,
-          "answered_rate": 0.5
+          "answered_rate": 0.5,
+          "one_short": {
+            "count": 6,
+            "missing": {
+              "送迎の有無": 6
+            }
+          }
         },
         "Q11": {
           "text": "チェックインは何時まで？",
@@ -2163,7 +2391,13 @@
           "applicable": 36,
           "answered": 9,
           "ask_inn": 27,
-          "answered_rate": 0.25
+          "answered_rate": 0.25,
+          "one_short": {
+            "count": 10,
+            "missing": {
+              "チェックインの締め切り": 10
+            }
+          }
         },
         "Q12": {
           "text": "大浴場は何時まで入れる？",

@@ -36,7 +36,7 @@ def read(relative: str) -> str:
 
 def test_all_public_pages_send_to_both_google_tags_once() -> None:
     pages = tracked_public_html()
-    assert len(pages) == 29
+    assert len(pages) == 30
     for path in pages:
         content = read(path)
         assert content.count(LAB_CONFIG) == 1, path
@@ -61,7 +61,7 @@ def test_fallback_footers_link_back_to_ugatta() -> None:
         assert "運営：合同会社UGATTA</small>" not in content, path
         assert UGATTA_LINK in content, path
     # Every Lab page except the standalone demos carries the shared footer from _includes/.
-    assert len(fallback_pages) == 22
+    assert len(fallback_pages) == 23
 
 
 def test_ugatta_link_has_visible_link_styling() -> None:
@@ -87,7 +87,7 @@ def test_site_shell_cache_busters_are_consistent() -> None:
         assert css_match, path
         js_versions.add(js_match.group(1))
         css_versions.add(css_match.group(1))
-    assert len(shell_pages) == 22
+    assert len(shell_pages) == 23
     assert js_versions == {"20261012shell2"}
     assert css_versions == {"20261012shell"}
 

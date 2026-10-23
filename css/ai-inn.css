@@ -109,11 +109,51 @@
 .ai-next ul{margin:0;padding-left:20px;color:var(--lab-ink);font-size:13px;line-height:1.9}
 .ai-legend__note{align-self:center;color:var(--lab-ink-soft);font-size:12px}
 
+/* 一斉診断の集計：横棒（HTMLの本文として読めるよう、SVGではなく要素で描く） */
+.ai-bars{display:grid;gap:8px;max-width:900px;margin:0;padding:0;list-style:none}
+.ai-bars__row{display:grid;grid-template-columns:minmax(0,17em) minmax(0,1fr) 5.5em;align-items:center;gap:12px;font-size:13px;line-height:1.5}
+.ai-bars__label{color:var(--lab-ink);text-align:right}
+.ai-bars__track{display:flex;height:16px;border-radius:3px;background:var(--data-unavailable);overflow:hidden}
+.ai-bars__fill{display:block;height:100%;background:var(--lab-navy)}
+.ai-bars__fill--short{background:var(--data-market);opacity:.55}
+.ai-bars__fill--key{background:#b85c38}
+.ai-bars__fill--muted{background:var(--data-other)}
+.ai-bars__value{color:var(--lab-ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ai-bars__to{font-weight:700}
+.ai-bars__row--key .ai-bars__label{font-weight:700}
+.ai-bars__row--total{padding-bottom:8px;border-bottom:1px solid var(--lab-border)}
+.ai-bars__row--total .ai-bars__label,.ai-bars__row--total .ai-bars__value{font-weight:700}
+.ai-bars--markets .ai-bars__row{grid-template-columns:minmax(0,9em) minmax(0,1fr) 4em}
+.ai-legend--bars{margin:0 0 16px}
+.ai-legend--bars li{display:flex;align-items:center;gap:6px;color:var(--lab-ink-soft);font-size:12px}
+.ai-swatch{display:inline-block;width:12px;height:12px;border-radius:2px;background:var(--lab-navy)}
+.ai-swatch--short{background:var(--data-market);opacity:.55}
+.ai-swatch--rest{background:var(--data-unavailable)}
+.ai-swatch--key{background:#b85c38}
+.ai-swatch--muted{background:var(--data-other)}
+.ai-table-wrap--spaced{margin-top:24px}
+.ai-steps{max-width:820px;margin:0;padding-left:22px;color:var(--lab-ink);font-size:14px;line-height:1.9}
+.ai-steps li{margin-bottom:10px}
+.ai-steps strong{color:var(--lab-navy);font-weight:700}
+.ai-steps--plain{list-style:disc}
+
+/* 「AIに聞かれる宿」の3つのページの流れ */
+.ai-series{padding:20px 0 0}
+.ai-series ol{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0;padding:0;list-style:none}
+.ai-series__step{display:grid;gap:2px;height:100%;padding:14px 16px;border:1px solid var(--lab-border);border-radius:12px;background:var(--lab-card);color:var(--lab-ink);text-decoration:none}
+.ai-series__step:hover,.ai-series__step:focus-visible{border-color:var(--lab-navy)}
+.ai-series__step[aria-current="page"]{border-color:var(--lab-navy);box-shadow:inset 3px 0 0 var(--lab-navy);background:#fff}
+.ai-series__num{color:var(--lab-ink-soft);font-size:12px;font-weight:500}
+.ai-series__kicker{color:var(--lab-teal);font-size:12px;font-weight:500}
+.ai-series__step strong{color:var(--lab-navy);font-size:15px;font-weight:700;line-height:1.5}
+.ai-series__note{color:var(--lab-ink-soft);font-size:12px;line-height:1.6}
+
 @media (max-width:960px){
   .ai-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
   .ai-journey{grid-template-columns:repeat(3,minmax(0,1fr))}
   .ai-stage:not(:last-child)::after{display:none}
   .ai-cards,.ai-sites{grid-template-columns:1fr}
+  .ai-series ol{grid-template-columns:1fr}
 }
 @media (max-width:640px){
   .ai-section{padding:52px 0}
@@ -126,4 +166,6 @@
   .ai-code__head{flex-direction:column;align-items:flex-start}
   .ai-code pre{max-height:220px}
   .ai-site__screen.is-live{height:460px}
+  .ai-bars__row,.ai-bars--markets .ai-bars__row{grid-template-columns:minmax(0,1fr) 5em;gap:4px 10px}
+  .ai-bars__label{grid-column:1/-1;text-align:left}
 }
