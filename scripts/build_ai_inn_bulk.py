@@ -41,10 +41,6 @@ def pct(rate: float | None) -> str:
     return "—" if rate is None else f"{round(rate * 100)}%"
 
 
-def yen(value: float | None) -> str:
-    return "—" if value is None else f"{round(value):,}円"
-
-
 def width(value: float, total: float) -> str:
     return f"{max(0.0, min(100.0, value / total * 100)):.1f}%"
 
@@ -153,35 +149,6 @@ def size_rows(summary: dict) -> str:
         f'<td>{count(g["answered"]["median"])}問</td></tr>' for g in summary["sizes"])
 
 
-def price_section(overall: dict) -> str:
-    pc = overall.get("price_comparison")
-    if not pc:
-        return ""
-    lo, hi = pc["lower_half"], pc["upper_half"]
-    rows = [
-        ("答えられた質問（中央値）", f'{count(lo["answered_median"])}問', f'{count(hi["answered_median"])}問'),
-        ("2食付きの料金（中央値）", yen(lo["two_meals_price_median_yen"]), yen(hi["two_meals_price_median_yen"])),
-        ("参考最低料金（中央値）", yen(lo["reference_min_charge_yen_median"]), yen(hi["reference_min_charge_yen_median"])),
-        ("総合評価（中央値）", num(lo["review_average_median"], 2), num(hi["review_average_median"], 2)),
-        ("風呂の評価（中央値）", num(lo["bath_rating_median"], 2), num(hi["bath_rating_median"], 2)),
-        ("夕食の評価（中央値）", num(lo["dinner_rating_median"], 2), num(hi["dinner_rating_median"], 2)),
-    ]
-    body = "\n          ".join(f'<tr><th scope="row">{a}</th><td>{b}</td><td>{c}</td></tr>' for a, b, c in rows)
-    return f'''
-    <section class="ai-section" id="price" aria-labelledby="price-title"><div class="container">
-      <h2 class="ai-h2" id="price-title">よく答えられる宿と、そうでない宿の料金と評価</h2>
-      <p class="ai-lead">楽天トラベルの料金と評価がある宿を、答えられた質問の数で上位半分と下位半分に分けて比べました。評価はほとんど変わりません。</p>
-      <div class="ai-table-wrap ai-table-wrap--narrow"><table class="ai-table">
-        <thead><tr><th scope="col">比べたもの</th><th scope="col">下位半分（{lo["inns"]}軒）</th><th scope="col">上位半分（{hi["inns"]}軒）</th></tr></thead>
-        <tbody>
-          {body}
-        </tbody>
-      </table></div>
-      <p class="ai-note">{esc(pc["note"])}</p>
-    </div></section>
-'''
-
-
 def series_nav(f: dict, current: str) -> str:
     """「AIに聞かれる宿」の3つのページの流れ。サンプルページにも同じものを手で置いている（tests で一致を確かめる）。"""
     steps = [
@@ -229,8 +196,6 @@ tool_sources:
   - name: 対象の宿
     publisher: 宿泊DXラボ 宿泊料金トレンドで料金を見ている温泉地の旅館・ホテル
     url: /hotel-price-trends.html
-  - name: 料金と評価
-    publisher: 楽天トラベル（宿泊料金トレンドの{esc(summary.get("price_snapshot_date") or "")}時点のデータ）
 tool_notes:
   - 宿ごとの結果、集めたページ、AIへの入力と出力は公開していません。診断を希望する宿には、その宿の結果だけをお渡しします。
   - ページ同士の食い違いは多めに数えている可能性があり確かめていないため、この集計では「宿に確認を」に含めています。
@@ -362,7 +327,6 @@ tool_related:
       </table></div>
     </div></section>
 
-{price_section(o)}
     <section class="ai-section ai-section--plain" id="advice" aria-labelledby="advice-title"><div class="container">
       <h2 class="ai-h2" id="advice-title">宿のサイトで、すぐにできること</h2>
       <p class="ai-lead">効きやすい順に並べました。いちばん手軽なのは、よくある質問に3行足すことです。実際に対策すると答えがどう変わるかは、<a href="/ai-inn-diagnosis/sample/">架空の宿で対策前と対策後を比べたサンプル</a>で見られます。</p>
