@@ -222,8 +222,8 @@ def main(argv: list[str] | None = None) -> int:
     chosen = [int(n) for n in request.get("competitor_hotel_nos", [])]
     if chosen:
         known = {int(h["hotelBasicInfo"]["hotelNo"]) for h in nearby}
-        competitors = [n for n in chosen if n in known][:max_competitors]
-        print(f"指定の比較施設 {len(chosen)} 件のうち周辺にあった施設 {len(competitors)} 件")
+        competitors = [n for n in chosen if n != target_no][:max_competitors]
+        print(f"指定の比較施設 {len(competitors)} 件（うち周辺検索に出た施設 {sum(n in known for n in competitors)} 件）")
     else:
         competitors = [int(h["hotelBasicInfo"]["hotelNo"]) for h in nearby[:max_competitors]]
     print(f"周辺施設 {len(nearby)} 件、料金を取る施設 {len(competitors) + 1} 件")
