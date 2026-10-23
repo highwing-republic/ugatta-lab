@@ -105,27 +105,26 @@ test("seven-day comparison requires exact date and matching conditions", () => {
   const current = snapshot("2026-09-16", [row(1, 12000), row(2, 20000), row(3, 30000)]);
   const prior = snapshot("2026-09-09", [row(1, 10000), row(2, 20000), row(3, 30000)]);
   const selection = {regionCode: "area", hotelNo: 1, stayDate: "2026-10-01", mealType: "two_meals"};
-  assert.equal(model.sevenDayComparison(current, [current, prior], selection).marketChange, 0);
-  assert.equal(model.sevenDayComparison(current, [snapshot("2026-09-08", prior.regions[0].rates)], selection).status, "missing_snapshot");
-  assert.equal(model.sevenDayComparison(current, [snapshot("2026-09-09", prior.regions[0].rates, undefined, {adults: 1, rooms: 1, nights: 1})], selection).status, "conditions_mismatch");
+  assert.equal(model.sevenDayComparison(current, model.trendHistoryFrom([current, prior]), selection).marketChange, 0);
+  assert.equal(model.sevenDayComparison(current, model.trendHistoryFrom([snapshot("2026-09-08", prior.regions[0].rates)]), selection).status, "missing_snapshot");
+  assert.equal(model.sevenDayComparison(current, model.trendHistoryFrom([snapshot("2026-09-09", prior.regions[0].rates, undefined, {adults: 1, rooms: 1, nights: 1})]), selection).status, "conditions_mismatch");
 });
 
 test("property-set changes suppress market comparison but retain a same-property price change", () => {
   const current = snapshot("2026-09-16", [row(1, 12000), row(2, 20000), row(3, 30000)]);
   const prior = snapshot("2026-09-09", [row(1, 10000), row(2, 20000), row(4, 30000)], [{hotel_no: 1}, {hotel_no: 2}, {hotel_no: 4}]);
-  const result = model.sevenDayComparison(current, [current, prior], {regionCode: "area", hotelNo: 1, stayDate: "2026-10-01", mealType: "two_meals"});
+  const result = model.sevenDayComparison(current, model.trendHistoryFrom([current, prior]), {regionCode: "area", hotelNo: 1, stayDate: "2026-10-01", mealType: "two_meals"});
   assert.equal(result.status, "property_set_mismatch");
   assert.equal(result.marketChange, null);
-  assert.ok(Math.abs(result.selectedChange - 20) < 0.000001);
+  assert.equal("selectedChange" in result, false); // 施設ごとの過去の料金は公開していない
 });
 
 test("cohort version changes suppress both market and selected-property history", () => {
   const current = cohortSnapshot("2026-09-16", [1, 2, 3, 4, 5].map((id) => row(id, id * 12000)), "area-v2");
   const prior = cohortSnapshot("2026-09-09", [1, 2, 3, 4, 5].map((id) => row(id, id * 10000)), "area-v1");
-  const result = model.sevenDayComparison(current, [prior], {regionCode: "area", hotelNo: 1, stayDate: "2026-10-01", mealType: "two_meals"});
+  const result = model.sevenDayComparison(current, model.trendHistoryFrom([prior]), {regionCode: "area", hotelNo: 1, stayDate: "2026-10-01", mealType: "two_meals"});
   assert.equal(result.status, "cohort_version_mismatch");
   assert.equal(result.marketChange, null);
-  assert.equal(result.selectedChange, null);
 });
 
 test("date display inputs are calendar-safe at month and leap-year boundaries", () => {
@@ -178,7 +177,7 @@ test("insights remain at most three sentences when the selected price is missing
   const prior = snapshot("2026-09-09", [row(1, 10000), row(2, 20000), row(3, 30000), row(4, null, "no_plan")], properties);
   const current = snapshot("2026-09-16", [row(1, 12000), row(2, 24000), row(3, 36000), row(4, null, "no_plan")], properties);
   const selection = {regionCode: "area", hotelNo: 4, stayDate: "2026-10-01", mealType: "two_meals"};
-  const comparison = model.sevenDayComparison(current, [prior], selection);
+  const comparison = model.sevenDayComparison(current, model.trendHistoryFrom([prior]), selection);
   const lines = model.insightLines(comparison.current, comparison, 4);
   assert.equal(lines.length, 3);
   assert.equal((lines.join("").match(/。/g) || []).length, 3);
@@ -190,13 +189,29 @@ test("a market without any collected rates says collection has not started", () 
   assert.deepEqual(model.insightLines(empty, null, 1), ["この市場の料金データはまだありません（取得開始前）。"]);
 });
 
-test("selected property's 7-day price is withheld across cohort versions", () => {
-  const prior = cohortSnapshot("2026-09-09", [row(1, 10000), row(2, 20000), row(3, 30000)], "area-v1");
-  const current = cohortSnapshot("2026-09-16", [row(1, 12000), row(2, 24000), row(3, 36000)], "area-v2");
-  const result = model.sevenDayComparison(current, [prior], {regionCode: "area", hotelNo: 1, stayDate: "2026-10-01", mealType: "two_meals"});
-  assert.equal(result.status, "cohort_version_mismatch");
-  assert.equal(result.previousSelected, undefined);
-  assert.equal(result.selectedChange, null);
+test("trend history keeps market aggregates only and matches summarize for every stored day", () => {
+  const properties = [1, 2, 3, 4, 5].map((hotel_no) => ({hotel_no, name: `H${hotel_no}`, role: "core"}));
+  const days = ["2026-09-09", "2026-09-12", "2026-09-16"];
+  const snapshots = days.map((date, index) => cohortSnapshot(date, [1, 2, 3, 4, 5].map((id) => row(id, id * 10000 + index * 1001)), "area-v1", properties));
+  snapshots[1].regions[0].rates[1].status = "no_plan"; // 9/12は4施設
+  const history = JSON.parse(JSON.stringify(model.trendHistoryFrom(snapshots)));
+  assert.deepEqual(history.snapshots.map((entry) => entry.date), days);
+  assert.doesNotMatch(JSON.stringify(history), /hotel_no|min_price_yen|plan_count|"H1"/);
+  days.forEach((date, index) => {
+    const expected = model.summarize(snapshots[index], "area", "2026-10-01", "two_meals");
+    const actual = model.historySummary(history, index, "area", "2026-10-01", "two_meals");
+    for (const key of ["marketMedian", "successful", "observations", "target", "comparisonReady", "dataQuality", "cohortActive", "cohortValid", "cohortVersion"]) {
+      assert.deepEqual(actual[key], expected[key], `${date} ${key}`);
+    }
+    assert.deepEqual([...actual.propertyIds].sort(), [...expected.propertyIds].sort());
+  });
+  const latestSummary = model.summarize(snapshots[2], "area", "2026-10-01", "two_meals");
+  const rows = model.trendRows(history, latestSummary, {regionCode: "area", stayDate: "2026-10-01", mealType: "two_meals"});
+  assert.deepEqual(rows.map((item) => [item.snapshot_date, item.median, item.successful]), [["2026-09-09", 30000, 5], ["2026-09-12", 36001, 4], ["2026-09-16", 32002, 5]]);
+  // 別のバージョンの日は推移に入れない
+  const mixed = model.trendHistoryFrom([cohortSnapshot("2026-09-08", [1, 2, 3].map((id) => row(id, id * 10000)), "area-v0", properties), ...snapshots]);
+  assert.equal(model.trendRows(mixed, latestSummary, {regionCode: "area", stayDate: "2026-10-01", mealType: "two_meals"}).length, 3);
+  assert.equal(model.sevenDayComparison(snapshots[2], history, {regionCode: "area", hotelNo: 1, stayDate: "2026-10-01", mealType: "two_meals"}).status, "available");
 });
 
 test("rating peers require three profiles in a Phase 1 market", () => {

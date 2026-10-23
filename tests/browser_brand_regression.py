@@ -27,7 +27,7 @@ def main(destination):
     threading.Thread(target=server.serve_forever, daemon=True).start()
     base = f'http://127.0.0.1:{server.server_port}/'
     manifest = json.loads((ROOT / 'data/hotel-price-trends/manifest.json').read_text(encoding='utf-8'))
-    snapshot = json.loads((ROOT / 'data/hotel-price-trends' / manifest['snapshots'][0]['file']).read_text(encoding='utf-8'))
+    snapshot = json.loads((ROOT / 'data/hotel-price-trends' / (manifest.get('latest_file') or manifest['snapshots'][0]['file'])).read_text(encoding='utf-8'))
     region = next(item for item in snapshot['regions'] if item['code'] == 'noboribetsu-onsen')
     stay_date = min(row['stay_date'] for row in region['rates'])
     results = []

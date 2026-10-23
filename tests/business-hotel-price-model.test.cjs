@@ -229,7 +229,7 @@ test("全国サマリ: 代表料金の中央値、最も高い・安い市場、
 
 test("ランキング: 値動き・跳ね上がる日・7日の値上がりを大きい順に最大5件", () => {
   const latest = twoMarketSnapshot("2026-10-16", 400);
-  const national = model.nationalSummary(twoMarkets, latest, twoMarketSnapshot("2026-10-09"));
+  const national = model.nationalSummary(twoMarkets, latest, model.buildHistory(twoMarkets, [twoMarketSnapshot("2026-10-09"), latest]));
   const ranks = model.rankings(national);
   assert.deepEqual(ranks.volatileMarkets.map((row) => row.market), ["札幌", "岡山"]);
   assert.ok(ranks.volatileHotels.length === 5 && ranks.volatileHotels[0].market === "札幌");
@@ -322,4 +322,36 @@ test("催し: 前泊から最終日の泊までに急騰日・売り切れが目
   assert.equal(model.eventCandidates(null, national).available, false);
   assert.equal(model.formatPeriod("2026-10-24", "2026-10-25"), "10/24（土）〜10/25（日）");
   assert.equal(model.formatPeriod("2026-10-24", "2026-10-24"), "10/24（土）");
+});
+
+test("公開する集計: 過去の取得から施設ごとの料金を除き、画面と同じ泊ごとの動き・まとめ・7日変化を作る", () => {
+  const snap = (date, shift) => snapshot(date, {start: date, shift});
+  const latest = snap("2026-10-16", 400);
+  latest.markets[0].hotels[3].price[2] = null;
+  latest.markets[0].hotels[3].meal = "RR-" + "R".repeat(11);
+  const raw = [snapshot("2026-10-09"), snap("2026-10-14", 200), latest];
+  const history = JSON.parse(JSON.stringify(model.buildHistory(cohort, raw)));
+  assert.equal(history.latest, "2026-10-16");
+  assert.deepEqual(history.snapshots, ["2026-10-09", "2026-10-14", "2026-10-16"]);
+  // 個々の施設の料金・施設番号は含めない（7日変化の施設ごとの変化率だけは残す）
+  const text = JSON.stringify(history.markets.sapporo.stays);
+  assert.doesNotMatch(text, /hotel_no|hotels|price/);
+  const dates = latest.stay_dates;
+  const fromRaw = model.stayHistories(cohort, raw, "sapporo", dates);
+  const fromHistory = model.historyStays(history, "sapporo", dates);
+  fromRaw.forEach((expected, index) => {
+    const actual = fromHistory[index];
+    assert.equal(actual.change, expected.change);
+    assert.equal(actual.direction, expected.direction);
+    assert.deepEqual(actual.points.map(({snapshot, daysBefore, status, median, soldOut}) => [snapshot, daysBefore, status, median, soldOut]),
+      expected.points.map(({snapshot, daysBefore, status, median, soldOut}) => [snapshot, daysBefore, status, median, soldOut]));
+    assert.deepEqual(actual.moves, model.stayMoves(expected));
+  });
+  assert.equal(fromHistory[2].moves.soldOut, 1);
+  assert.deepEqual(history.markets.sapporo.paths[30], model.pricePaths(cohort, raw, "sapporo", {nights: 30}));
+  assert.deepEqual(history.markets.sapporo.weekly, JSON.parse(JSON.stringify(model.weeklyChange(cohort, latest, raw[0], "sapporo"))));
+  // 今朝と違う日の集計は使わない
+  assert.equal(model.nationalSummary(cohort, latest, history).markets[0].weekly.status, "ok");
+  assert.equal(model.nationalSummary(cohort, snap("2026-10-17", 0), history).markets[0].weekly.status, "insufficient");
+  assert.equal(model.historyStays(null, "sapporo", ["2026-10-18"])[0].change, null);
 });

@@ -1,7 +1,11 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "generated_at": "2026-10-23T10:20:06+09:00",
   "latest_snapshot": "2026-10-23",
+  "latest_file": "latest.json",
+  "history_file": "history.json",
+  "history_since": "2026-10-16",
+  "history_records": 8,
   "cohort_file": "cohort.json",
   "cohort_version": "bh-v2",
   "conditions": {
@@ -13,39 +17,5 @@
   "source": {
     "name": "楽天トラベル空室検索API",
     "url": "https://webservice.rakuten.co.jp/documentation/vacant-hotel-search"
-  },
-  "snapshots": [
-    {
-      "date": "2026-10-23",
-      "file": "snapshots/2026-10-23.json"
-    },
-    {
-      "date": "2026-10-22",
-      "file": "snapshots/2026-10-22.json"
-    },
-    {
-      "date": "2026-10-21",
-      "file": "snapshots/2026-10-21.json"
-    },
-    {
-      "date": "2026-10-20",
-      "file": "snapshots/2026-10-20.json"
-    },
-    {
-      "date": "2026-10-19",
-      "file": "snapshots/2026-10-19.json"
-    },
-    {
-      "date": "2026-10-18",
-      "file": "snapshots/2026-10-18.json"
-    },
-    {
-      "date": "2026-10-17",
-      "file": "snapshots/2026-10-17.json"
-    },
-    {
-      "date": "2026-10-16",
-      "file": "snapshots/2026-10-16.json"
-    }
-  ]
+  }
 }

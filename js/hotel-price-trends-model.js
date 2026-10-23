@@ -51,8 +51,7 @@
     current?.conditions?.[key] != null && candidate?.conditions?.[key] != null &&
     Number(current.conditions[key]) === Number(candidate.conditions[key])
   );
-  const idsFor = (positions) => new Set((positions || []).map((property) => String(property.hotel_no)));
-  const sameIds = (left, right) => left.size === right.size && [...left].every((id) => right.has(id));
+    const sameIds = (left, right) => left.size === right.size && [...left].every((id) => right.has(id));
 
   function summarize(snapshot, regionCode, stayDate, mealType) {
     const region = regionFrom(snapshot, regionCode);
@@ -101,26 +100,97 @@
     return {rank: above + 1, total: available.length, equal};
   }
 
-  function sevenDayComparison(currentSnapshot, history, selection) {
+  // 過去の取得は施設ごとの料金を公開せず、市場ごとの集計だけを trend-history.json に残す
+  // （サーバーの scripts/export_static.py が同じ形で書き出す）。
+  //   snapshots: [{date, conditions}]（古い順）
+  //   regions[code].cohorts[i]: [cohort_version, cohortActive, cohortValid, "CORE施設番号,…", target] または null（その日に市場がない）
+  //   regions[code].rates[宿泊日][食事条件][i]: [比較施設群中央値, 料金確認施設数, 観測行数]
+  // 市場は期間中に一度でも出てきたもの、宿泊日は最新の取得日より後の泊だけを持つ（どの取得かに料金行があった泊と食事条件）。
+  // trendHistoryFrom は同じ集計を取得そのものから作る（テストと検算用）。
+  function trendHistoryFrom(snapshots, {days = 30} = {}) {
+    const ordered = (snapshots || []).filter(Boolean).slice().sort((a, b) => a.snapshot_date.localeCompare(b.snapshot_date)).slice(-days);
+    const latest = ordered[ordered.length - 1];
+    const regions = {};
+    const codes = [...new Set(ordered.flatMap((snapshot) => (snapshot.regions || []).map((region) => region.code)))];
+    codes.forEach((code) => {
+      const latestRegion = {code};
+      const stays = {};
+      ordered.forEach((snapshot) => (regionFrom(snapshot, latestRegion.code)?.rates || []).forEach((row) => {
+        if (row.stay_date > latest.snapshot_date) (stays[row.stay_date] ||= new Set()).add(row.meal_type);
+      }));
+      const cohorts = ordered.map((snapshot) => {
+        const region = regionFrom(snapshot, latestRegion.code);
+        if (!region) return null;
+        const cohort = cohortMetadata(region);
+        return [cohort.version, cohort.active, cohort.valid, [...cohort.propertyIds].sort().join(","), cohort.expectedCount];
+      });
+      const rates = {};
+      Object.keys(stays).sort().forEach((stayDate) => {
+        rates[stayDate] = {};
+        [...stays[stayDate]].sort().forEach((mealType) => {
+          rates[stayDate][mealType] = ordered.map((snapshot, index) => {
+            if (!cohorts[index]) return null;
+            const summary = summarize(snapshot, latestRegion.code, stayDate, mealType);
+            return [summary.marketMedian, summary.successful, summary.observations];
+          });
+        });
+      });
+      regions[latestRegion.code] = {cohorts, rates};
+    });
+    return {
+      schema_version: 1,
+      latest_snapshot: latest?.snapshot_date || null,
+      snapshots: ordered.map((snapshot) => ({date: snapshot.snapshot_date, conditions: snapshot.conditions || null})),
+      regions
+    };
+  }
+
+  // trend-history.json の i 番目の取得について、summarize と同じ名前で市場の集計を返す（施設ごとの値はない）
+  function historySummary(trendHistory, index, regionCode, stayDate, mealType) {
+    const region = trendHistory?.regions?.[regionCode];
+    const cohort = region?.cohorts?.[index];
+    const entry = trendHistory?.snapshots?.[index];
+    if (!cohort || !entry) return null;
+    const [version, active, valid, ids, target] = cohort;
+    const [marketMedian, successful, observations] = region.rates?.[stayDate]?.[mealType]?.[index] || [null, 0, 0];
+    const dataQuality = active ? qualityForCount(successful) : successful >= 3 ? "legacy_comparable" : "legacy_reference";
+    return {
+      snapshot_date: entry.date, conditions: entry.conditions, marketMedian, successful, observations, target,
+      comparisonReady: active ? valid && dataQuality !== "insufficient" : successful >= 3,
+      dataQuality, cohortActive: active, cohortValid: valid, cohortVersion: version,
+      propertyIds: ids ? ids.split(",") : []
+    };
+  }
+
+  function sevenDayComparison(currentSnapshot, trendHistory, selection) {
     const targetDate = addDays(currentSnapshot?.snapshot_date, -7);
-    const previous = (history || []).find((snapshot) => snapshot?.snapshot_date === targetDate);
-    if (!previous) return {status: "missing_snapshot", previous: null};
+    const index = (trendHistory?.snapshots || []).findIndex((entry) => entry.date === targetDate);
+    if (index < 0) return {status: "missing_snapshot", previous: null};
+    const previous = {snapshot_date: targetDate, conditions: trendHistory.snapshots[index].conditions};
     if (!conditionsMatch(currentSnapshot, previous)) return {status: "conditions_mismatch", previous};
-    const previousRegion = regionFrom(previous, selection.regionCode);
-    if (!previousRegion) return {status: "missing_region", previous};
+    const prior = historySummary(trendHistory, index, selection.regionCode, selection.stayDate, selection.mealType);
+    if (!prior) return {status: "missing_region", previous};
     const current = summarize(currentSnapshot, selection.regionCode, selection.stayDate, selection.mealType);
-    const prior = summarize(previous, selection.regionCode, selection.stayDate, selection.mealType);
     const currentSelected = current.positions.find((row) => Number(row.hotel_no) === Number(selection.hotelNo));
-    const previousSelected = prior.positions.find((row) => Number(row.hotel_no) === Number(selection.hotelNo));
     const cohortVersionsMatch = current.cohortVersion === prior.cohortVersion;
-    const selectedChange = cohortVersionsMatch && currentSelected?.min_price_yen != null && previousSelected?.min_price_yen != null
-      ? (currentSelected.min_price_yen / previousSelected.min_price_yen - 1) * 100 : null;
-    const propertySetsMatch = sameIds(idsFor(current.positions), idsFor(prior.positions));
+    const propertySetsMatch = sameIds(new Set(current.propertyIds), new Set(prior.propertyIds));
     const marketComparable = cohortVersionsMatch && propertySetsMatch && current.cohortValid && prior.cohortValid;
     const marketChange = marketComparable && current.comparisonReady && prior.comparisonReady && current.marketMedian != null && prior.marketMedian != null
       ? (current.marketMedian / prior.marketMedian - 1) * 100 : null;
     const status = !cohortVersionsMatch ? "cohort_version_mismatch" : propertySetsMatch ? "available" : "property_set_mismatch";
-    return {status, previous, current, prior, currentSelected, previousSelected: cohortVersionsMatch ? previousSelected : undefined, selectedChange, marketChange};
+    return {status, previous, current, prior, currentSelected, marketChange};
+  }
+
+  // 選択した宿泊日の比較施設群中央値を取得日ごとに並べる。今日の比較施設群と同じバージョン・同じ施設の日だけ
+  function trendRows(trendHistory, latestSummary, selection) {
+    const expectedIds = [...latestSummary.propertyIds].sort().join(",");
+    return (trendHistory?.snapshots || []).map((entry, index) => {
+      const summary = historySummary(trendHistory, index, selection.regionCode, selection.stayDate, selection.mealType);
+      if (!summary) return null;
+      return {snapshot_date: entry.date, median: summary.marketMedian, successful: summary.successful, target: summary.target,
+        cohort_version: summary.cohortVersion, cohort_valid: summary.cohortValid, property_ids: [...summary.propertyIds].sort().join(",")};
+    }).filter((row) => row && row.snapshot_date <= selection.stayDate &&
+      (!latestSummary.cohortActive || row.cohort_valid && row.cohort_version === latestSummary.cohortVersion && row.property_ids === expectedIds));
   }
 
   const MIN_RATING_PEERS = 3;
@@ -274,5 +344,5 @@
     return {min, max, step, ticks};
   }
 
-  return {DAILY_TREND_LABELS, addDays, changeLabel, cohortMetadata, conditionsMatch, dailyTrendView, formatJapaneseDate, insightLines, isFinitePositive, median, priceRank, qualityForCount, ratingPeers, rawQuantile, regionFrom, selectableRegions, sevenDayComparison, showPositionBars, signedPercent, summarize, trendAxis, trendSegments};
+  return {DAILY_TREND_LABELS, addDays, changeLabel, cohortMetadata, conditionsMatch, dailyTrendView, formatJapaneseDate, insightLines, isFinitePositive, median, priceRank, qualityForCount, ratingPeers, rawQuantile, regionFrom, selectableRegions, sevenDayComparison, showPositionBars, trendHistoryFrom, historySummary, trendRows, signedPercent, summarize, trendAxis, trendSegments};
 });

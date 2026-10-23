@@ -128,7 +128,7 @@ def test_daily_workflow_fetches_photos_without_blocking_prices():
     workflow = (ROOT / ".github/workflows/update-business-hotel-prices.yml").read_text(encoding="utf-8")
     step = workflow.split("- name: Fetch facility photo URLs from Rakuten Travel", 1)[1].split("- name:", 1)[0]
     assert "continue-on-error: true" in step and "update_business_hotel_images.py" in step
-    assert workflow.index("update_business_hotel_prices.py") < workflow.index("update_business_hotel_images.py") < workflow.index("git add data/business-hotel-price-trends")
+    assert workflow.index("update_business_hotel_prices.py") < workflow.index("update_business_hotel_images.py") < workflow.index("git add -A data/business-hotel-price-trends")
 
 
 def test_page_credits_rakuten_for_photos():

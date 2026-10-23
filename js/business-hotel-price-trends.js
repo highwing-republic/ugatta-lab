@@ -4,7 +4,7 @@
   const M = globalThis.BusinessHotelPriceModel;
   const DATA = "data/business-hotel-price-trends/";
   const $ = (selector) => document.querySelector(selector);
-  const state = {cohort: null, manifest: null, latest: null, previous: null, history: [], historyLoaded: false, events: null, images: null, eventView: null, market: null, nights: 30, rankTab: "volatileMarkets"};
+  const state = {cohort: null, manifest: null, latest: null, history: null, events: null, images: null, eventView: null, market: null, nights: 30, rankTab: "volatileMarkets"};
 
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
   const yen = M.formatYen;
@@ -28,22 +28,20 @@
     show("loading");
     try {
       const [manifest, cohort] = await Promise.all([getJson(`${DATA}manifest.json`), getJson(`${DATA}cohort.json`)]);
-      if (!manifest.latest_snapshot || !manifest.snapshots?.length) throw Object.assign(new Error("empty"), {status: 404});
-      const latestEntry = manifest.snapshots.find((item) => item.date === manifest.latest_snapshot) || manifest.snapshots[0];
-      const previousEntry = manifest.snapshots.find((item) => item.date === M.addDays(latestEntry.date, -7));
-      // 催しの候補（AI調べ）と施設写真は無くても表示できるので、読めなければ黙って省く
-      const [latest, previous, events, images] = await Promise.all([
-        getJson(DATA + latestEntry.file),
-        previousEntry ? getJson(DATA + previousEntry.file).catch(() => null) : null,
+      if (!manifest.latest_snapshot || !manifest.latest_file) throw Object.assign(new Error("empty"), {status: 404});
+      // 過去の取得は施設ごとの料金を公開せず、集計（history.json）だけを読む。
+      // 集計・催しの候補（AI調べ）・施設写真は無くても表示できるので、読めなければ黙って省く
+      const [latest, history, events, images] = await Promise.all([
+        getJson(DATA + manifest.latest_file),
+        manifest.history_file ? getJson(DATA + manifest.history_file).catch(() => null) : null,
         getJson(`${DATA}events.json`).catch(() => null),
         getJson(`${DATA}images.json`).catch(() => null),
       ]);
-      Object.assign(state, {manifest, cohort, latest, previous, events, images});
+      Object.assign(state, {manifest, cohort, latest, history: M.historyFor(history, latest), events, images});
       readUrl();
       setupControls();
       show("dashboard");
       render();
-      loadHistory(manifest, latestEntry, previous);
     } catch (error) {
       if (error.status === 404) {
         $("#bht-error-title").textContent = "データを準備中です";
@@ -55,18 +53,6 @@
       }
       show("error");
     }
-  }
-
-  // 泊まる日ごとの値段の動きに使う過去の取得（今日から60泊分の泊が観測された期間）。
-  // 最初の表示を待たせないよう後から読み、読めた分だけで値段の動きを描く
-  const HISTORY_DAYS = 60;
-  async function loadHistory(manifest, latestEntry, previous) {
-    const oldest = M.addDays(latestEntry.date, -HISTORY_DAYS);
-    const entries = manifest.snapshots.filter((item) => item.date < latestEntry.date && item.date >= oldest);
-    const loaded = await Promise.all(entries.map((item) => (previous && item.date === previous.snapshot_date ? previous : getJson(DATA + item.file).catch(() => null))));
-    state.history = loaded.filter(Boolean);
-    state.historyLoaded = true;
-    render();
   }
 
   function show(which) {
@@ -117,7 +103,7 @@
     const updated = $("#source-updated");
     if (updated) updated.textContent = state.latest.snapshot_date;
 
-    const national = M.nationalSummary(state.cohort, state.latest, state.previous, {nights: state.nights});
+    const national = M.nationalSummary(state.cohort, state.latest, state.history, {nights: state.nights});
     const summaries = national.markets;
     state.eventView = M.eventCandidates(state.events, national);
     renderHighlights(M.highlights(national));
@@ -430,23 +416,6 @@
   const signedPct = (value) => `${value > 0 ? "+" : value < 0 ? "−" : "±"}${Math.abs(value).toFixed(0)}%`;
 
   // 施設ごとに、料金が見えた最初の取得と今朝を比べる（今朝が楽天で売り切れなら「売り切れ」）
-  function hotelMoves(history) {
-    const last = history.points[history.points.length - 1];
-    const counts = {up: 0, flat: 0, down: 0, soldOut: 0};
-    if (!last || history.points.length < 2) return counts;
-    last.hotels.forEach((hotel) => {
-      const firstPoint = history.points.slice(0, -1).find((point) => M.isPrice(point.hotels.find((item) => item.hotel_no === hotel.hotel_no)?.price));
-      if (!firstPoint) return;
-      const first = firstPoint.hotels.find((item) => item.hotel_no === hotel.hotel_no).price;
-      if (hotel.soldOut) counts.soldOut += 1;
-      else if (M.isPrice(hotel.price)) {
-        const change = (hotel.price / first - 1) * 100;
-        counts[change >= M.TREND_THRESHOLD ? "up" : change <= -M.TREND_THRESHOLD ? "down" : "flat"] += 1;
-      }
-    });
-    return counts;
-  }
-
   // ツールチップに入れる小さな折れ線（毎朝の中央値）。数値だけで組み立てる
   function sparkline(points) {
     const list = points.filter((point) => point.status !== "none");
@@ -466,7 +435,7 @@
     if (!history || !history.first || !history.last || history.first === history.last) {
       return {text: `${head}\n${history && history.points.length > 1 ? "今朝は比較データ不足（売り切れなど）" : "記録がまだ今朝の1日分です"}`};
     }
-    const moves = hotelMoves(history);
+    const moves = history.moves;
     const moveText = [["up", "値上がり"], ["flat", "横ばい"], ["down", "値下がり"], ["soldOut", "売り切れ"]].filter(([key]) => moves[key]).map(([key, label]) => `${label}${moves[key]}`).join("・");
     // 毎朝の値段（多いときは間引いて最大8行）
     const valid = history.points.filter((point) => point.status !== "none");
@@ -484,13 +453,8 @@
     const lead = $("#bht-moves-lead");
     const clear = () => ["#bht-moves-chart", "#bht-moves-legend", "#bht-moves-table"].forEach((id) => ($(id).innerHTML = ""));
     renderPaths();
-    if (!state.historyLoaded) {
-      lead.textContent = "毎朝の取得の記録を読み込んでいます…";
-      clear();
-      return;
-    }
     const days = summary.days;
-    const histories = M.stayHistories(state.cohort, [state.latest, ...state.history], state.market, days.map((day) => day.date));
+    const histories = M.historyStays(state.history, state.market, days.map((day) => day.date));
     const withChange = histories.filter((item) => item.change !== null);
     if (!withChange.length) {
       lead.textContent = "取得の記録が2日分以上になると、泊まる日ごとの値段の動きを表示します。";
@@ -507,8 +471,8 @@
     }
     const highest = withChange.slice().sort((a, b) => b.change - a.change)[0];
     const lowest = withChange.slice().sort((a, b) => a.change - b.change)[0];
-    const since = [state.latest, ...state.history].map((snap) => snap.snapshot_date).sort()[0];
-    lead.innerHTML = `記録の最初の取得から今朝までに、<b>値上がりした泊 ${count("up")}</b>・<b>値下がりした泊 ${count("down")}</b>・ほぼ同じ泊 ${count("flat")}（±${M.TREND_THRESHOLD}%未満）。${highest.change > 0 ? `いちばん上がったのは<b>${escapeHtml(M.formatDate(highest.date))}泊（${escapeHtml(signedPct(highest.change))}）</b>、` : ""}${lowest.change < 0 ? `いちばん下がったのは<b>${escapeHtml(M.formatDate(lowest.date))}泊（${escapeHtml(signedPct(lowest.change))}）</b>です。` : ""}<span class="bht-daily-lead__note">記録は${escapeHtml(M.formatDate(since))}から${state.history.length + 1}日分。棒に触れると、その泊の毎朝の値段が出ます。</span>`;
+    const since = state.history.snapshots[0];
+    lead.innerHTML = `記録の最初の取得から今朝までに、<b>値上がりした泊 ${count("up")}</b>・<b>値下がりした泊 ${count("down")}</b>・ほぼ同じ泊 ${count("flat")}（±${M.TREND_THRESHOLD}%未満）。${highest.change > 0 ? `いちばん上がったのは<b>${escapeHtml(M.formatDate(highest.date))}泊（${escapeHtml(signedPct(highest.change))}）</b>、` : ""}${lowest.change < 0 ? `いちばん下がったのは<b>${escapeHtml(M.formatDate(lowest.date))}泊（${escapeHtml(signedPct(lowest.change))}）</b>です。` : ""}<span class="bht-daily-lead__note">記録は${escapeHtml(M.formatDate(since))}から${state.history.snapshots.length}日分。棒に触れると、その泊の毎朝の値段が出ます。</span>`;
 
     const width = chartWidth(chart, 960);
     const narrow = width < 560;
@@ -556,7 +520,7 @@
     const byDate = new Map(histories.map((item) => [item.date, item]));
     bindCrosshair(chart, days, cx, step, (day) => moveTip(day, byDate.get(day.date)), "#bht-moves-crosshair");
     $("#bht-moves-table").innerHTML = tableTwin("表で見る", ["宿泊日", "最初の取得", "そのときの中央値", "今朝の中央値", "変化", "施設ごと"], histories.map((item) => {
-      const moves = hotelMoves(item);
+      const moves = item.moves;
       return [M.formatDate(item.date), item.first ? `${shortDate(item.first.snapshot)}（${item.first.daysBefore}日前）` : "—", item.first ? yen(item.first.median) : "—", item.last ? yen(item.last.median) : "—", item.change === null ? "—" : signedPct(item.change), item.change === null ? "—" : `上${moves.up}・同${moves.flat}・下${moves.down}・売${moves.soldOut}`];
     }));
   }
@@ -564,11 +528,7 @@
   // 値段の動き方のまとめ: 高い泊とその他の泊で、施設ごとの動きの割合を横棒で並べる
   function renderPaths() {
     const box = $("#bht-paths");
-    if (!state.historyLoaded) {
-      box.innerHTML = "";
-      return;
-    }
-    const result = M.pricePaths(state.cohort, [state.latest, ...state.history], state.market, {nights: state.nights});
+    const result = state.history?.markets[state.market]?.paths[state.nights] || {records: 0, groups: []};
     const groups = result.groups.filter((group) => group.total);
     if (!groups.length) {
       box.innerHTML = `<h3>値段の動き方のまとめ</h3><p class="bht-note">取得の記録が2日分以上になると表示します。</p>`;

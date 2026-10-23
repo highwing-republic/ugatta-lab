@@ -170,7 +170,7 @@ def test_bad_credentials_stop_the_run_instead_of_recording_errors():
 # ---------------------------------------------------------------- 保存
 
 
-def test_snapshot_is_compact_and_manifest_lists_newest_first(tmp_path):
+def test_snapshot_is_compact_and_kept_only_in_the_private_store(tmp_path):
     cohort = {**COHORT, "markets": [COHORT["markets"][0]]}
     sapporo = cohort["markets"][0]
     first, second = sapporo["properties"][0]["hotel_no"], sapporo["properties"][1]["hotel_no"]
@@ -184,13 +184,21 @@ def test_snapshot_is_compact_and_manifest_lists_newest_first(tmp_path):
     assert market["hotels"][1] == {"hotel_no": second, "price": [None, None], "meal": "-?"}
     assert snapshot["generated_at"] == "2026-10-16T06:30:00+09:00"
 
-    bh.write_snapshot(snapshot, cohort, tmp_path)
-    older = {**snapshot, "snapshot_date": "2026-10-15"}
-    bh.write_snapshot(older, cohort, tmp_path)
-    manifest = json.loads((tmp_path / "manifest.json").read_text(encoding="utf-8"))
-    assert manifest["latest_snapshot"] == "2026-10-16"
-    assert [s["date"] for s in manifest["snapshots"]] == ["2026-10-16", "2026-10-15"]
-    assert manifest["cohort_version"] == COHORT["cohort_version"]
+    raw = tmp_path / "raw"
+    for old in ("2026-08-16", "2026-08-17"):
+        bh.write_snapshot({**snapshot, "snapshot_date": old}, raw)
+    path = bh.write_snapshot(snapshot, raw)
+    assert path == raw / "2026-10-16.json"
+    assert json.loads(path.read_text(encoding="utf-8")) == snapshot
+    # 60日より前の日別料金は消す（10/16 から60日前 = 8/17 は残す）
+    assert sorted(p.name for p in raw.iterdir()) == ["2026-08-17.json", "2026-10-16.json"]
+
+
+def test_daily_prices_are_not_written_into_the_public_site():
+    assert bh.RAW_DIR.relative_to(bh.ROOT).parts[0] == ".private"
+    gitignore = (bh.ROOT / ".gitignore").read_text(encoding="utf-8").splitlines()
+    assert ".private/" in gitignore
+    assert ".private" not in str(bh.DATA_DIR)
 
 
 def test_error_ratio_counts_only_failed_lookups():

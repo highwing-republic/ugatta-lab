@@ -5,3 +5,4 @@ __pycache__/
 .signal-source/
 .worktrees/
 .tmp/
+.private/
