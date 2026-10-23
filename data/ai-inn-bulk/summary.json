@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-10-22T12:51:39+00:00",
+  "generated_at": "2026-10-23T08:57:25+00:00",
   "models": [
     "claude-haiku-5-5"
   ],
-  "price_snapshot_date": "2026-10-21",
+  "price_snapshot_date": "2026-10-23",
   "note": "「答えられた」はサイトに書いてあるという意味で、内容が事実どおりかは確かめていません。",
   "overall": {
     "group": {
@@ -12,24 +12,24 @@
     "inns": 108,
     "inns_not_judged": 4,
     "answered": {
-      "mean": 4.34,
+      "mean": 4.49,
       "median": 4.0,
-      "rate": 0.396,
+      "rate": 0.409,
       "distribution": {
         "0": 2,
-        "1": 7,
-        "2": 9,
-        "3": 14,
-        "4": 23,
-        "5": 27,
-        "6": 15,
-        "7": 5,
-        "8": 4,
-        "9": 2
+        "1": 6,
+        "2": 11,
+        "3": 12,
+        "4": 25,
+        "5": 20,
+        "6": 12,
+        "7": 14,
+        "8": 3,
+        "9": 3
       }
     },
     "items_absent": {
-      "mean": 6.8,
+      "mean": 6.87,
       "median": 6.0
     },
     "questions": {
@@ -47,18 +47,18 @@
         "stage": "知る",
         "scored": true,
         "applicable": 107,
-        "answered": 41,
-        "ask_inn": 66,
-        "answered_rate": 0.383
+        "answered": 36,
+        "ask_inn": 71,
+        "answered_rate": 0.336
       },
       "Q03": {
         "text": "露天風呂付きの客室はある？",
         "stage": "比べる",
         "scored": true,
         "applicable": 108,
-        "answered": 61,
-        "ask_inn": 47,
-        "answered_rate": 0.565
+        "answered": 62,
+        "ask_inn": 46,
+        "answered_rate": 0.574
       },
       "Q04": {
         "text": "部屋の広さと1泊の料金は？",
@@ -74,18 +74,18 @@
         "stage": "比べる",
         "scored": true,
         "applicable": 107,
-        "answered": 58,
-        "ask_inn": 49,
-        "answered_rate": 0.542
+        "answered": 63,
+        "ask_inn": 44,
+        "answered_rate": 0.589
       },
       "Q06": {
         "text": "夕食付きで泊まれる？部屋食？",
         "stage": "予約する",
         "scored": true,
         "applicable": 108,
-        "answered": 50,
-        "ask_inn": 58,
-        "answered_rate": 0.463
+        "answered": 54,
+        "ask_inn": 54,
+        "answered_rate": 0.5
       },
       "Q07": {
         "text": "食物アレルギーに対応してもらえる？",
@@ -101,72 +101,72 @@
         "stage": "予約する",
         "scored": true,
         "applicable": 108,
-        "answered": 8,
-        "ask_inn": 100,
-        "answered_rate": 0.074
+        "answered": 9,
+        "ask_inn": 99,
+        "answered_rate": 0.083
       },
       "Q09": {
         "text": "キャンセル料はいつから？",
         "stage": "予約する",
         "scored": true,
         "applicable": 108,
-        "answered": 29,
-        "ask_inn": 79,
-        "answered_rate": 0.269
+        "answered": 30,
+        "ask_inn": 78,
+        "answered_rate": 0.278
       },
       "Q10": {
         "text": "最寄り駅から送迎はある？",
         "stage": "向かう",
         "scored": true,
         "applicable": 108,
-        "answered": 58,
-        "ask_inn": 50,
-        "answered_rate": 0.537
+        "answered": 62,
+        "ask_inn": 46,
+        "answered_rate": 0.574
       },
       "Q11": {
         "text": "チェックインは何時まで？",
         "stage": "向かう",
         "scored": true,
         "applicable": 108,
-        "answered": 18,
-        "ask_inn": 90,
-        "answered_rate": 0.167
+        "answered": 22,
+        "ask_inn": 86,
+        "answered_rate": 0.204
       },
       "Q12": {
         "text": "大浴場は何時まで入れる？",
         "stage": "泊まる",
         "scored": true,
         "applicable": 107,
-        "answered": 77,
-        "ask_inn": 30,
-        "answered_rate": 0.72
+        "answered": 78,
+        "ask_inn": 29,
+        "answered_rate": 0.729
       }
     },
     "stages": {
       "知る": {
-        "answered": 41,
+        "answered": 36,
         "denominator": 107,
-        "rate": 0.383
+        "rate": 0.336
       },
       "比べる": {
-        "answered": 127,
+        "answered": 133,
         "denominator": 323,
-        "rate": 0.393
+        "rate": 0.412
       },
       "予約する": {
-        "answered": 148,
+        "answered": 154,
         "denominator": 432,
-        "rate": 0.343
+        "rate": 0.356
       },
       "向かう": {
-        "answered": 76,
+        "answered": 84,
         "denominator": 216,
-        "rate": 0.352
+        "rate": 0.389
       },
       "泊まる": {
-        "answered": 77,
+        "answered": 78,
         "denominator": 107,
-        "rate": 0.72
+        "rate": 0.729
       }
     },
     "items": {
@@ -181,22 +181,22 @@
         "field": "温泉",
         "name": "源泉かけ流しかどうか",
         "applicable": 107,
-        "absent": 47,
-        "absent_rate": 0.439
+        "absent": 50,
+        "absent_rate": 0.467
       },
       "I03": {
         "field": "温泉",
         "name": "大浴場と露天風呂の時間",
         "applicable": 107,
-        "absent": 22,
-        "absent_rate": 0.206
+        "absent": 23,
+        "absent_rate": 0.215
       },
       "I04": {
         "field": "温泉",
         "name": "貸切風呂",
         "applicable": 107,
-        "absent": 39,
-        "absent_rate": 0.364
+        "absent": 40,
+        "absent_rate": 0.374
       },
       "I05": {
         "field": "食事",
@@ -209,15 +209,15 @@
         "field": "食事",
         "name": "夕食の場所（部屋食か食事処か）",
         "applicable": 108,
-        "absent": 10,
-        "absent_rate": 0.093
+        "absent": 14,
+        "absent_rate": 0.13
       },
       "I07": {
         "field": "食事",
         "name": "朝食",
         "applicable": 108,
-        "absent": 38,
-        "absent_rate": 0.352
+        "absent": 35,
+        "absent_rate": 0.324
       },
       "I08": {
         "field": "食事",
@@ -230,15 +230,15 @@
         "field": "客室",
         "name": "客室数",
         "applicable": 108,
-        "absent": 58,
-        "absent_rate": 0.537
+        "absent": 60,
+        "absent_rate": 0.556
       },
       "I10": {
         "field": "客室",
         "name": "客室の広さと定員",
         "applicable": 108,
-        "absent": 13,
-        "absent_rate": 0.12
+        "absent": 15,
+        "absent_rate": 0.139
       },
       "I11": {
         "field": "客室",
@@ -251,36 +251,36 @@
         "field": "客室",
         "name": "露天風呂付き客室",
         "applicable": 108,
-        "absent": 46,
-        "absent_rate": 0.426
+        "absent": 45,
+        "absent_rate": 0.417
       },
       "I13": {
         "field": "家族",
         "name": "子ども料金と添い寝",
         "applicable": 108,
-        "absent": 63,
-        "absent_rate": 0.583
+        "absent": 64,
+        "absent_rate": 0.593
       },
       "I14": {
         "field": "規約",
         "name": "キャンセル料",
         "applicable": 108,
-        "absent": 71,
-        "absent_rate": 0.657
+        "absent": 72,
+        "absent_rate": 0.667
       },
       "I15": {
         "field": "規約",
         "name": "支払い方法",
         "applicable": 108,
-        "absent": 48,
-        "absent_rate": 0.444
+        "absent": 50,
+        "absent_rate": 0.463
       },
       "I16": {
         "field": "規約",
         "name": "税・サービス料と入湯税",
         "applicable": 108,
-        "absent": 45,
-        "absent_rate": 0.417
+        "absent": 39,
+        "absent_rate": 0.361
       },
       "I17": {
         "field": "アクセス",
@@ -300,8 +300,8 @@
         "field": "アクセス",
         "name": "チェックインとアウト",
         "applicable": 108,
-        "absent": 34,
-        "absent_rate": 0.315
+        "absent": 35,
+        "absent_rate": 0.324
       }
     },
     "machine": {
@@ -348,26 +348,26 @@
         }
       }
     },
-    "inns_with_unstable": 10,
-    "inns_with_hidden_questions": 25,
+    "inns_with_unstable": 7,
+    "inns_with_hidden_questions": 27,
     "price_comparison": {
       "lower_half": {
         "inns": 54,
         "answered_median": 3.0,
         "reference_min_charge_yen_median": 13200.0,
-        "review_average_median": 4.404999999999999,
-        "bath_rating_median": 4.445,
-        "dinner_rating_median": 4.45,
-        "two_meals_price_median_yen": 53900
+        "review_average_median": 4.425,
+        "bath_rating_median": 4.455,
+        "dinner_rating_median": 4.46,
+        "two_meals_price_median_yen": 54300.0
       },
       "upper_half": {
         "inns": 54,
-        "answered_median": 5.0,
-        "reference_min_charge_yen_median": 15400,
+        "answered_median": 6.0,
+        "reference_min_charge_yen_median": 14850,
         "review_average_median": 4.44,
         "bath_rating_median": 4.49,
-        "dinner_rating_median": 4.48,
-        "two_meals_price_median_yen": 59050.0
+        "dinner_rating_median": 4.470000000000001,
+        "two_meals_price_median_yen": 58300.0
       },
       "note": "答えられた質問数と料金・評価の関係は相関であって、因果ではありません。"
     }
@@ -382,12 +382,12 @@
       "inns": 5,
       "inns_not_judged": 0,
       "answered": {
-        "mean": 4.8,
+        "mean": 5,
         "median": 5,
-        "rate": 0.436
+        "rate": 0.455
       },
       "items_absent": {
-        "mean": 8.2,
+        "mean": 8.4,
         "median": 9
       }
     },
@@ -400,9 +400,9 @@
       "inns": 5,
       "inns_not_judged": 0,
       "answered": {
-        "mean": 5,
+        "mean": 5.4,
         "median": 4,
-        "rate": 0.455
+        "rate": 0.491
       },
       "items_absent": {
         "mean": 5.6,
@@ -418,12 +418,12 @@
       "inns": 5,
       "inns_not_judged": 0,
       "answered": {
-        "mean": 4.2,
+        "mean": 4,
         "median": 4,
-        "rate": 0.382
+        "rate": 0.364
       },
       "items_absent": {
-        "mean": 6.8,
+        "mean": 6.2,
         "median": 7
       }
     },
@@ -436,12 +436,12 @@
       "inns": 5,
       "inns_not_judged": 0,
       "answered": {
-        "mean": 4,
+        "mean": 4.2,
         "median": 5,
-        "rate": 0.364
+        "rate": 0.382
       },
       "items_absent": {
-        "mean": 8.2,
+        "mean": 8.4,
         "median": 5
       }
     },
@@ -455,7 +455,7 @@
       "inns_not_judged": 0,
       "answered": {
         "mean": 5.6,
-        "median": 6,
+        "median": 5,
         "rate": 0.509
       },
       "items_absent": {
@@ -472,13 +472,13 @@
       "inns": 5,
       "inns_not_judged": 0,
       "answered": {
-        "mean": 4.6,
+        "mean": 5,
         "median": 5,
-        "rate": 0.418
+        "rate": 0.455
       },
       "items_absent": {
-        "mean": 7.2,
-        "median": 7
+        "mean": 7.6,
+        "median": 9
       }
     },
     {
@@ -490,13 +490,13 @@
       "inns": 5,
       "inns_not_judged": 0,
       "answered": {
-        "mean": 5,
+        "mean": 5.4,
         "median": 6,
-        "rate": 0.455
+        "rate": 0.491
       },
       "items_absent": {
-        "mean": 5.8,
-        "median": 6
+        "mean": 5.6,
+        "median": 5
       }
     },
     {
@@ -508,12 +508,12 @@
       "inns": 5,
       "inns_not_judged": 0,
       "answered": {
-        "mean": 4.6,
-        "median": 5,
-        "rate": 0.418
+        "mean": 5,
+        "median": 6,
+        "rate": 0.455
       },
       "items_absent": {
-        "mean": 6.8,
+        "mean": 7,
         "median": 5
       }
     },
@@ -526,12 +526,12 @@
       "inns": 5,
       "inns_not_judged": 0,
       "answered": {
-        "mean": 3.4,
+        "mean": 3.2,
         "median": 3,
-        "rate": 0.309
+        "rate": 0.291
       },
       "items_absent": {
-        "mean": 8.6,
+        "mean": 9,
         "median": 8
       }
     },
@@ -549,7 +549,7 @@
         "rate": 0.365
       },
       "items_absent": {
-        "mean": 5.6,
+        "mean": 5.2,
         "median": 5
       }
     },
@@ -562,12 +562,12 @@
       "inns": 5,
       "inns_not_judged": 0,
       "answered": {
-        "mean": 3.8,
-        "median": 4,
-        "rate": 0.345
+        "mean": 4,
+        "median": 5,
+        "rate": 0.364
       },
       "items_absent": {
-        "mean": 9.6,
+        "mean": 9.2,
         "median": 8
       }
     },
@@ -580,12 +580,12 @@
       "inns": 5,
       "inns_not_judged": 0,
       "answered": {
-        "mean": 5.4,
-        "median": 4,
-        "rate": 0.491
+        "mean": 6.2,
+        "median": 6,
+        "rate": 0.564
       },
       "items_absent": {
-        "mean": 4.4,
+        "mean": 4.2,
         "median": 5
       }
     },
@@ -598,13 +598,13 @@
       "inns": 5,
       "inns_not_judged": 0,
       "answered": {
-        "mean": 4.8,
+        "mean": 5.2,
         "median": 5,
-        "rate": 0.436
+        "rate": 0.473
       },
       "items_absent": {
         "mean": 5.4,
-        "median": 4
+        "median": 5
       }
     },
     {
@@ -616,12 +616,12 @@
       "inns": 5,
       "inns_not_judged": 0,
       "answered": {
-        "mean": 4.4,
+        "mean": 4.6,
         "median": 4,
-        "rate": 0.4
+        "rate": 0.418
       },
       "items_absent": {
-        "mean": 6.8,
+        "mean": 7,
         "median": 6
       }
     },
@@ -640,7 +640,7 @@
       },
       "items_absent": {
         "mean": 7.8,
-        "median": 8
+        "median": 7
       }
     },
     {
@@ -652,13 +652,13 @@
       "inns": 5,
       "inns_not_judged": 0,
       "answered": {
-        "mean": 4.8,
+        "mean": 5,
         "median": 5,
-        "rate": 0.436
+        "rate": 0.455
       },
       "items_absent": {
-        "mean": 6.2,
-        "median": 6
+        "mean": 6,
+        "median": 5
       }
     },
     {
@@ -671,12 +671,12 @@
       "inns_not_judged": 0,
       "answered": {
         "mean": 3.4,
-        "median": 4,
+        "median": 3,
         "rate": 0.309
       },
       "items_absent": {
-        "mean": 9.6,
-        "median": 9
+        "mean": 10,
+        "median": 10
       }
     }
   ],
@@ -686,31 +686,32 @@
         "kind": "size",
         "label": "〜20室"
       },
-      "inns": 13,
+      "inns": 12,
       "inns_not_judged": 0,
       "answered": {
-        "mean": 4.62,
-        "median": 5,
-        "rate": 0.42,
+        "mean": 4.83,
+        "median": 5.0,
+        "rate": 0.439,
         "distribution": {
           "2": 1,
           "3": 2,
           "4": 2,
-          "5": 4,
-          "6": 4
+          "5": 3,
+          "6": 1,
+          "7": 3
         }
       },
       "items_absent": {
-        "mean": 6.69,
-        "median": 6
+        "mean": 6.83,
+        "median": 6.0
       },
       "questions": {
         "Q01": {
           "text": "どんな旅館？おすすめは？",
           "stage": "知る",
           "scored": false,
-          "applicable": 13,
-          "answered": 13,
+          "applicable": 12,
+          "answered": 12,
           "ask_inn": 0,
           "answered_rate": 1.0
         },
@@ -718,302 +719,298 @@
           "text": "源泉かけ流し？泉質は？",
           "stage": "知る",
           "scored": true,
-          "applicable": 13,
-          "answered": 5,
-          "ask_inn": 8,
-          "answered_rate": 0.385
+          "applicable": 12,
+          "answered": 3,
+          "ask_inn": 9,
+          "answered_rate": 0.25
         },
         "Q03": {
           "text": "露天風呂付きの客室はある？",
           "stage": "比べる",
           "scored": true,
-          "applicable": 13,
-          "answered": 9,
+          "applicable": 12,
+          "answered": 8,
           "ask_inn": 4,
-          "answered_rate": 0.692
+          "answered_rate": 0.667
         },
         "Q04": {
           "text": "部屋の広さと1泊の料金は？",
           "stage": "比べる",
           "scored": true,
-          "applicable": 13,
-          "answered": 0,
-          "ask_inn": 13,
-          "answered_rate": 0.0
+          "applicable": 12,
+          "answered": 1,
+          "ask_inn": 11,
+          "answered_rate": 0.083
         },
         "Q05": {
           "text": "貸切風呂（家族風呂）はある？",
           "stage": "比べる",
           "scored": true,
-          "applicable": 13,
+          "applicable": 12,
           "answered": 9,
-          "ask_inn": 4,
-          "answered_rate": 0.692
+          "ask_inn": 3,
+          "answered_rate": 0.75
         },
         "Q06": {
           "text": "夕食付きで泊まれる？部屋食？",
           "stage": "予約する",
           "scored": true,
-          "applicable": 13,
-          "answered": 9,
+          "applicable": 12,
+          "answered": 8,
           "ask_inn": 4,
-          "answered_rate": 0.692
+          "answered_rate": 0.667
         },
         "Q07": {
           "text": "食物アレルギーに対応してもらえる？",
           "stage": "予約する",
           "scored": true,
-          "applicable": 13,
-          "answered": 6,
+          "applicable": 12,
+          "answered": 5,
           "ask_inn": 7,
-          "answered_rate": 0.462
+          "answered_rate": 0.417
         },
         "Q08": {
           "text": "子ども料金と添い寝は？",
           "stage": "予約する",
           "scored": true,
-          "applicable": 13,
+          "applicable": 12,
           "answered": 2,
-          "ask_inn": 11,
-          "answered_rate": 0.154
+          "ask_inn": 10,
+          "answered_rate": 0.167
         },
         "Q09": {
           "text": "キャンセル料はいつから？",
           "stage": "予約する",
           "scored": true,
-          "applicable": 13,
+          "applicable": 12,
           "answered": 2,
-          "ask_inn": 11,
-          "answered_rate": 0.154
+          "ask_inn": 10,
+          "answered_rate": 0.167
         },
         "Q10": {
           "text": "最寄り駅から送迎はある？",
           "stage": "向かう",
           "scored": true,
-          "applicable": 13,
-          "answered": 4,
-          "ask_inn": 9,
-          "answered_rate": 0.308
+          "applicable": 12,
+          "answered": 6,
+          "ask_inn": 6,
+          "answered_rate": 0.5
         },
         "Q11": {
           "text": "チェックインは何時まで？",
           "stage": "向かう",
           "scored": true,
-          "applicable": 13,
-          "answered": 2,
-          "ask_inn": 11,
-          "answered_rate": 0.154
+          "applicable": 12,
+          "answered": 3,
+          "ask_inn": 9,
+          "answered_rate": 0.25
         },
         "Q12": {
           "text": "大浴場は何時まで入れる？",
           "stage": "泊まる",
           "scored": true,
-          "applicable": 13,
-          "answered": 12,
+          "applicable": 12,
+          "answered": 11,
           "ask_inn": 1,
-          "answered_rate": 0.923
+          "answered_rate": 0.917
         }
       },
       "stages": {
         "知る": {
-          "answered": 5,
-          "denominator": 13,
-          "rate": 0.385
+          "answered": 3,
+          "denominator": 12,
+          "rate": 0.25
         },
         "比べる": {
           "answered": 18,
-          "denominator": 39,
-          "rate": 0.462
+          "denominator": 36,
+          "rate": 0.5
         },
         "予約する": {
-          "answered": 19,
-          "denominator": 52,
-          "rate": 0.365
+          "answered": 17,
+          "denominator": 48,
+          "rate": 0.354
         },
         "向かう": {
-          "answered": 6,
-          "denominator": 26,
-          "rate": 0.231
+          "answered": 9,
+          "denominator": 24,
+          "rate": 0.375
         },
         "泊まる": {
-          "answered": 12,
-          "denominator": 13,
-          "rate": 0.923
+          "answered": 11,
+          "denominator": 12,
+          "rate": 0.917
         }
       },
       "items": {
         "I01": {
           "field": "温泉",
           "name": "泉質と効能",
-          "applicable": 13,
+          "applicable": 12,
           "absent": 2,
-          "absent_rate": 0.154
+          "absent_rate": 0.167
         },
         "I02": {
           "field": "温泉",
           "name": "源泉かけ流しかどうか",
-          "applicable": 13,
+          "applicable": 12,
           "absent": 6,
-          "absent_rate": 0.462
+          "absent_rate": 0.5
         },
         "I03": {
           "field": "温泉",
           "name": "大浴場と露天風呂の時間",
-          "applicable": 13,
+          "applicable": 12,
           "absent": 1,
-          "absent_rate": 0.077
+          "absent_rate": 0.083
         },
         "I04": {
           "field": "温泉",
           "name": "貸切風呂",
-          "applicable": 13,
+          "applicable": 12,
           "absent": 3,
-          "absent_rate": 0.231
+          "absent_rate": 0.25
         },
         "I05": {
           "field": "食事",
           "name": "夕食の有無",
-          "applicable": 13,
+          "applicable": 12,
           "absent": 1,
-          "absent_rate": 0.077
+          "absent_rate": 0.083
         },
         "I06": {
           "field": "食事",
           "name": "夕食の場所（部屋食か食事処か）",
-          "applicable": 13,
+          "applicable": 12,
           "absent": 1,
-          "absent_rate": 0.077
+          "absent_rate": 0.083
         },
         "I07": {
           "field": "食事",
           "name": "朝食",
-          "applicable": 13,
-          "absent": 3,
-          "absent_rate": 0.231
+          "applicable": 12,
+          "absent": 2,
+          "absent_rate": 0.167
         },
         "I08": {
           "field": "食事",
           "name": "食物アレルギーへの対応",
-          "applicable": 13,
-          "absent": 7,
-          "absent_rate": 0.538
+          "applicable": 12,
+          "absent": 6,
+          "absent_rate": 0.5
         },
         "I09": {
           "field": "客室",
           "name": "客室数",
-          "applicable": 13,
+          "applicable": 12,
           "absent": 2,
-          "absent_rate": 0.154
+          "absent_rate": 0.167
         },
         "I10": {
           "field": "客室",
           "name": "客室の広さと定員",
-          "applicable": 13,
-          "absent": 2,
-          "absent_rate": 0.154
+          "applicable": 12,
+          "absent": 3,
+          "absent_rate": 0.25
         },
         "I11": {
           "field": "客室",
           "name": "料金（1室1泊）",
-          "applicable": 13,
+          "applicable": 12,
           "absent": 11,
-          "absent_rate": 0.846
+          "absent_rate": 0.917
         },
         "I12": {
           "field": "客室",
           "name": "露天風呂付き客室",
-          "applicable": 13,
+          "applicable": 12,
           "absent": 4,
-          "absent_rate": 0.308
+          "absent_rate": 0.333
         },
         "I13": {
           "field": "家族",
           "name": "子ども料金と添い寝",
-          "applicable": 13,
+          "applicable": 12,
           "absent": 8,
-          "absent_rate": 0.615
+          "absent_rate": 0.667
         },
         "I14": {
           "field": "規約",
           "name": "キャンセル料",
-          "applicable": 13,
-          "absent": 10,
-          "absent_rate": 0.769
+          "applicable": 12,
+          "absent": 9,
+          "absent_rate": 0.75
         },
         "I15": {
           "field": "規約",
           "name": "支払い方法",
-          "applicable": 13,
+          "applicable": 12,
           "absent": 10,
-          "absent_rate": 0.769
+          "absent_rate": 0.833
         },
         "I16": {
           "field": "規約",
           "name": "税・サービス料と入湯税",
-          "applicable": 13,
-          "absent": 5,
-          "absent_rate": 0.385
+          "applicable": 12,
+          "absent": 4,
+          "absent_rate": 0.333
         },
         "I17": {
           "field": "アクセス",
           "name": "最寄り駅と送迎",
-          "applicable": 13,
+          "applicable": 12,
           "absent": 2,
-          "absent_rate": 0.154
+          "absent_rate": 0.167
         },
         "I18": {
           "field": "アクセス",
           "name": "駐車場",
-          "applicable": 13,
-          "absent": 4,
-          "absent_rate": 0.308
+          "applicable": 12,
+          "absent": 3,
+          "absent_rate": 0.25
         },
         "I19": {
           "field": "アクセス",
           "name": "チェックインとアウト",
-          "applicable": 13,
-          "absent": 5,
-          "absent_rate": 0.385
+          "applicable": 12,
+          "absent": 4,
+          "absent_rate": 0.333
         }
       },
       "machine": {
         "nojs": {
           "partial": {
-            "count": 5,
-            "rate": 0.385
+            "count": 4,
+            "rate": 0.333
           },
           "readable": {
             "count": 8,
-            "rate": 0.615
+            "rate": 0.667
           }
         },
         "multilingual": {
-          "js_only": {
-            "count": 1,
-            "rate": 0.077
-          },
           "separate_urls": {
             "count": 12,
-            "rate": 0.923
+            "rate": 1.0
           }
         },
         "structured_data": {
           "lodging_type": {
-            "count": 2,
-            "rate": 0.154
+            "count": 1,
+            "rate": 0.083
           },
           "none": {
             "count": 2,
-            "rate": 0.154
+            "rate": 0.167
           },
           "other_type": {
             "count": 9,
-            "rate": 0.692
+            "rate": 0.75
           }
         }
       },
-      "inns_with_unstable": 1,
-      "inns_with_hidden_questions": 3
+      "inns_with_unstable": 0,
+      "inns_with_hidden_questions": 4
     },
     {
       "group": {
@@ -1023,14 +1020,16 @@
       "inns": 16,
       "inns_not_judged": 1,
       "answered": {
-        "mean": 4.31,
+        "mean": 4.25,
         "median": 4.0,
-        "rate": 0.392,
+        "rate": 0.386,
         "distribution": {
           "2": 3,
+          "3": 2,
           "4": 6,
-          "5": 5,
-          "6": 1,
+          "5": 1,
+          "6": 2,
+          "7": 1,
           "8": 1
         }
       },
@@ -1053,18 +1052,18 @@
           "stage": "知る",
           "scored": true,
           "applicable": 16,
-          "answered": 5,
-          "ask_inn": 11,
-          "answered_rate": 0.312
+          "answered": 4,
+          "ask_inn": 12,
+          "answered_rate": 0.25
         },
         "Q03": {
           "text": "露天風呂付きの客室はある？",
           "stage": "比べる",
           "scored": true,
           "applicable": 16,
-          "answered": 12,
-          "ask_inn": 4,
-          "answered_rate": 0.75
+          "answered": 13,
+          "ask_inn": 3,
+          "answered_rate": 0.812
         },
         "Q04": {
           "text": "部屋の広さと1泊の料金は？",
@@ -1080,9 +1079,9 @@
           "stage": "比べる",
           "scored": true,
           "applicable": 16,
-          "answered": 9,
-          "ask_inn": 7,
-          "answered_rate": 0.562
+          "answered": 8,
+          "ask_inn": 8,
+          "answered_rate": 0.5
         },
         "Q06": {
           "text": "夕食付きで泊まれる？部屋食？",
@@ -1150,9 +1149,9 @@
       },
       "stages": {
         "知る": {
-          "answered": 5,
+          "answered": 4,
           "denominator": 16,
-          "rate": 0.312
+          "rate": 0.25
         },
         "比べる": {
           "answered": 21,
@@ -1187,8 +1186,8 @@
           "field": "温泉",
           "name": "源泉かけ流しかどうか",
           "applicable": 16,
-          "absent": 6,
-          "absent_rate": 0.375
+          "absent": 7,
+          "absent_rate": 0.438
         },
         "I03": {
           "field": "温泉",
@@ -1201,8 +1200,8 @@
           "field": "温泉",
           "name": "貸切風呂",
           "applicable": 16,
-          "absent": 6,
-          "absent_rate": 0.375
+          "absent": 7,
+          "absent_rate": 0.438
         },
         "I05": {
           "field": "食事",
@@ -1215,15 +1214,15 @@
           "field": "食事",
           "name": "夕食の場所（部屋食か食事処か）",
           "applicable": 16,
-          "absent": 2,
-          "absent_rate": 0.125
+          "absent": 3,
+          "absent_rate": 0.188
         },
         "I07": {
           "field": "食事",
           "name": "朝食",
           "applicable": 16,
-          "absent": 4,
-          "absent_rate": 0.25
+          "absent": 2,
+          "absent_rate": 0.125
         },
         "I08": {
           "field": "食事",
@@ -1257,8 +1256,8 @@
           "field": "客室",
           "name": "露天風呂付き客室",
           "applicable": 16,
-          "absent": 4,
-          "absent_rate": 0.25
+          "absent": 3,
+          "absent_rate": 0.188
         },
         "I13": {
           "field": "家族",
@@ -1278,15 +1277,15 @@
           "field": "規約",
           "name": "支払い方法",
           "applicable": 16,
-          "absent": 8,
-          "absent_rate": 0.5
+          "absent": 9,
+          "absent_rate": 0.562
         },
         "I16": {
           "field": "規約",
           "name": "税・サービス料と入湯税",
           "applicable": 16,
-          "absent": 9,
-          "absent_rate": 0.562
+          "absent": 8,
+          "absent_rate": 0.5
         },
         "I17": {
           "field": "アクセス",
@@ -1358,33 +1357,34 @@
         "kind": "size",
         "label": "51〜100室"
       },
-      "inns": 15,
+      "inns": 17,
       "inns_not_judged": 1,
       "answered": {
-        "mean": 4.27,
+        "mean": 4.47,
         "median": 4,
-        "rate": 0.388,
+        "rate": 0.406,
         "distribution": {
-          "1": 2,
-          "3": 3,
-          "4": 3,
-          "5": 4,
-          "6": 1,
-          "7": 1,
+          "1": 1,
+          "2": 2,
+          "3": 1,
+          "4": 6,
+          "5": 2,
+          "6": 2,
+          "7": 2,
           "8": 1
         }
       },
       "items_absent": {
-        "mean": 6.13,
-        "median": 6
+        "mean": 6.12,
+        "median": 5
       },
       "questions": {
         "Q01": {
           "text": "どんな旅館？おすすめは？",
           "stage": "知る",
           "scored": false,
-          "applicable": 15,
-          "answered": 15,
+          "applicable": 17,
+          "answered": 17,
           "ask_inn": 0,
           "answered_rate": 1.0
         },
@@ -1392,305 +1392,305 @@
           "text": "源泉かけ流し？泉質は？",
           "stage": "知る",
           "scored": true,
-          "applicable": 15,
+          "applicable": 17,
           "answered": 8,
-          "ask_inn": 7,
-          "answered_rate": 0.533
+          "ask_inn": 9,
+          "answered_rate": 0.471
         },
         "Q03": {
           "text": "露天風呂付きの客室はある？",
           "stage": "比べる",
           "scored": true,
-          "applicable": 15,
-          "answered": 4,
+          "applicable": 17,
+          "answered": 6,
           "ask_inn": 11,
-          "answered_rate": 0.267
+          "answered_rate": 0.353
         },
         "Q04": {
           "text": "部屋の広さと1泊の料金は？",
           "stage": "比べる",
           "scored": true,
-          "applicable": 15,
+          "applicable": 17,
           "answered": 1,
-          "ask_inn": 14,
-          "answered_rate": 0.067
+          "ask_inn": 16,
+          "answered_rate": 0.059
         },
         "Q05": {
           "text": "貸切風呂（家族風呂）はある？",
           "stage": "比べる",
           "scored": true,
-          "applicable": 15,
-          "answered": 8,
+          "applicable": 17,
+          "answered": 10,
           "ask_inn": 7,
-          "answered_rate": 0.533
+          "answered_rate": 0.588
         },
         "Q06": {
           "text": "夕食付きで泊まれる？部屋食？",
           "stage": "予約する",
           "scored": true,
-          "applicable": 15,
+          "applicable": 17,
           "answered": 6,
-          "ask_inn": 9,
-          "answered_rate": 0.4
+          "ask_inn": 11,
+          "answered_rate": 0.353
         },
         "Q07": {
           "text": "食物アレルギーに対応してもらえる？",
           "stage": "予約する",
           "scored": true,
-          "applicable": 15,
-          "answered": 9,
+          "applicable": 17,
+          "answered": 11,
           "ask_inn": 6,
-          "answered_rate": 0.6
+          "answered_rate": 0.647
         },
         "Q08": {
           "text": "子ども料金と添い寝は？",
           "stage": "予約する",
           "scored": true,
-          "applicable": 15,
+          "applicable": 17,
           "answered": 1,
-          "ask_inn": 14,
-          "answered_rate": 0.067
+          "ask_inn": 16,
+          "answered_rate": 0.059
         },
         "Q09": {
           "text": "キャンセル料はいつから？",
           "stage": "予約する",
           "scored": true,
-          "applicable": 15,
-          "answered": 4,
-          "ask_inn": 11,
-          "answered_rate": 0.267
+          "applicable": 17,
+          "answered": 3,
+          "ask_inn": 14,
+          "answered_rate": 0.176
         },
         "Q10": {
           "text": "最寄り駅から送迎はある？",
           "stage": "向かう",
           "scored": true,
-          "applicable": 15,
-          "answered": 8,
-          "ask_inn": 7,
-          "answered_rate": 0.533
+          "applicable": 17,
+          "answered": 12,
+          "ask_inn": 5,
+          "answered_rate": 0.706
         },
         "Q11": {
           "text": "チェックインは何時まで？",
           "stage": "向かう",
           "scored": true,
-          "applicable": 15,
-          "answered": 1,
-          "ask_inn": 14,
-          "answered_rate": 0.067
+          "applicable": 17,
+          "answered": 2,
+          "ask_inn": 15,
+          "answered_rate": 0.118
         },
         "Q12": {
           "text": "大浴場は何時まで入れる？",
           "stage": "泊まる",
           "scored": true,
-          "applicable": 15,
-          "answered": 14,
+          "applicable": 17,
+          "answered": 16,
           "ask_inn": 1,
-          "answered_rate": 0.933
+          "answered_rate": 0.941
         }
       },
       "stages": {
         "知る": {
           "answered": 8,
-          "denominator": 15,
-          "rate": 0.533
+          "denominator": 17,
+          "rate": 0.471
         },
         "比べる": {
-          "answered": 13,
-          "denominator": 45,
-          "rate": 0.289
-        },
-        "予約する": {
-          "answered": 20,
-          "denominator": 60,
+          "answered": 17,
+          "denominator": 51,
           "rate": 0.333
         },
+        "予約する": {
+          "answered": 21,
+          "denominator": 68,
+          "rate": 0.309
+        },
         "向かう": {
-          "answered": 9,
-          "denominator": 30,
-          "rate": 0.3
+          "answered": 14,
+          "denominator": 34,
+          "rate": 0.412
         },
         "泊まる": {
-          "answered": 14,
-          "denominator": 15,
-          "rate": 0.933
+          "answered": 16,
+          "denominator": 17,
+          "rate": 0.941
         }
       },
       "items": {
         "I01": {
           "field": "温泉",
           "name": "泉質と効能",
-          "applicable": 15,
+          "applicable": 17,
           "absent": 2,
-          "absent_rate": 0.133
+          "absent_rate": 0.118
         },
         "I02": {
           "field": "温泉",
           "name": "源泉かけ流しかどうか",
-          "applicable": 15,
-          "absent": 6,
-          "absent_rate": 0.4
+          "applicable": 17,
+          "absent": 8,
+          "absent_rate": 0.471
         },
         "I03": {
           "field": "温泉",
           "name": "大浴場と露天風呂の時間",
-          "applicable": 15,
+          "applicable": 17,
           "absent": 1,
-          "absent_rate": 0.067
+          "absent_rate": 0.059
         },
         "I04": {
           "field": "温泉",
           "name": "貸切風呂",
-          "applicable": 15,
+          "applicable": 17,
           "absent": 7,
-          "absent_rate": 0.467
+          "absent_rate": 0.412
         },
         "I05": {
           "field": "食事",
           "name": "夕食の有無",
-          "applicable": 15,
+          "applicable": 17,
           "absent": 1,
-          "absent_rate": 0.067
+          "absent_rate": 0.059
         },
         "I06": {
           "field": "食事",
           "name": "夕食の場所（部屋食か食事処か）",
-          "applicable": 15,
+          "applicable": 17,
           "absent": 2,
-          "absent_rate": 0.133
+          "absent_rate": 0.118
         },
         "I07": {
           "field": "食事",
           "name": "朝食",
-          "applicable": 15,
-          "absent": 7,
-          "absent_rate": 0.467
+          "applicable": 17,
+          "absent": 6,
+          "absent_rate": 0.353
         },
         "I08": {
           "field": "食事",
           "name": "食物アレルギーへの対応",
-          "applicable": 15,
+          "applicable": 17,
           "absent": 5,
-          "absent_rate": 0.333
+          "absent_rate": 0.294
         },
         "I09": {
           "field": "客室",
           "name": "客室数",
-          "applicable": 15,
-          "absent": 3,
-          "absent_rate": 0.2
+          "applicable": 17,
+          "absent": 4,
+          "absent_rate": 0.235
         },
         "I10": {
           "field": "客室",
           "name": "客室の広さと定員",
-          "applicable": 15,
+          "applicable": 17,
           "absent": 1,
-          "absent_rate": 0.067
+          "absent_rate": 0.059
         },
         "I11": {
           "field": "客室",
           "name": "料金（1室1泊）",
-          "applicable": 15,
-          "absent": 13,
-          "absent_rate": 0.867
+          "applicable": 17,
+          "absent": 14,
+          "absent_rate": 0.824
         },
         "I12": {
           "field": "客室",
           "name": "露天風呂付き客室",
-          "applicable": 15,
+          "applicable": 17,
           "absent": 11,
-          "absent_rate": 0.733
+          "absent_rate": 0.647
         },
         "I13": {
           "field": "家族",
           "name": "子ども料金と添い寝",
-          "applicable": 15,
-          "absent": 8,
-          "absent_rate": 0.533
+          "applicable": 17,
+          "absent": 11,
+          "absent_rate": 0.647
         },
         "I14": {
           "field": "規約",
           "name": "キャンセル料",
-          "applicable": 15,
-          "absent": 11,
-          "absent_rate": 0.733
+          "applicable": 17,
+          "absent": 14,
+          "absent_rate": 0.824
         },
         "I15": {
           "field": "規約",
           "name": "支払い方法",
-          "applicable": 15,
-          "absent": 3,
-          "absent_rate": 0.2
+          "applicable": 17,
+          "absent": 5,
+          "absent_rate": 0.294
         },
         "I16": {
           "field": "規約",
           "name": "税・サービス料と入湯税",
-          "applicable": 15,
-          "absent": 6,
-          "absent_rate": 0.4
+          "applicable": 17,
+          "absent": 5,
+          "absent_rate": 0.294
         },
         "I17": {
           "field": "アクセス",
           "name": "最寄り駅と送迎",
-          "applicable": 15,
+          "applicable": 17,
           "absent": 0,
           "absent_rate": 0.0
         },
         "I18": {
           "field": "アクセス",
           "name": "駐車場",
-          "applicable": 15,
+          "applicable": 17,
           "absent": 2,
-          "absent_rate": 0.133
+          "absent_rate": 0.118
         },
         "I19": {
           "field": "アクセス",
           "name": "チェックインとアウト",
-          "applicable": 15,
-          "absent": 3,
-          "absent_rate": 0.2
+          "applicable": 17,
+          "absent": 5,
+          "absent_rate": 0.294
         }
       },
       "machine": {
         "nojs": {
           "partial": {
-            "count": 4,
-            "rate": 0.267
+            "count": 5,
+            "rate": 0.294
           },
           "readable": {
-            "count": 11,
-            "rate": 0.733
+            "count": 12,
+            "rate": 0.706
           }
         },
         "multilingual": {
           "js_only": {
-            "count": 4,
-            "rate": 0.267
+            "count": 6,
+            "rate": 0.353
           },
           "none": {
             "count": 1,
-            "rate": 0.067
+            "rate": 0.059
           },
           "separate_urls": {
             "count": 10,
-            "rate": 0.667
+            "rate": 0.588
           }
         },
         "structured_data": {
           "lodging_type": {
-            "count": 3,
-            "rate": 0.2
+            "count": 4,
+            "rate": 0.235
           },
           "none": {
             "count": 6,
-            "rate": 0.4
+            "rate": 0.353
           },
           "other_type": {
-            "count": 6,
-            "rate": 0.4
+            "count": 7,
+            "rate": 0.412
           }
         }
       },
-      "inns_with_unstable": 0,
+      "inns_with_unstable": 1,
       "inns_with_hidden_questions": 3
     },
     {
@@ -1701,23 +1701,22 @@
       "inns": 27,
       "inns_not_judged": 0,
       "answered": {
-        "mean": 4.41,
+        "mean": 4.48,
         "median": 5,
-        "rate": 0.401,
+        "rate": 0.407,
         "distribution": {
           "1": 2,
           "2": 2,
           "3": 5,
-          "4": 4,
-          "5": 6,
-          "6": 5,
-          "7": 2,
-          "8": 1
+          "4": 3,
+          "5": 7,
+          "6": 3,
+          "7": 5
         }
       },
       "items_absent": {
-        "mean": 6.22,
-        "median": 6
+        "mean": 6.33,
+        "median": 5
       },
       "questions": {
         "Q01": {
@@ -1734,18 +1733,18 @@
           "stage": "知る",
           "scored": true,
           "applicable": 27,
-          "answered": 11,
-          "ask_inn": 16,
-          "answered_rate": 0.407
+          "answered": 9,
+          "ask_inn": 18,
+          "answered_rate": 0.333
         },
         "Q03": {
           "text": "露天風呂付きの客室はある？",
           "stage": "比べる",
           "scored": true,
           "applicable": 27,
-          "answered": 13,
-          "ask_inn": 14,
-          "answered_rate": 0.481
+          "answered": 12,
+          "ask_inn": 15,
+          "answered_rate": 0.444
         },
         "Q04": {
           "text": "部屋の広さと1泊の料金は？",
@@ -1761,18 +1760,18 @@
           "stage": "比べる",
           "scored": true,
           "applicable": 27,
-          "answered": 14,
-          "ask_inn": 13,
-          "answered_rate": 0.519
+          "answered": 16,
+          "ask_inn": 11,
+          "answered_rate": 0.593
         },
         "Q06": {
           "text": "夕食付きで泊まれる？部屋食？",
           "stage": "予約する",
           "scored": true,
           "applicable": 27,
-          "answered": 9,
-          "ask_inn": 18,
-          "answered_rate": 0.333
+          "answered": 10,
+          "ask_inn": 17,
+          "answered_rate": 0.37
         },
         "Q07": {
           "text": "食物アレルギーに対応してもらえる？",
@@ -1788,9 +1787,9 @@
           "stage": "予約する",
           "scored": true,
           "applicable": 27,
-          "answered": 3,
-          "ask_inn": 24,
-          "answered_rate": 0.111
+          "answered": 4,
+          "ask_inn": 23,
+          "answered_rate": 0.148
         },
         "Q09": {
           "text": "キャンセル料はいつから？",
@@ -1806,9 +1805,9 @@
           "stage": "向かう",
           "scored": true,
           "applicable": 27,
-          "answered": 21,
-          "ask_inn": 6,
-          "answered_rate": 0.778
+          "answered": 20,
+          "ask_inn": 7,
+          "answered_rate": 0.741
         },
         "Q11": {
           "text": "チェックインは何時まで？",
@@ -1824,36 +1823,36 @@
           "stage": "泊まる",
           "scored": true,
           "applicable": 27,
-          "answered": 17,
-          "ask_inn": 10,
-          "answered_rate": 0.63
+          "answered": 19,
+          "ask_inn": 8,
+          "answered_rate": 0.704
         }
       },
       "stages": {
         "知る": {
-          "answered": 11,
+          "answered": 9,
           "denominator": 27,
-          "rate": 0.407
+          "rate": 0.333
         },
         "比べる": {
-          "answered": 28,
+          "answered": 29,
           "denominator": 81,
-          "rate": 0.346
+          "rate": 0.358
         },
         "予約する": {
-          "answered": 37,
+          "answered": 39,
           "denominator": 108,
-          "rate": 0.343
+          "rate": 0.361
         },
         "向かう": {
-          "answered": 26,
+          "answered": 25,
           "denominator": 54,
-          "rate": 0.481
+          "rate": 0.463
         },
         "泊まる": {
-          "answered": 17,
+          "answered": 19,
           "denominator": 27,
-          "rate": 0.63
+          "rate": 0.704
         }
       },
       "items": {
@@ -1861,15 +1860,15 @@
           "field": "温泉",
           "name": "泉質と効能",
           "applicable": 27,
-          "absent": 4,
-          "absent_rate": 0.148
+          "absent": 3,
+          "absent_rate": 0.111
         },
         "I02": {
           "field": "温泉",
           "name": "源泉かけ流しかどうか",
           "applicable": 27,
-          "absent": 12,
-          "absent_rate": 0.444
+          "absent": 13,
+          "absent_rate": 0.481
         },
         "I03": {
           "field": "温泉",
@@ -1896,15 +1895,15 @@
           "field": "食事",
           "name": "夕食の場所（部屋食か食事処か）",
           "applicable": 27,
-          "absent": 2,
-          "absent_rate": 0.074
+          "absent": 4,
+          "absent_rate": 0.148
         },
         "I07": {
           "field": "食事",
           "name": "朝食",
           "applicable": 27,
-          "absent": 9,
-          "absent_rate": 0.333
+          "absent": 12,
+          "absent_rate": 0.444
         },
         "I08": {
           "field": "食事",
@@ -1917,8 +1916,8 @@
           "field": "客室",
           "name": "客室数",
           "applicable": 27,
-          "absent": 11,
-          "absent_rate": 0.407
+          "absent": 13,
+          "absent_rate": 0.481
         },
         "I10": {
           "field": "客室",
@@ -1966,8 +1965,8 @@
           "field": "規約",
           "name": "税・サービス料と入湯税",
           "applicable": 27,
-          "absent": 12,
-          "absent_rate": 0.444
+          "absent": 8,
+          "absent_rate": 0.296
         },
         "I17": {
           "field": "アクセス",
@@ -1980,15 +1979,15 @@
           "field": "アクセス",
           "name": "駐車場",
           "applicable": 27,
-          "absent": 4,
-          "absent_rate": 0.148
+          "absent": 5,
+          "absent_rate": 0.185
         },
         "I19": {
           "field": "アクセス",
           "name": "チェックインとアウト",
           "applicable": 27,
-          "absent": 7,
-          "absent_rate": 0.259
+          "absent": 6,
+          "absent_rate": 0.222
         }
       },
       "machine": {
@@ -2035,7 +2034,7 @@
           }
         }
       },
-      "inns_with_unstable": 4,
+      "inns_with_unstable": 2,
       "inns_with_hidden_questions": 5
     },
     {
@@ -2043,347 +2042,347 @@
         "kind": "size",
         "label": "規模不明"
       },
-      "inns": 37,
+      "inns": 36,
       "inns_not_judged": 2,
       "answered": {
-        "mean": 4.24,
-        "median": 4,
-        "rate": 0.389,
+        "mean": 4.5,
+        "median": 4.5,
+        "rate": 0.412,
         "distribution": {
           "0": 2,
           "1": 3,
           "2": 3,
-          "3": 4,
+          "3": 2,
           "4": 8,
-          "5": 8,
+          "5": 7,
           "6": 4,
-          "7": 2,
+          "7": 3,
           "8": 1,
-          "9": 2
+          "9": 3
         }
       },
       "items_absent": {
-        "mean": 7.57,
-        "median": 7
+        "mean": 7.72,
+        "median": 8.0
       },
       "questions": {
         "Q01": {
           "text": "どんな旅館？おすすめは？",
           "stage": "知る",
           "scored": false,
-          "applicable": 37,
-          "answered": 35,
+          "applicable": 36,
+          "answered": 34,
           "ask_inn": 2,
-          "answered_rate": 0.946
+          "answered_rate": 0.944
         },
         "Q02": {
           "text": "源泉かけ流し？泉質は？",
           "stage": "知る",
           "scored": true,
-          "applicable": 36,
+          "applicable": 35,
           "answered": 12,
-          "ask_inn": 24,
-          "answered_rate": 0.333
+          "ask_inn": 23,
+          "answered_rate": 0.343
         },
         "Q03": {
           "text": "露天風呂付きの客室はある？",
           "stage": "比べる",
           "scored": true,
-          "applicable": 37,
+          "applicable": 36,
           "answered": 23,
-          "ask_inn": 14,
-          "answered_rate": 0.622
+          "ask_inn": 13,
+          "answered_rate": 0.639
         },
         "Q04": {
           "text": "部屋の広さと1泊の料金は？",
           "stage": "比べる",
           "scored": true,
-          "applicable": 37,
-          "answered": 6,
+          "applicable": 36,
+          "answered": 5,
           "ask_inn": 31,
-          "answered_rate": 0.162
+          "answered_rate": 0.139
         },
         "Q05": {
           "text": "貸切風呂（家族風呂）はある？",
           "stage": "比べる",
+          "scored": true,
+          "applicable": 35,
+          "answered": 20,
+          "ask_inn": 15,
+          "answered_rate": 0.571
+        },
+        "Q06": {
+          "text": "夕食付きで泊まれる？部屋食？",
+          "stage": "予約する",
+          "scored": true,
+          "applicable": 36,
+          "answered": 21,
+          "ask_inn": 15,
+          "answered_rate": 0.583
+        },
+        "Q07": {
+          "text": "食物アレルギーに対応してもらえる？",
+          "stage": "予約する",
           "scored": true,
           "applicable": 36,
           "answered": 18,
           "ask_inn": 18,
           "answered_rate": 0.5
         },
-        "Q06": {
-          "text": "夕食付きで泊まれる？部屋食？",
-          "stage": "予約する",
-          "scored": true,
-          "applicable": 37,
-          "answered": 17,
-          "ask_inn": 20,
-          "answered_rate": 0.459
-        },
-        "Q07": {
-          "text": "食物アレルギーに対応してもらえる？",
-          "stage": "予約する",
-          "scored": true,
-          "applicable": 37,
-          "answered": 19,
-          "ask_inn": 18,
-          "answered_rate": 0.514
-        },
         "Q08": {
           "text": "子ども料金と添い寝は？",
           "stage": "予約する",
           "scored": true,
-          "applicable": 37,
+          "applicable": 36,
           "answered": 2,
-          "ask_inn": 35,
-          "answered_rate": 0.054
+          "ask_inn": 34,
+          "answered_rate": 0.056
         },
         "Q09": {
           "text": "キャンセル料はいつから？",
           "stage": "予約する",
           "scored": true,
-          "applicable": 37,
-          "answered": 12,
-          "ask_inn": 25,
-          "answered_rate": 0.324
+          "applicable": 36,
+          "answered": 14,
+          "ask_inn": 22,
+          "answered_rate": 0.389
         },
         "Q10": {
           "text": "最寄り駅から送迎はある？",
           "stage": "向かう",
           "scored": true,
-          "applicable": 37,
-          "answered": 19,
+          "applicable": 36,
+          "answered": 18,
           "ask_inn": 18,
-          "answered_rate": 0.514
+          "answered_rate": 0.5
         },
         "Q11": {
           "text": "チェックインは何時まで？",
           "stage": "向かう",
           "scored": true,
-          "applicable": 37,
-          "answered": 7,
-          "ask_inn": 30,
-          "answered_rate": 0.189
+          "applicable": 36,
+          "answered": 9,
+          "ask_inn": 27,
+          "answered_rate": 0.25
         },
         "Q12": {
           "text": "大浴場は何時まで入れる？",
           "stage": "泊まる",
           "scored": true,
-          "applicable": 36,
-          "answered": 22,
-          "ask_inn": 14,
-          "answered_rate": 0.611
+          "applicable": 35,
+          "answered": 20,
+          "ask_inn": 15,
+          "answered_rate": 0.571
         }
       },
       "stages": {
         "知る": {
           "answered": 12,
-          "denominator": 36,
-          "rate": 0.333
+          "denominator": 35,
+          "rate": 0.343
         },
         "比べる": {
-          "answered": 47,
-          "denominator": 110,
-          "rate": 0.427
+          "answered": 48,
+          "denominator": 107,
+          "rate": 0.449
         },
         "予約する": {
-          "answered": 50,
-          "denominator": 148,
-          "rate": 0.338
+          "answered": 55,
+          "denominator": 144,
+          "rate": 0.382
         },
         "向かう": {
-          "answered": 26,
-          "denominator": 74,
-          "rate": 0.351
+          "answered": 27,
+          "denominator": 72,
+          "rate": 0.375
         },
         "泊まる": {
-          "answered": 22,
-          "denominator": 36,
-          "rate": 0.611
+          "answered": 20,
+          "denominator": 35,
+          "rate": 0.571
         }
       },
       "items": {
         "I01": {
           "field": "温泉",
           "name": "泉質と効能",
-          "applicable": 36,
-          "absent": 7,
-          "absent_rate": 0.194
+          "applicable": 35,
+          "absent": 8,
+          "absent_rate": 0.229
         },
         "I02": {
           "field": "温泉",
           "name": "源泉かけ流しかどうか",
-          "applicable": 36,
-          "absent": 17,
-          "absent_rate": 0.472
+          "applicable": 35,
+          "absent": 16,
+          "absent_rate": 0.457
         },
         "I03": {
           "field": "温泉",
           "name": "大浴場と露天風呂の時間",
-          "applicable": 36,
-          "absent": 10,
-          "absent_rate": 0.278
+          "applicable": 35,
+          "absent": 11,
+          "absent_rate": 0.314
         },
         "I04": {
           "field": "温泉",
           "name": "貸切風呂",
-          "applicable": 36,
+          "applicable": 35,
           "absent": 12,
-          "absent_rate": 0.333
+          "absent_rate": 0.343
         },
         "I05": {
           "field": "食事",
           "name": "夕食の有無",
-          "applicable": 37,
+          "applicable": 36,
           "absent": 3,
-          "absent_rate": 0.081
+          "absent_rate": 0.083
         },
         "I06": {
           "field": "食事",
           "name": "夕食の場所（部屋食か食事処か）",
-          "applicable": 37,
-          "absent": 3,
-          "absent_rate": 0.081
+          "applicable": 36,
+          "absent": 4,
+          "absent_rate": 0.111
         },
         "I07": {
           "field": "食事",
           "name": "朝食",
-          "applicable": 37,
-          "absent": 15,
-          "absent_rate": 0.405
+          "applicable": 36,
+          "absent": 13,
+          "absent_rate": 0.361
         },
         "I08": {
           "field": "食事",
           "name": "食物アレルギーへの対応",
-          "applicable": 37,
-          "absent": 17,
-          "absent_rate": 0.459
+          "applicable": 36,
+          "absent": 18,
+          "absent_rate": 0.5
         },
         "I09": {
           "field": "客室",
           "name": "客室数",
-          "applicable": 37,
-          "absent": 36,
-          "absent_rate": 0.973
+          "applicable": 36,
+          "absent": 35,
+          "absent_rate": 0.972
         },
         "I10": {
           "field": "客室",
           "name": "客室の広さと定員",
-          "applicable": 37,
-          "absent": 7,
-          "absent_rate": 0.189
+          "applicable": 36,
+          "absent": 8,
+          "absent_rate": 0.222
         },
         "I11": {
           "field": "客室",
           "name": "料金（1室1泊）",
-          "applicable": 37,
-          "absent": 30,
-          "absent_rate": 0.811
+          "applicable": 36,
+          "absent": 29,
+          "absent_rate": 0.806
         },
         "I12": {
           "field": "客室",
           "name": "露天風呂付き客室",
-          "applicable": 37,
+          "applicable": 36,
           "absent": 13,
-          "absent_rate": 0.351
+          "absent_rate": 0.361
         },
         "I13": {
           "field": "家族",
           "name": "子ども料金と添い寝",
-          "applicable": 37,
-          "absent": 22,
-          "absent_rate": 0.595
+          "applicable": 36,
+          "absent": 20,
+          "absent_rate": 0.556
         },
         "I14": {
           "field": "規約",
           "name": "キャンセル料",
-          "applicable": 37,
-          "absent": 23,
-          "absent_rate": 0.622
+          "applicable": 36,
+          "absent": 22,
+          "absent_rate": 0.611
         },
         "I15": {
           "field": "規約",
           "name": "支払い方法",
-          "applicable": 37,
-          "absent": 17,
-          "absent_rate": 0.459
+          "applicable": 36,
+          "absent": 16,
+          "absent_rate": 0.444
         },
         "I16": {
           "field": "規約",
           "name": "税・サービス料と入湯税",
-          "applicable": 37,
-          "absent": 13,
-          "absent_rate": 0.351
+          "applicable": 36,
+          "absent": 14,
+          "absent_rate": 0.389
         },
         "I17": {
           "field": "アクセス",
           "name": "最寄り駅と送迎",
-          "applicable": 37,
+          "applicable": 36,
           "absent": 9,
-          "absent_rate": 0.243
+          "absent_rate": 0.25
         },
         "I18": {
           "field": "アクセス",
           "name": "駐車場",
-          "applicable": 37,
+          "applicable": 36,
           "absent": 12,
-          "absent_rate": 0.324
+          "absent_rate": 0.333
         },
         "I19": {
           "field": "アクセス",
           "name": "チェックインとアウト",
-          "applicable": 37,
-          "absent": 14,
-          "absent_rate": 0.378
+          "applicable": 36,
+          "absent": 15,
+          "absent_rate": 0.417
         }
       },
       "machine": {
         "nojs": {
           "partial": {
             "count": 10,
-            "rate": 0.27
+            "rate": 0.278
           },
           "readable": {
-            "count": 25,
-            "rate": 0.676
+            "count": 24,
+            "rate": 0.667
           },
           "unreadable": {
             "count": 2,
-            "rate": 0.054
+            "rate": 0.056
           }
         },
         "multilingual": {
           "js_only": {
-            "count": 7,
-            "rate": 0.189
+            "count": 6,
+            "rate": 0.167
           },
           "none": {
             "count": 7,
-            "rate": 0.189
+            "rate": 0.194
           },
           "separate_urls": {
             "count": 23,
-            "rate": 0.622
+            "rate": 0.639
           }
         },
         "structured_data": {
           "lodging_type": {
             "count": 9,
-            "rate": 0.243
+            "rate": 0.25
           },
           "none": {
             "count": 9,
-            "rate": 0.243
+            "rate": 0.25
           },
           "other_type": {
-            "count": 19,
-            "rate": 0.514
+            "count": 18,
+            "rate": 0.5
           }
         }
       },
-      "inns_with_unstable": 4,
-      "inns_with_hidden_questions": 9
+      "inns_with_unstable": 3,
+      "inns_with_hidden_questions": 10
     }
   ],
   "suppressed_groups": 6,
