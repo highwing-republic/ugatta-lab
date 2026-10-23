@@ -43,8 +43,7 @@ def test_page_structure() -> None:
 def test_registry_home_and_llms_quote_the_page_numbers() -> None:
     p = page()
     kpis = {k["data-kpi"]: k.dd.strong.get_text() for k in p.select(".ai-kpi")}
-    inns = re.search(r"(\d+)軒", p.select_one(".scope-badge").get_text()).group(1)
-    expected = [f"{inns}軒", f"{float(kpis['answered']):.1f}問", f"{kpis['one-short']}問"]
+    expected = [f"{float(kpis['answered']):.1f}問", f"{kpis['one-short']}問"]
     tool = next(t for t in yaml.safe_load((ROOT / "_data/tools.yml").read_text(encoding="utf-8")) if t["id"] == "ai-inn-bulk")
     assert tool["url"] == "/ai-inn-diagnosis/bulk/"
     home = BeautifulSoup((ROOT / "index.html").read_text(encoding="utf-8"), "html.parser")
@@ -54,6 +53,18 @@ def test_registry_home_and_llms_quote_the_page_numbers() -> None:
         for number in expected:
             assert number in text, (number, text)
     assert f"<loc>{URL}</loc>" in (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+
+
+def test_no_hint_of_how_many_inns_or_where_they_come_from() -> None:
+    # 対象の軒数と、料金トレンドの宿であることはできるだけわからないようにする
+    tool = next(t for t in yaml.safe_load((ROOT / "_data/tools.yml").read_text(encoding="utf-8")) if t["id"] == "ai-inn-bulk")
+    home = BeautifulSoup((ROOT / "index.html").read_text(encoding="utf-8"), "html.parser")
+    card = home.select_one('a[data-tool-id="ai-inn-bulk"]').get_text()
+    llms = next(line for line in (ROOT / "llms.txt").read_text(encoding="utf-8").splitlines() if URL in line)
+    sample = BeautifulSoup((ROOT / "ai-inn-diagnosis/sample/index.html").read_text(encoding="utf-8"), "html.parser")
+    for text in (source(), tool["summary"], card, llms, sample.select_one("nav.ai-series").get_text()):
+        assert not re.search(r"\d+\s*軒(?!あたり)", text), text[:80]
+        assert "料金トレンド" not in text and "hotel-price-trends" not in text
 
 
 def test_both_ai_inn_pages_share_the_same_three_step_path() -> None:
