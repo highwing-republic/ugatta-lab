@@ -1,14 +1,14 @@
 ---
 # このページは非公開の集計から別の場所で作っています。直接は編集しません。
 tool: ai-inn-bulk
-tool_purpose: 温泉地の旅館・ホテル108軒の公式サイトを、AIに聞かれる旅館ならではの12の質問で一斉に診断した集計です。AIが答えられた質問の数、あと1行書けば答えられる質問、サイトに書かれていない情報を、温泉地と客室数の区分でまとめました。宿ごとの結果は公開していません。
+tool_purpose: 温泉地の旅館・ホテルの公式サイトを、AIに聞かれる旅館ならではの12の質問で一斉に診断した集計です。AIが答えられた質問の数、あと1行書けば答えられる質問、サイトに書かれていない情報をまとめました。宿ごとの結果は公開していません。
 tool_scope:
   - label: 対象
-    text: 宿泊DXラボの宿泊料金トレンドで料金を見ている温泉地の旅館・ホテルのうち、公式サイトを読めた108軒（読めなかった4軒は除いています）。
+    text: 国内の温泉地にある旅館・ホテルの公式サイト（読めなかった宿は除いています）。
   - label: データ
     text: 公式サイトの本文。AIに12の質問と19の項目を3回ずつ判定させ、AIが挙げた引用が本文に実在するかをプログラムで確かめた結果です。
   - label: 条件
-    text: 判定するのは「サイトに書いてあるか」と「ページ同士が食い違っていないか」だけで、内容が事実どおりかは確かめていません。5軒未満の区分は出していません。
+    text: 判定するのは「サイトに書いてあるか」と「ページ同士が食い違っていないか」だけで、内容が事実どおりかは確かめていません。
 tool_cta:
   label: 集計を見る
   href: "#summary"
@@ -17,8 +17,7 @@ tool_updated: "2026-10-23"
 tool_updated_label: 集計日
 tool_sources:
   - name: 対象の宿
-    publisher: 宿泊DXラボ 宿泊料金トレンドで料金を見ている温泉地の旅館・ホテル
-    url: /hotel-price-trends.html
+    publisher: 国内の温泉地にある旅館・ホテルの公式サイト
 tool_notes:
   - 宿ごとの結果、集めたページ、AIへの入力と出力は公開していません。診断を希望する宿には、その宿の結果だけをお渡しします。
   - ページ同士の食い違いは多めに数えている可能性があり確かめていないため、この集計では「宿に確認を」に含めています。
@@ -26,7 +25,7 @@ tool_notes:
   - 集めたのは公式サイトの一部のページです。予約システムの中だけにある料金や規約は読まれていません。それ自体が、AIから見えていないことを示しています。
 tool_related:
   - ai-inn-sample
-  - hotel-price-trends
+  - hotel-site-demo
   - dx-diagnosis
 ---
 <!DOCTYPE html>
@@ -36,20 +35,20 @@ tool_related:
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QS9HSHCY33');gtag('config','GT-M3S9S5D7');</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>温泉旅館108軒のAIO診断｜AIに聞かれる宿 一斉診断 集計レポート｜宿泊DXラボ</title>
-  <meta name="description" content="温泉地の旅館・ホテル108軒の公式サイトを、旅館ならではの12の質問で一斉に診断した集計です。AIが答えられた質問は平均4.49問（11問中）。あと1行書けば答えられる質問が、1軒あたり2.6問ありました。">
+  <title>温泉旅館のAIO診断｜AIに聞かれる宿 一斉診断 集計レポート｜宿泊DXラボ</title>
+  <meta name="description" content="温泉地の旅館・ホテルの公式サイトを、旅館ならではの12の質問で一斉に診断した集計です。AIが答えられた質問は平均4.49問（11問中）。あと1行書けば答えられる質問が、1軒あたり2.6問ありました。">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://lab.ugatta-llc.com/ai-inn-diagnosis/bulk/">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="宿泊DXラボ">
-  <meta property="og:title" content="温泉旅館108軒のAIO診断｜AIに聞かれる宿 一斉診断 集計レポート">
-  <meta property="og:description" content="温泉地の旅館・ホテル108軒の公式サイトを、旅館ならではの12の質問で一斉に診断した集計です。AIが答えられた質問は平均4.49問（11問中）。あと1行書けば答えられる質問が、1軒あたり2.6問ありました。">
+  <meta property="og:title" content="温泉旅館のAIO診断｜AIに聞かれる宿 一斉診断 集計レポート">
+  <meta property="og:description" content="温泉地の旅館・ホテルの公式サイトを、旅館ならではの12の質問で一斉に診断した集計です。AIが答えられた質問は平均4.49問（11問中）。あと1行書けば答えられる質問が、1軒あたり2.6問ありました。">
   <meta property="og:url" content="https://lab.ugatta-llc.com/ai-inn-diagnosis/bulk/">
   <meta property="og:image" content="https://lab.ugatta-llc.com/images/og-lab.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="温泉旅館108軒のAIO診断｜AIに聞かれる宿 一斉診断 集計レポート">
-  <meta name="twitter:description" content="温泉地の旅館・ホテル108軒の公式サイトを、旅館ならではの12の質問で一斉に診断した集計です。AIが答えられた質問は平均4.49問（11問中）。あと1行書けば答えられる質問が、1軒あたり2.6問ありました。">
+  <meta name="twitter:title" content="温泉旅館のAIO診断｜AIに聞かれる宿 一斉診断 集計レポート">
+  <meta name="twitter:description" content="温泉地の旅館・ホテルの公式サイトを、旅館ならではの12の質問で一斉に診断した集計です。AIが答えられた質問は平均4.49問（11問中）。あと1行書けば答えられる質問が、1軒あたり2.6問ありました。">
   <meta name="twitter:image" content="https://lab.ugatta-llc.com/images/og-lab.jpg">
   <meta name="theme-color" content="#17324d">
   <link rel="icon" type="image/png" href="/favicon.png?v=20261013">
@@ -60,7 +59,7 @@ tool_related:
   <link rel="stylesheet" href="/css/tool-standard.css?v=20261015guide">
   <link rel="stylesheet" href="/css/ai-inn.css?v=20261023bulk">
   <script type="application/ld+json">
-  {"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://lab.ugatta-llc.com/"}, {"@type": "ListItem", "position": 2, "name": "分析・ツール", "item": "https://lab.ugatta-llc.com/#analysis-tools"}, {"@type": "ListItem", "position": 3, "name": "AIに聞かれる宿 一斉診断 集計レポート", "item": "https://lab.ugatta-llc.com/ai-inn-diagnosis/bulk/"}]}, {"@type": "Report", "name": "AIに聞かれる宿 一斉診断 集計レポート", "url": "https://lab.ugatta-llc.com/ai-inn-diagnosis/bulk/", "inLanguage": "ja-JP", "datePublished": "2026-10-23", "description": "温泉地の旅館・ホテル108軒の公式サイトを、旅館ならではの12の質問で一斉に診断した集計です。AIが答えられた質問は平均4.49問（11問中）。あと1行書けば答えられる質問が、1軒あたり2.6問ありました。", "publisher": {"@type": "Organization", "@id": "https://lab.ugatta-llc.com/#organization", "name": "宿泊DXラボ", "url": "https://lab.ugatta-llc.com/"}}]}
+  {"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://lab.ugatta-llc.com/"}, {"@type": "ListItem", "position": 2, "name": "分析・ツール", "item": "https://lab.ugatta-llc.com/#analysis-tools"}, {"@type": "ListItem", "position": 3, "name": "AIに聞かれる宿 一斉診断 集計レポート", "item": "https://lab.ugatta-llc.com/ai-inn-diagnosis/bulk/"}]}, {"@type": "Report", "name": "AIに聞かれる宿 一斉診断 集計レポート", "url": "https://lab.ugatta-llc.com/ai-inn-diagnosis/bulk/", "inLanguage": "ja-JP", "datePublished": "2026-10-23", "description": "温泉地の旅館・ホテルの公式サイトを、旅館ならではの12の質問で一斉に診断した集計です。AIが答えられた質問は平均4.49問（11問中）。あと1行書けば答えられる質問が、1軒あたり2.6問ありました。", "publisher": {"@type": "Organization", "@id": "https://lab.ugatta-llc.com/#organization", "name": "宿泊DXラボ", "url": "https://lab.ugatta-llc.com/"}}]}
   </script>
   <link rel="stylesheet" href="/css/site-shell.css?v=20261012shell">
   <script src="/js/site-shell.js?v=20261012shell2" defer></script>
@@ -70,8 +69,8 @@ tool_related:
   {% include site-header.html %}
   <main id="main">
     <nav class="breadcrumb container" aria-label="パンくずリスト"><ol><li><a href="/">ホーム</a></li><li><a href="/#analysis-tools">分析・ツール</a></li><li aria-current="page">AIに聞かれる宿 一斉診断 集計レポート</li></ol></nav>
-    <section class="page-hero tool-page-hero"><div class="container page-hero-grid"><div><span class="scope-badge scope-badge--facility">旅館のAIO対策（108軒の集計）</span><h1>AIに聞かれる宿<br>一斉診断<br>集計レポート</h1></div><div><p>「源泉かけ流しの宿は？」「部屋食で、子どもも泊まれる旅館は？」。AIに宿を相談したとき、AIは旅館の公式サイトから答えられるのでしょうか。温泉地の旅館・ホテル108軒の公式サイトを、旅館ならではの12の質問で一斉に診断しました。</p><p class="ai-hero-note">このページは集計値だけを載せています。宿ごとの結果は公開していません。</p></div></div></section>
-    <nav class="ai-series" aria-label="AIに聞かれる宿 診断のページ"><div class="container"><ol><li><a class="ai-series__step" href="/ai-inn-diagnosis/bulk/" aria-current="page"><span class="ai-series__num">1</span><span class="ai-series__kicker">実態を知る</span><strong>実在の温泉旅館108軒の集計</strong><span class="ai-series__note">AIが答えられた質問は平均4.5問</span></a></li><li><a class="ai-series__step" href="/ai-inn-diagnosis/sample/"><span class="ai-series__num">2</span><span class="ai-series__kicker">対策の効果を見る</span><strong>対策前後のサンプル</strong><span class="ai-series__note">架空の宿で4問から12問へ</span></a></li><li><a class="ai-series__step" href="#request"><span class="ai-series__num">3</span><span class="ai-series__kicker">自館を診断する</span><strong>自館の診断（準備中）</strong><span class="ai-series__note">その宿の結果と直す順番をお渡しします</span></a></li></ol></div></nav>
+    <section class="page-hero tool-page-hero"><div class="container page-hero-grid"><div><span class="scope-badge scope-badge--facility">旅館のAIO対策（実在の宿の集計）</span><h1>AIに聞かれる宿<br>一斉診断<br>集計レポート</h1></div><div><p>「源泉かけ流しの宿は？」「部屋食で、子どもも泊まれる旅館は？」。AIに宿を相談したとき、AIは旅館の公式サイトから答えられるのでしょうか。温泉地の旅館・ホテルの公式サイトを、旅館ならではの12の質問で一斉に診断しました。</p><p class="ai-hero-note">このページは集計値だけを載せています。宿ごとの結果は公開していません。</p></div></div></section>
+    <nav class="ai-series" aria-label="AIに聞かれる宿 診断のページ"><div class="container"><ol><li><a class="ai-series__step" href="/ai-inn-diagnosis/bulk/" aria-current="page"><span class="ai-series__num">1</span><span class="ai-series__kicker">実態を知る</span><strong>実在の温泉旅館の集計</strong><span class="ai-series__note">AIが答えられた質問は平均4.5問</span></a></li><li><a class="ai-series__step" href="/ai-inn-diagnosis/sample/"><span class="ai-series__num">2</span><span class="ai-series__kicker">対策の効果を見る</span><strong>対策前後のサンプル</strong><span class="ai-series__note">架空の宿で4問から12問へ</span></a></li><li><a class="ai-series__step" href="#request"><span class="ai-series__num">3</span><span class="ai-series__kicker">自館を診断する</span><strong>自館の診断（準備中）</strong><span class="ai-series__note">その宿の結果と直す順番をお渡しします</span></a></li></ol></div></nav>
     {% include tool-overview.html %}
 
     <section class="ai-section" id="summary" aria-labelledby="summary-title"><div class="container">
@@ -81,39 +80,28 @@ tool_related:
         <div class="ai-kpi" data-kpi="answered"><dt>AIが答えられた質問（平均）</dt><dd><strong>4.49</strong><span> / 11問</span></dd><p>中央値は4問です。11問のうち41%に答えられました。</p></div>
         <div class="ai-kpi" data-kpi="one-short"><dt>あと1行で答えられる質問（1軒あたり）</dt><dd><strong>2.6</strong><span> 問</span></dd><p>すべて書き足せば、平均7.1問前後になる試算です。</p></div>
         <div class="ai-kpi ai-kpi--warn" data-kpi="price"><dt>1泊の料金が本文に書かれていない宿</dt><dd><strong>86%</strong></dd><p>キャンセル料は67%、子ども料金と添い寝は59%の宿で書かれていません。</p></div>
-        <div class="ai-kpi" data-kpi="hidden"><dt>JavaScriptを動かさないと答えられない質問があった宿</dt><dd><strong>27</strong><span> 軒</span></dd><p>多くのAIの巡回はJavaScriptを動かさないため、その部分は読まれません。</p></div>
+        <div class="ai-kpi" data-kpi="hidden"><dt>JavaScriptを動かさないと答えられない質問があった宿</dt><dd><strong>25%</strong></dd><p>多くのAIの巡回はJavaScriptを動かさないため、その部分は読まれません。</p></div>
       </dl>
-      <p class="ai-callout"><strong>いちばん多い「あと一歩」：</strong>80軒は、部屋の広さを書いているのに1泊の料金がありません。そのため「部屋の広さと1泊の料金は？」に、AIは「宿に確認を」と答えるしかありませんでした。</p>
+      <p class="ai-callout"><strong>いちばん多い「あと一歩」：</strong>宿の74%は、部屋の広さを書いているのに1泊の料金がありません。そのため「部屋の広さと1泊の料金は？」に、AIは「宿に確認を」と答えるしかありませんでした。</p>
     </div></section>
 
     <section class="ai-section ai-section--plain" id="one-short" aria-labelledby="one-short-title"><div class="container">
       <h2 class="ai-h2" id="one-short-title">あと1行で答えられる質問が、1軒あたり2.6問あります</h2>
-      <p class="ai-lead">質問ごとに、答えられた宿と、足りないのが1つの要素だけだった宿を数えました。右の数字は「今答えられた宿 → 1行書き足した場合」です。</p>
+      <p class="ai-lead">質問ごとに、答えられた宿と、足りないのが1つの要素だけだった宿の割合を出しました。右の数字は「今答えられる宿の割合 → 足りない1つを書き足せば答えられる宿の割合」です。たとえば「57% → 77%」なら、今は57%の宿で答えられ、足りない1つを書き足せば77%の宿で答えられるという意味です。</p>
       <ul class="ai-legend ai-legend--bars" aria-label="凡例"><li><span class="ai-swatch"></span>答えられた</li><li><span class="ai-swatch ai-swatch--short"></span>あと1行で答えられる</li><li><span class="ai-swatch ai-swatch--rest"></span>それ以外の「宿に確認を」</li></ul>
-      <ol class="ai-bars" aria-label="質問ごとの、答えられた宿とあと1行で答えられる宿（108軒中）">
-          <li class="ai-bars__row"><span class="ai-bars__label">Q12 大浴場は何時まで入れる？</span><span class="ai-bars__track" role="img" aria-label="Q12 大浴場は何時まで入れる？：答えられた78軒（107軒中）"><span class="ai-bars__fill" style="width:72.9%"></span></span><span class="ai-bars__value">78</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">Q05 貸切風呂（家族風呂）はある？</span><span class="ai-bars__track" role="img" aria-label="Q05 貸切風呂（家族風呂）はある？：答えられた63軒（107軒中）"><span class="ai-bars__fill" style="width:58.9%"></span></span><span class="ai-bars__value">63</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">Q03 露天風呂付きの客室はある？</span><span class="ai-bars__track" role="img" aria-label="Q03 露天風呂付きの客室はある？：答えられた62軒（108軒中）"><span class="ai-bars__fill" style="width:57.4%"></span></span><span class="ai-bars__value">62</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">Q10 最寄り駅から送迎はある？</span><span class="ai-bars__track" role="img" aria-label="Q10 最寄り駅から送迎はある？：答えられた62軒、あと1行で答えられる21軒（108軒中）"><span class="ai-bars__fill" style="width:57.4%"></span><span class="ai-bars__fill ai-bars__fill--short" style="width:19.4%"></span></span><span class="ai-bars__value">62<span class="ai-bars__to"> → 83</span></span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">Q07 食物アレルギーに対応してもらえる？</span><span class="ai-bars__track" role="img" aria-label="Q07 食物アレルギーに対応してもらえる？：答えられた61軒（108軒中）"><span class="ai-bars__fill" style="width:56.5%"></span></span><span class="ai-bars__value">61</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">Q06 夕食付きで泊まれる？部屋食？</span><span class="ai-bars__track" role="img" aria-label="Q06 夕食付きで泊まれる？部屋食？：答えられた54軒、あと1行で答えられる43軒（108軒中）"><span class="ai-bars__fill" style="width:50.0%"></span><span class="ai-bars__fill ai-bars__fill--short" style="width:39.8%"></span></span><span class="ai-bars__value">54<span class="ai-bars__to"> → 97</span></span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">Q02 源泉かけ流し？泉質は？</span><span class="ai-bars__track" role="img" aria-label="Q02 源泉かけ流し？泉質は？：答えられた36軒、あと1行で答えられる54軒（107軒中）"><span class="ai-bars__fill" style="width:33.6%"></span><span class="ai-bars__fill ai-bars__fill--short" style="width:50.5%"></span></span><span class="ai-bars__value">36<span class="ai-bars__to"> → 90</span></span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">Q09 キャンセル料はいつから？</span><span class="ai-bars__track" role="img" aria-label="Q09 キャンセル料はいつから？：答えられた30軒（108軒中）"><span class="ai-bars__fill" style="width:27.8%"></span></span><span class="ai-bars__value">30</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">Q11 チェックインは何時まで？</span><span class="ai-bars__track" role="img" aria-label="Q11 チェックインは何時まで？：答えられた22軒、あと1行で答えられる46軒（108軒中）"><span class="ai-bars__fill" style="width:20.4%"></span><span class="ai-bars__fill ai-bars__fill--short" style="width:42.6%"></span></span><span class="ai-bars__value">22<span class="ai-bars__to"> → 68</span></span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">Q08 子ども料金と添い寝は？</span><span class="ai-bars__track" role="img" aria-label="Q08 子ども料金と添い寝は？：答えられた9軒、あと1行で答えられる31軒（108軒中）"><span class="ai-bars__fill" style="width:8.3%"></span><span class="ai-bars__fill ai-bars__fill--short" style="width:28.7%"></span></span><span class="ai-bars__value">9<span class="ai-bars__to"> → 40</span></span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">Q04 部屋の広さと1泊の料金は？</span><span class="ai-bars__track" role="img" aria-label="Q04 部屋の広さと1泊の料金は？：答えられた8軒、あと1行で答えられる83軒（108軒中）"><span class="ai-bars__fill" style="width:7.4%"></span><span class="ai-bars__fill ai-bars__fill--short" style="width:76.9%"></span></span><span class="ai-bars__value">8<span class="ai-bars__to"> → 91</span></span></li>
+      <ol class="ai-bars" aria-label="質問ごとの、答えられた宿とあと1行で答えられる宿の割合">
+          <li class="ai-bars__row"><span class="ai-bars__label">Q12 大浴場は何時まで入れる？</span><span class="ai-bars__track" role="img" aria-label="Q12 大浴場は何時まで入れる？：今答えられる宿73%"><span class="ai-bars__fill" style="width:72.9%"></span></span><span class="ai-bars__value">73%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">Q05 貸切風呂（家族風呂）はある？</span><span class="ai-bars__track" role="img" aria-label="Q05 貸切風呂（家族風呂）はある？：今答えられる宿59%"><span class="ai-bars__fill" style="width:58.9%"></span></span><span class="ai-bars__value">59%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">Q03 露天風呂付きの客室はある？</span><span class="ai-bars__track" role="img" aria-label="Q03 露天風呂付きの客室はある？：今答えられる宿57%"><span class="ai-bars__fill" style="width:57.4%"></span></span><span class="ai-bars__value">57%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">Q10 最寄り駅から送迎はある？</span><span class="ai-bars__track" role="img" aria-label="Q10 最寄り駅から送迎はある？：今答えられる宿57%、1行書き足せば77%"><span class="ai-bars__fill" style="width:57.4%"></span><span class="ai-bars__fill ai-bars__fill--short" style="width:19.4%"></span></span><span class="ai-bars__value">57%<span class="ai-bars__to"> → 77%</span></span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">Q07 食物アレルギーに対応してもらえる？</span><span class="ai-bars__track" role="img" aria-label="Q07 食物アレルギーに対応してもらえる？：今答えられる宿56%"><span class="ai-bars__fill" style="width:56.5%"></span></span><span class="ai-bars__value">56%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">Q06 夕食付きで泊まれる？部屋食？</span><span class="ai-bars__track" role="img" aria-label="Q06 夕食付きで泊まれる？部屋食？：今答えられる宿50%、1行書き足せば90%"><span class="ai-bars__fill" style="width:50.0%"></span><span class="ai-bars__fill ai-bars__fill--short" style="width:39.8%"></span></span><span class="ai-bars__value">50%<span class="ai-bars__to"> → 90%</span></span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">Q02 源泉かけ流し？泉質は？</span><span class="ai-bars__track" role="img" aria-label="Q02 源泉かけ流し？泉質は？：今答えられる宿34%、1行書き足せば84%"><span class="ai-bars__fill" style="width:33.6%"></span><span class="ai-bars__fill ai-bars__fill--short" style="width:50.5%"></span></span><span class="ai-bars__value">34%<span class="ai-bars__to"> → 84%</span></span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">Q09 キャンセル料はいつから？</span><span class="ai-bars__track" role="img" aria-label="Q09 キャンセル料はいつから？：今答えられる宿28%"><span class="ai-bars__fill" style="width:27.8%"></span></span><span class="ai-bars__value">28%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">Q11 チェックインは何時まで？</span><span class="ai-bars__track" role="img" aria-label="Q11 チェックインは何時まで？：今答えられる宿20%、1行書き足せば63%"><span class="ai-bars__fill" style="width:20.4%"></span><span class="ai-bars__fill ai-bars__fill--short" style="width:42.6%"></span></span><span class="ai-bars__value">20%<span class="ai-bars__to"> → 63%</span></span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">Q08 子ども料金と添い寝は？</span><span class="ai-bars__track" role="img" aria-label="Q08 子ども料金と添い寝は？：今答えられる宿8%、1行書き足せば37%"><span class="ai-bars__fill" style="width:8.3%"></span><span class="ai-bars__fill ai-bars__fill--short" style="width:28.7%"></span></span><span class="ai-bars__value">8%<span class="ai-bars__to"> → 37%</span></span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">Q04 部屋の広さと1泊の料金は？</span><span class="ai-bars__track" role="img" aria-label="Q04 部屋の広さと1泊の料金は？：今答えられる宿7%、1行書き足せば84%"><span class="ai-bars__fill" style="width:7.4%"></span><span class="ai-bars__fill ai-bars__fill--short" style="width:76.9%"></span></span><span class="ai-bars__value">7%<span class="ai-bars__to"> → 84%</span></span></li>
       </ol>
-      <div class="ai-table-wrap ai-table-wrap--spaced"><table class="ai-table">
-        <thead><tr><th scope="col">質問</th><th scope="col">あと1行の宿</th><th scope="col">足りなかったもの</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">Q04 部屋の広さと1泊の料金は？</th><td>83軒</td><td>1泊の料金 80軒、部屋の広さ 3軒</td></tr>
-          <tr><th scope="row">Q02 源泉かけ流し？泉質は？</th><td>54軒</td><td>源泉かけ流しかどうか 42軒、泉質 12軒</td></tr>
-          <tr><th scope="row">Q11 チェックインは何時まで？</th><td>46軒</td><td>チェックインの締め切り 46軒</td></tr>
-          <tr><th scope="row">Q06 夕食付きで泊まれる？部屋食？</th><td>43軒</td><td>部屋食かどうか 38軒、夕食付きで泊まれるか 5軒</td></tr>
-          <tr><th scope="row">Q08 子ども料金と添い寝は？</th><td>31軒</td><td>添い寝 23軒、子ども料金 8軒</td></tr>
-          <tr><th scope="row">Q10 最寄り駅から送迎はある？</th><td>21軒</td><td>送迎の有無 21軒</td></tr>
-        </tbody>
-      </table></div>
       <p class="ai-note">「露天風呂付きの客室」「貸切風呂」「送迎」の「宿に確認を」には、その設備やサービスがない宿も含まれます。「ありません」と書けば、AIは答えられます。</p>
     </div></section>
 
@@ -122,25 +110,25 @@ tool_related:
       <p class="ai-lead">旅館の情報を19の項目に分け、本文に書かれていなかった宿の割合を並べました（一部だけ書かれていた宿は含めていません）。温泉や料理など宿の魅力はよく書かれています。</p>
       <ul class="ai-legend ai-legend--bars" aria-label="凡例"><li><span class="ai-swatch ai-swatch--key"></span>予約の判断に要る条件（料金・規約・家族向け）</li><li><span class="ai-swatch ai-swatch--muted"></span>そのほか</li></ul>
       <ol class="ai-bars" aria-label="19項目ごとの、書かれていない宿の割合">
-          <li class="ai-bars__row ai-bars__row--key"><span class="ai-bars__label">料金（1室1泊）</span><span class="ai-bars__track" role="img" aria-label="料金（1室1泊）：93軒（108軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--key" style="width:86.1%"></span></span><span class="ai-bars__value">86%</span></li>
-          <li class="ai-bars__row ai-bars__row--key"><span class="ai-bars__label">キャンセル料</span><span class="ai-bars__track" role="img" aria-label="キャンセル料：72軒（108軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--key" style="width:66.7%"></span></span><span class="ai-bars__value">67%</span></li>
-          <li class="ai-bars__row ai-bars__row--key"><span class="ai-bars__label">子ども料金と添い寝</span><span class="ai-bars__track" role="img" aria-label="子ども料金と添い寝：64軒（108軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--key" style="width:59.3%"></span></span><span class="ai-bars__value">59%</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">客室数</span><span class="ai-bars__track" role="img" aria-label="客室数：60軒（108軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:55.6%"></span></span><span class="ai-bars__value">56%</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">源泉かけ流しかどうか</span><span class="ai-bars__track" role="img" aria-label="源泉かけ流しかどうか：50軒（107軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:46.7%"></span></span><span class="ai-bars__value">47%</span></li>
-          <li class="ai-bars__row ai-bars__row--key"><span class="ai-bars__label">支払い方法</span><span class="ai-bars__track" role="img" aria-label="支払い方法：50軒（108軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--key" style="width:46.3%"></span></span><span class="ai-bars__value">46%</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">食物アレルギーへの対応</span><span class="ai-bars__track" role="img" aria-label="食物アレルギーへの対応：45軒（108軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:41.7%"></span></span><span class="ai-bars__value">42%</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">露天風呂付き客室</span><span class="ai-bars__track" role="img" aria-label="露天風呂付き客室：45軒（108軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:41.7%"></span></span><span class="ai-bars__value">42%</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">貸切風呂</span><span class="ai-bars__track" role="img" aria-label="貸切風呂：40軒（107軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:37.4%"></span></span><span class="ai-bars__value">37%</span></li>
-          <li class="ai-bars__row ai-bars__row--key"><span class="ai-bars__label">税・サービス料と入湯税</span><span class="ai-bars__track" role="img" aria-label="税・サービス料と入湯税：39軒（108軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--key" style="width:36.1%"></span></span><span class="ai-bars__value">36%</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">朝食</span><span class="ai-bars__track" role="img" aria-label="朝食：35軒（108軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:32.4%"></span></span><span class="ai-bars__value">32%</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">チェックインとアウト</span><span class="ai-bars__track" role="img" aria-label="チェックインとアウト：35軒（108軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:32.4%"></span></span><span class="ai-bars__value">32%</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">駐車場</span><span class="ai-bars__track" role="img" aria-label="駐車場：24軒（108軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:22.2%"></span></span><span class="ai-bars__value">22%</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">大浴場と露天風呂の時間</span><span class="ai-bars__track" role="img" aria-label="大浴場と露天風呂の時間：23軒（107軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:21.5%"></span></span><span class="ai-bars__value">22%</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">泉質と効能</span><span class="ai-bars__track" role="img" aria-label="泉質と効能：16軒（107軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:15.0%"></span></span><span class="ai-bars__value">15%</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">客室の広さと定員</span><span class="ai-bars__track" role="img" aria-label="客室の広さと定員：15軒（108軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:13.9%"></span></span><span class="ai-bars__value">14%</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">夕食の場所（部屋食か食事処か）</span><span class="ai-bars__track" role="img" aria-label="夕食の場所（部屋食か食事処か）：14軒（108軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:13.0%"></span></span><span class="ai-bars__value">13%</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">最寄り駅と送迎</span><span class="ai-bars__track" role="img" aria-label="最寄り駅と送迎：14軒（108軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:13.0%"></span></span><span class="ai-bars__value">13%</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">夕食の有無</span><span class="ai-bars__track" role="img" aria-label="夕食の有無：8軒（108軒中）で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:7.4%"></span></span><span class="ai-bars__value">7%</span></li>
+          <li class="ai-bars__row ai-bars__row--key"><span class="ai-bars__label">料金（1室1泊）</span><span class="ai-bars__track" role="img" aria-label="料金（1室1泊）：86%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--key" style="width:86.1%"></span></span><span class="ai-bars__value">86%</span></li>
+          <li class="ai-bars__row ai-bars__row--key"><span class="ai-bars__label">キャンセル料</span><span class="ai-bars__track" role="img" aria-label="キャンセル料：67%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--key" style="width:66.7%"></span></span><span class="ai-bars__value">67%</span></li>
+          <li class="ai-bars__row ai-bars__row--key"><span class="ai-bars__label">子ども料金と添い寝</span><span class="ai-bars__track" role="img" aria-label="子ども料金と添い寝：59%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--key" style="width:59.3%"></span></span><span class="ai-bars__value">59%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">客室数</span><span class="ai-bars__track" role="img" aria-label="客室数：56%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:55.6%"></span></span><span class="ai-bars__value">56%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">源泉かけ流しかどうか</span><span class="ai-bars__track" role="img" aria-label="源泉かけ流しかどうか：47%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:46.7%"></span></span><span class="ai-bars__value">47%</span></li>
+          <li class="ai-bars__row ai-bars__row--key"><span class="ai-bars__label">支払い方法</span><span class="ai-bars__track" role="img" aria-label="支払い方法：46%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--key" style="width:46.3%"></span></span><span class="ai-bars__value">46%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">食物アレルギーへの対応</span><span class="ai-bars__track" role="img" aria-label="食物アレルギーへの対応：42%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:41.7%"></span></span><span class="ai-bars__value">42%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">露天風呂付き客室</span><span class="ai-bars__track" role="img" aria-label="露天風呂付き客室：42%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:41.7%"></span></span><span class="ai-bars__value">42%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">貸切風呂</span><span class="ai-bars__track" role="img" aria-label="貸切風呂：37%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:37.4%"></span></span><span class="ai-bars__value">37%</span></li>
+          <li class="ai-bars__row ai-bars__row--key"><span class="ai-bars__label">税・サービス料と入湯税</span><span class="ai-bars__track" role="img" aria-label="税・サービス料と入湯税：36%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--key" style="width:36.1%"></span></span><span class="ai-bars__value">36%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">朝食</span><span class="ai-bars__track" role="img" aria-label="朝食：32%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:32.4%"></span></span><span class="ai-bars__value">32%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">チェックインとアウト</span><span class="ai-bars__track" role="img" aria-label="チェックインとアウト：32%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:32.4%"></span></span><span class="ai-bars__value">32%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">駐車場</span><span class="ai-bars__track" role="img" aria-label="駐車場：22%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:22.2%"></span></span><span class="ai-bars__value">22%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">大浴場と露天風呂の時間</span><span class="ai-bars__track" role="img" aria-label="大浴場と露天風呂の時間：22%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:21.5%"></span></span><span class="ai-bars__value">22%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">泉質と効能</span><span class="ai-bars__track" role="img" aria-label="泉質と効能：15%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:15.0%"></span></span><span class="ai-bars__value">15%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">客室の広さと定員</span><span class="ai-bars__track" role="img" aria-label="客室の広さと定員：14%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:13.9%"></span></span><span class="ai-bars__value">14%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">夕食の場所（部屋食か食事処か）</span><span class="ai-bars__track" role="img" aria-label="夕食の場所（部屋食か食事処か）：13%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:13.0%"></span></span><span class="ai-bars__value">13%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">最寄り駅と送迎</span><span class="ai-bars__track" role="img" aria-label="最寄り駅と送迎：13%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:13.0%"></span></span><span class="ai-bars__value">13%</span></li>
+          <li class="ai-bars__row"><span class="ai-bars__label">夕食の有無</span><span class="ai-bars__track" role="img" aria-label="夕食の有無：7%の宿で書かれていない"><span class="ai-bars__fill ai-bars__fill--muted" style="width:7.4%"></span></span><span class="ai-bars__value">7%</span></li>
       </ol>
       <p class="ai-note">料金や規約は、予約システムの中にだけ書かれていることが多いと考えられます。AIが読む公式サイトの本文にも、目安を書いておくと答えられます。</p>
     </div></section>
@@ -149,53 +137,13 @@ tool_related:
       <h2 class="ai-h2" id="stages-title">旅の段階では「知る」と「予約する」で、AIが答えに詰まっています</h2>
       <p class="ai-lead">12の質問を、宿泊客の旅の5つの段階に分けて、答えられた割合を出しました。「どんな旅館？おすすめは？」は点数に入れていません。</p>
       <div class="ai-table-wrap ai-table-wrap--narrow"><table class="ai-table">
-        <thead><tr><th scope="col">旅の段階</th><th scope="col">答えられた質問 / 対象</th><th scope="col">割合</th></tr></thead>
+        <thead><tr><th scope="col">旅の段階</th><th scope="col">答えられた割合</th></tr></thead>
         <tbody>
-          <tr><th scope="row">知る</th><td>36 / 107</td><td>34%</td></tr>
-          <tr><th scope="row">比べる</th><td>133 / 323</td><td>41%</td></tr>
-          <tr><th scope="row">予約する</th><td>154 / 432</td><td>36%</td></tr>
-          <tr><th scope="row">向かう</th><td>84 / 216</td><td>39%</td></tr>
-          <tr><th scope="row">泊まる</th><td>78 / 107</td><td>73%</td></tr>
-        </tbody>
-      </table></div>
-    </div></section>
-
-    <section class="ai-section" id="markets" aria-labelledby="markets-title"><div class="container">
-      <h2 class="ai-h2" id="markets-title">温泉地ごとの平均は3.2〜6.2問。各地5軒のため、温泉地の差というより宿ごとの差です</h2>
-      <p class="ai-lead">公開できる17の温泉地について、答えられた質問の平均（11問中）を並べました。宿の数が5軒未満の区分（6区分）は、宿が特定されないよう出していません。</p>
-      <ol class="ai-bars ai-bars--markets" aria-label="温泉地ごとの、答えられた質問の平均">
-          <li class="ai-bars__row ai-bars__row--total"><span class="ai-bars__label">全体（108軒）</span><span class="ai-bars__track" role="img" aria-label="全体：平均4.49問"><span class="ai-bars__fill" style="width:40.8%"></span></span><span class="ai-bars__value">4.49</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">霧島</span><span class="ai-bars__track" role="img" aria-label="霧島：平均6.2問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:56.4%"></span></span><span class="ai-bars__value">6.2</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">下呂温泉</span><span class="ai-bars__track" role="img" aria-label="下呂温泉：平均5.6問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:50.9%"></span></span><span class="ai-bars__value">5.6</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">熱海</span><span class="ai-bars__track" role="img" aria-label="熱海：平均5.4問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:49.1%"></span></span><span class="ai-bars__value">5.4</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">指宿温泉</span><span class="ai-bars__track" role="img" aria-label="指宿温泉：平均5.4問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:49.1%"></span></span><span class="ai-bars__value">5.4</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">草津温泉</span><span class="ai-bars__track" role="img" aria-label="草津温泉：平均5.2問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:47.3%"></span></span><span class="ai-bars__value">5.2</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">有馬温泉</span><span class="ai-bars__track" role="img" aria-label="有馬温泉：平均5.0問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:45.5%"></span></span><span class="ai-bars__value">5.0</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">箱根</span><span class="ai-bars__track" role="img" aria-label="箱根：平均5.0問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:45.5%"></span></span><span class="ai-bars__value">5.0</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">伊勢志摩</span><span class="ai-bars__track" role="img" aria-label="伊勢志摩：平均5.0問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:45.5%"></span></span><span class="ai-bars__value">5.0</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">玉造温泉</span><span class="ai-bars__track" role="img" aria-label="玉造温泉：平均5.0問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:45.5%"></span></span><span class="ai-bars__value">5.0</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">登別温泉</span><span class="ai-bars__track" role="img" aria-label="登別温泉：平均4.6問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:41.8%"></span></span><span class="ai-bars__value">4.6</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">道後温泉</span><span class="ai-bars__track" role="img" aria-label="道後温泉：平均4.2問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:38.2%"></span></span><span class="ai-bars__value">4.2</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">別府</span><span class="ai-bars__track" role="img" aria-label="別府：平均4.0問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:36.4%"></span></span><span class="ai-bars__value">4.0</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">城崎温泉</span><span class="ai-bars__track" role="img" aria-label="城崎温泉：平均4.0問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:36.4%"></span></span><span class="ai-bars__value">4.0</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">高山</span><span class="ai-bars__track" role="img" aria-label="高山：平均4.0問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:36.4%"></span></span><span class="ai-bars__value">4.0</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">軽井沢</span><span class="ai-bars__track" role="img" aria-label="軽井沢：平均3.8問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:34.5%"></span></span><span class="ai-bars__value">3.8</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">雲仙温泉</span><span class="ai-bars__track" role="img" aria-label="雲仙温泉：平均3.4問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:30.9%"></span></span><span class="ai-bars__value">3.4</span></li>
-          <li class="ai-bars__row"><span class="ai-bars__label">定山渓</span><span class="ai-bars__track" role="img" aria-label="定山渓：平均3.2問（5軒）"><span class="ai-bars__fill ai-bars__fill--muted" style="width:29.1%"></span></span><span class="ai-bars__value">3.2</span></li>
-      </ol>
-    </div></section>
-
-    <section class="ai-section ai-section--plain" id="sizes" aria-labelledby="sizes-title"><div class="container">
-      <h2 class="ai-h2" id="sizes-title">客室数が多い宿ほど書いてある、とは限りません</h2>
-      <p class="ai-lead">客室数で分けた区分ごとの、答えられた質問の数です。「規模不明」は、公式サイトに客室数が書かれていなかった宿です。</p>
-      <div class="ai-table-wrap ai-table-wrap--narrow"><table class="ai-table">
-        <thead><tr><th scope="col">客室数</th><th scope="col">宿の数</th><th scope="col">平均</th><th scope="col">中央値</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">〜20室</th><td>12軒</td><td>4.83問</td><td>5問</td></tr>
-          <tr><th scope="row">21〜50室</th><td>16軒</td><td>4.25問</td><td>4問</td></tr>
-          <tr><th scope="row">51〜100室</th><td>17軒</td><td>4.47問</td><td>4問</td></tr>
-          <tr><th scope="row">101室〜</th><td>27軒</td><td>4.48問</td><td>5問</td></tr>
-          <tr><th scope="row">規模不明</th><td>36軒</td><td>4.50問</td><td>4.5問</td></tr>
+          <tr><th scope="row">知る</th><td>34%</td></tr>
+          <tr><th scope="row">比べる</th><td>41%</td></tr>
+          <tr><th scope="row">予約する</th><td>36%</td></tr>
+          <tr><th scope="row">向かう</th><td>39%</td></tr>
+          <tr><th scope="row">泊まる</th><td>73%</td></tr>
         </tbody>
       </table></div>
     </div></section>
