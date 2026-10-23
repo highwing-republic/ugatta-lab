@@ -22,11 +22,6 @@ NAME = "AIに聞かれる宿 一斉診断 集計レポート"
 
 # 予約の判断に要る条件（料金・規約・家族向け）。19項目のグラフで色を付ける
 BOOKING_ITEMS = ("I11", "I13", "I14", "I15", "I16")
-NOJS = {"readable": "JavaScriptなしで本文が読める", "partial": "JavaScriptなしでは一部しか読めない",
-        "unreadable": "JavaScriptなしではほぼ読めない"}
-MULTILINGUAL = {"separate_urls": "言語ごとにURLが分かれている", "js_only": "JavaScriptで切り替えるだけ",
-                "none": "外国語ページがない"}
-STRUCTURED = {"lodging_type": "宿泊施設の型がある", "other_type": "ほかの型だけある", "none": "ない"}
 
 
 def esc(text) -> str:
@@ -156,18 +151,6 @@ def size_rows(summary: dict) -> str:
     return "\n          ".join(
         f'<tr><th scope="row">{esc(g["group"]["label"])}</th><td>{g["inns"]}軒</td><td>{num(g["answered"]["mean"], 2)}問</td>'
         f'<td>{count(g["answered"]["median"])}問</td></tr>' for g in summary["sizes"])
-
-
-def machine_rows(overall: dict) -> str:
-    rows = []
-    for title, key, labels in (("JavaScriptなしで読めるか", "nojs", NOJS), ("外国語ページ", "multilingual", MULTILINGUAL),
-                               ("宿泊施設の構造化データ", "structured_data", STRUCTURED)):
-        counts = overall["machine"][key]
-        for i, (value, label) in enumerate(labels.items()):
-            c = counts.get(value, {"count": 0, "rate": 0})
-            head = f'<th scope="rowgroup" rowspan="{len(labels)}">{esc(title)}</th>' if i == 0 else ""
-            rows.append(f'<tr>{head}<td>{esc(label)}</td><td>{c["count"]}軒</td><td>{pct(c["rate"])}</td></tr>')
-    return "\n          ".join(rows)
 
 
 def price_section(overall: dict) -> str:
@@ -379,17 +362,6 @@ tool_related:
       </table></div>
     </div></section>
 
-    <section class="ai-section" id="machine" aria-labelledby="machine-title"><div class="container">
-      <h2 class="ai-h2" id="machine-title">サイトの作り：JavaScript、外国語ページ、構造化データ</h2>
-      <p class="ai-lead">AIに読まれやすいかを左右するサイトの作りを、プログラムで確かめました。</p>
-      <div class="ai-table-wrap ai-table-wrap--narrow"><table class="ai-table">
-        <thead><tr><th scope="col">確かめたこと</th><th scope="col">結果</th><th scope="col">宿の数</th><th scope="col">割合</th></tr></thead>
-        <tbody>
-          {machine_rows(o)}
-        </tbody>
-      </table></div>
-      <p class="ai-note">構造化データがあっても、本文に書かれていなければAIの答えにはなりません。</p>
-    </div></section>
 {price_section(o)}
     <section class="ai-section ai-section--plain" id="advice" aria-labelledby="advice-title"><div class="container">
       <h2 class="ai-h2" id="advice-title">宿のサイトで、すぐにできること</h2>
