@@ -137,11 +137,23 @@
 .ai-steps strong{color:var(--lab-navy);font-weight:700}
 .ai-steps--plain{list-style:disc}
 
+/* 「AIに聞かれる宿」の3つのページの流れ */
+.ai-series{padding:20px 0 0}
+.ai-series ol{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0;padding:0;list-style:none}
+.ai-series__step{display:grid;gap:2px;height:100%;padding:14px 16px;border:1px solid var(--lab-border);border-radius:12px;background:var(--lab-card);color:var(--lab-ink);text-decoration:none}
+.ai-series__step:hover,.ai-series__step:focus-visible{border-color:var(--lab-navy)}
+.ai-series__step[aria-current="page"]{border-color:var(--lab-navy);box-shadow:inset 3px 0 0 var(--lab-navy);background:#fff}
+.ai-series__num{color:var(--lab-ink-soft);font-size:12px;font-weight:500}
+.ai-series__kicker{color:var(--lab-teal);font-size:12px;font-weight:500}
+.ai-series__step strong{color:var(--lab-navy);font-size:15px;font-weight:700;line-height:1.5}
+.ai-series__note{color:var(--lab-ink-soft);font-size:12px;line-height:1.6}
+
 @media (max-width:960px){
   .ai-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
   .ai-journey{grid-template-columns:repeat(3,minmax(0,1fr))}
   .ai-stage:not(:last-child)::after{display:none}
   .ai-cards,.ai-sites{grid-template-columns:1fr}
+  .ai-series ol{grid-template-columns:1fr}
 }
 @media (max-width:640px){
   .ai-section{padding:52px 0}

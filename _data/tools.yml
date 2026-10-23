@@ -30,18 +30,18 @@
   group: facility
   tag: 計算ツール
   summary: 口コミ返信や外国語のお問い合わせなど、生成AIに下書きを任せて浮く時間を業務ごとに見積もります。
-- id: ai-inn-sample
-  title: AIに聞かれる宿 診断 サンプル
-  url: /ai-inn-diagnosis/sample/
-  group: facility
-  tag: サンプル（架空の宿）
-  summary: 旅館のAIO対策を、対策前と対策後で比べたサンプル。旅館ならではの12の質問にAIが答えられた数は、4問から12問に増えました。
 - id: ai-inn-bulk
   title: AIに聞かれる宿 一斉診断 集計レポート
   url: /ai-inn-diagnosis/bulk/
   group: facility
   tag: 調査レポート
   summary: 温泉地の旅館・ホテル108軒の公式サイトを、旅館ならではの12の質問で一斉に診断した集計。AIが答えられた質問は平均4.5問で、あと1行書けば答えられる質問が1軒あたり2.6問ありました。
+- id: ai-inn-sample
+  title: AIに聞かれる宿 診断 サンプル
+  url: /ai-inn-diagnosis/sample/
+  group: facility
+  tag: サンプル（架空の宿）
+  summary: 旅館のAIO対策を、対策前と対策後で比べたサンプル。旅館ならではの12の質問にAIが答えられた数は、4問から12問に増えました。
 - id: inbound
   title: インバウンド宿泊者分析
   url: /inbound-analysis.html

@@ -78,3 +78,17 @@ def test_registry_home_and_llms_quote_the_current_numbers() -> None:
         for number in expected:
             assert number in text, (number, text)
     assert f"<loc>{URL}</loc>" in (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+
+
+def test_both_ai_inn_pages_share_the_same_three_step_path() -> None:
+    from scripts.build_ai_inn_bulk import series_nav
+    f = facts(summary())
+    sample = (ROOT / "ai-inn-diagnosis/sample/index.html").read_text(encoding="utf-8")
+    # サンプルページの案内は手で置いているので、集計の数字が変わったらここで気づく
+    assert series_nav(f, "sample") in sample
+    assert series_nav(f, "bulk") in OUTPUT.read_text(encoding="utf-8")
+    page = BeautifulSoup(sample, "html.parser")
+    assert [a["href"] for a in page.select(".ai-series a")] == ["/ai-inn-diagnosis/bulk/", "/ai-inn-diagnosis/sample/", "#request"]
+    assert page.select_one("#request")
+    tools = [t["id"] for t in yaml.safe_load((ROOT / "_data/tools.yml").read_text(encoding="utf-8"))]
+    assert tools.index("ai-inn-bulk") + 1 == tools.index("ai-inn-sample")  # 実態 → サンプルの順

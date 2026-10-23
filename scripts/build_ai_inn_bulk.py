@@ -199,6 +199,21 @@ def price_section(overall: dict) -> str:
 '''
 
 
+def series_nav(f: dict, current: str) -> str:
+    """「AIに聞かれる宿」の3つのページの流れ。サンプルページにも同じものを手で置いている（tests で一致を確かめる）。"""
+    steps = [
+        ("bulk", "/ai-inn-diagnosis/bulk/", "実態を知る", f'実在の温泉旅館{f["inns"]}軒の集計', f'AIが答えられた質問は平均{num(f["mean"])}問'),
+        ("sample", "/ai-inn-diagnosis/sample/", "対策の効果を見る", "対策前後のサンプル", "架空の宿で4問から12問へ"),
+        ("request", "#request", "自館を診断する", "自館の診断（準備中）", "その宿の結果と直す順番をお渡しします"),
+    ]
+    items = "".join(
+        f'<li><a class="ai-series__step" href="{href}"{' aria-current="page"' if key == current else ''}>'
+        f'<span class="ai-series__num">{i}</span><span class="ai-series__kicker">{kicker}</span>'
+        f'<strong>{esc(title)}</strong><span class="ai-series__note">{esc(note)}</span></a></li>'
+        for i, (key, href, kicker, title, note) in enumerate(steps, 1))
+    return f'<nav class="ai-series" aria-label="AIに聞かれる宿 診断のページ"><div class="container"><ol>{items}</ol></div></nav>'
+
+
 def render(summary: dict) -> str:
     f = facts(summary)
     o = summary["overall"]
@@ -298,6 +313,7 @@ tool_related:
   <main id="main">
     <nav class="breadcrumb container" aria-label="パンくずリスト"><ol><li><a href="/">ホーム</a></li><li><a href="/#analysis-tools">分析・ツール</a></li><li aria-current="page">{NAME}</li></ol></nav>
     <section class="page-hero tool-page-hero"><div class="container page-hero-grid"><div><span class="scope-badge scope-badge--facility">旅館のAIO対策（{f["inns"]}軒の集計）</span><h1>AIに聞かれる宿<br>一斉診断<br>集計レポート</h1></div><div><p>「源泉かけ流しの宿は？」「部屋食で、子どもも泊まれる旅館は？」。AIに宿を相談したとき、AIは旅館の公式サイトから答えられるのでしょうか。温泉地の旅館・ホテル{f["inns"]}軒の公式サイトを、旅館ならではの12の質問で一斉に診断しました。</p><p class="ai-hero-note">このページは集計値だけを載せています。宿ごとの結果は公開していません。</p></div></div></section>
+    {series_nav(f, "bulk")}
     {{% include tool-overview.html %}}
 
     <section class="ai-section" id="summary" aria-labelledby="summary-title"><div class="container">
@@ -382,7 +398,7 @@ tool_related:
 {price_section(o)}
     <section class="ai-section ai-section--plain" id="advice" aria-labelledby="advice-title"><div class="container">
       <h2 class="ai-h2" id="advice-title">宿のサイトで、すぐにできること</h2>
-      <p class="ai-lead">効きやすい順に並べました。いちばん手軽なのは、よくある質問に3行足すことです。</p>
+      <p class="ai-lead">効きやすい順に並べました。いちばん手軽なのは、よくある質問に3行足すことです。実際に対策すると答えがどう変わるかは、<a href="/ai-inn-diagnosis/sample/">架空の宿で対策前と対策後を比べたサンプル</a>で見られます。</p>
       <ol class="ai-steps">
         <li><strong>よくある質問に3行足す。</strong>「チェックインは◯時まで」「キャンセル料は◯日前から◯%」「小学生◯円・添い寝◯円」の3つです。チェックインの締め切りだけが足りない宿は{f["no_deadline"]}軒ありました。</li>
         <li><strong>客室ページに料金の目安を書く。</strong>「2名1室1泊◯円〜（夕朝食付き）」の1行です。広さはあるのに料金がない宿が{f["no_price"]}軒ありました。</li>
