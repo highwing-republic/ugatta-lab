@@ -1,74 +1,50 @@
-"""一斉診断の集計レポート：ページは公開集計（summary.json）だけから作り、宿ごとのデータは含まない。"""
+"""一斉診断の集計レポート：ページは非公開の集計から作った HTML だけで、集計データや宿ごとのデータは置かない。"""
 from __future__ import annotations
 
-import json
 import re
 
 import yaml
 from bs4 import BeautifulSoup
 
-from scripts.build_ai_inn_bulk import DATA, OUTPUT, facts, render
 from site_pages import ROOT, rendered
 
 PAGE = "ai-inn-diagnosis/bulk/index.html"
 URL = "https://lab.ugatta-llc.com/ai-inn-diagnosis/bulk/"
-# 宿ごとの結果に出てくる項目。公開集計のどこにも出してはいけない
-PER_INN_KEYS = {"inn_id", "official_url", "rakuten_hotel_no", "rooms", "rooms_source", "quote", "evidence",
-                "runs", "final", "near_miss", "inns_list", "hotel_no"}
+# 宿ごとの結果に出てくる項目。ページのどこにも出してはいけない
+PER_INN_KEYS = ("inn_id", "official_url", "rakuten_hotel_no", "rooms_source", "near_miss", "hotel_no", "summary.json")
 
 
-def summary() -> dict:
-    return json.loads(DATA.read_text(encoding="utf-8"))
+def source() -> str:
+    return (ROOT / PAGE).read_text(encoding="utf-8")
 
 
-def keys(value) -> set[str]:
-    if isinstance(value, dict):
-        return set(value) | {k for v in value.values() for k in keys(v)}
-    if isinstance(value, list):
-        return {k for v in value for k in keys(v)}
-    return set()
+def page() -> BeautifulSoup:
+    return BeautifulSoup(rendered(PAGE), "html.parser")
 
 
-def test_page_is_built_from_the_current_summary() -> None:
-    # summary.json を差し替えたら python scripts/build_ai_inn_bulk.py を実行する
-    assert OUTPUT.read_text(encoding="utf-8") == render(summary())
+def test_no_aggregate_or_per_inn_data_in_this_repository() -> None:
+    # 集計JSONは公開しない。ページの HTML だけを置く
+    assert not (ROOT / "data" / "ai-inn-bulk").exists()
+    assert not list(ROOT.glob("scripts/*ai_inn_bulk*"))
+    text = source()
+    for key in PER_INN_KEYS:
+        assert key not in text, key
+    assert "fetch(" not in text
+    assert "<script src" not in text.replace('<script src="/js/site-shell.js', "")
 
 
-def test_public_summary_has_no_per_inn_data() -> None:
-    s = summary()
-    assert not keys(s) & PER_INN_KEYS
-    assert "inns_with_conflict" not in s["overall"]
-    for g in s["markets"] + s["sizes"]:
-        assert g["inns"] >= s["min_group_size"], g["group"]
-    for g in s["markets"]:
-        # 市場の区分は顔ぶれがわかるため、質問ごとの軒数は出さない
-        assert set(g) == {"group", "inns", "inns_not_judged", "answered", "items_absent"}
-        assert set(g["answered"]) == {"mean", "median", "rate"}
+def test_page_structure() -> None:
+    p = page()
+    assert len(p.select("#one-short .ai-bars__row")) == 11
+    assert len(p.select("#items .ai-bars__row")) == 19
+    assert p.select_one(".breadcrumb li[aria-current]").get_text() == "AIに聞かれる宿 一斉診断 集計レポート"
 
 
-def test_page_reads_no_other_data() -> None:
-    source = (ROOT / "scripts" / "build_ai_inn_bulk.py").read_text(encoding="utf-8")
-    assert re.findall(r'ROOT / "data" / "([^"]+)"', source) == ["ai-inn-bulk"]
-    page = OUTPUT.read_text(encoding="utf-8")
-    assert "<script src" not in page.replace('<script src="/js/site-shell.js', "")
-    assert "fetch(" not in page
-
-
-def test_headline_numbers_match_the_summary() -> None:
-    s, f = summary(), facts(summary())
-    page = BeautifulSoup(rendered(PAGE), "html.parser")
-    kpis = {k["data-kpi"]: k.dd.strong.get_text() for k in page.select(".ai-kpi")}
-    assert kpis["answered"] == f"{s['overall']['answered']['mean']:.2f}"
-    assert kpis["one-short"] == f"{f['one_short_per_inn']:.1f}"
-    assert len(page.select("#markets .ai-bars__row")) == len(s["markets"]) + 1
-    assert len(page.select("#one-short .ai-bars__row")) == 11
-    assert len(page.select("#items .ai-bars__row")) == 19
-    assert page.select_one(".breadcrumb li[aria-current]").get_text() == "AIに聞かれる宿 一斉診断 集計レポート"
-
-
-def test_registry_home_and_llms_quote_the_current_numbers() -> None:
-    f = facts(summary())
-    expected = [f"{f['inns']}軒", f"{f['mean']:.1f}問", f"{f['one_short_per_inn']:.1f}問"]
+def test_registry_home_and_llms_quote_the_page_numbers() -> None:
+    p = page()
+    kpis = {k["data-kpi"]: k.dd.strong.get_text() for k in p.select(".ai-kpi")}
+    inns = re.search(r"(\d+)軒", p.select_one(".scope-badge").get_text()).group(1)
+    expected = [f"{inns}軒", f"{float(kpis['answered']):.1f}問", f"{kpis['one-short']}問"]
     tool = next(t for t in yaml.safe_load((ROOT / "_data/tools.yml").read_text(encoding="utf-8")) if t["id"] == "ai-inn-bulk")
     assert tool["url"] == "/ai-inn-diagnosis/bulk/"
     home = BeautifulSoup((ROOT / "index.html").read_text(encoding="utf-8"), "html.parser")
@@ -81,14 +57,15 @@ def test_registry_home_and_llms_quote_the_current_numbers() -> None:
 
 
 def test_both_ai_inn_pages_share_the_same_three_step_path() -> None:
-    from scripts.build_ai_inn_bulk import series_nav
-    f = facts(summary())
-    sample = (ROOT / "ai-inn-diagnosis/sample/index.html").read_text(encoding="utf-8")
+    bulk = BeautifulSoup(source(), "html.parser").select_one("nav.ai-series")
+    sample = BeautifulSoup((ROOT / "ai-inn-diagnosis/sample/index.html").read_text(encoding="utf-8"), "html.parser")
+    nav = sample.select_one("nav.ai-series")
     # サンプルページの案内は手で置いているので、集計の数字が変わったらここで気づく
-    assert series_nav(f, "sample") in sample
-    assert series_nav(f, "bulk") in OUTPUT.read_text(encoding="utf-8")
-    page = BeautifulSoup(sample, "html.parser")
-    assert [a["href"] for a in page.select(".ai-series a")] == ["/ai-inn-diagnosis/bulk/", "/ai-inn-diagnosis/sample/", "#request"]
-    assert page.select_one("#request")
+    strip = lambda n: [(a["href"], a.get_text()) for a in n.select("a")]
+    assert strip(nav) == strip(bulk)
+    assert bulk.select_one('a[aria-current]')["href"] == "/ai-inn-diagnosis/bulk/"
+    assert nav.select_one('a[aria-current]')["href"] == "/ai-inn-diagnosis/sample/"
+    assert [a["href"] for a in nav.select("a")] == ["/ai-inn-diagnosis/bulk/", "/ai-inn-diagnosis/sample/", "#request"]
+    assert sample.select_one("#request")
     tools = [t["id"] for t in yaml.safe_load((ROOT / "_data/tools.yml").read_text(encoding="utf-8"))]
     assert tools.index("ai-inn-bulk") + 1 == tools.index("ai-inn-sample")  # 実態 → サンプルの順
