@@ -200,31 +200,6 @@ tool_related:
       </table></div>
     </div></section>
 
-    <section class="ai-section ai-section--plain" id="advice" aria-labelledby="advice-title"><div class="container">
-      <h2 class="ai-h2" id="advice-title">宿のサイトで、すぐにできること</h2>
-      <p class="ai-lead">効きやすい順に並べました。いちばん手軽なのは、よくある質問に3行足すことです。実際に対策すると答えがどう変わるかは、<a href="/ai-inn-diagnosis/sample/">架空の宿で対策前と対策後を比べたサンプル</a>で見られます。</p>
-      <ol class="ai-steps">
-        <li><strong>よくある質問に3行足す。</strong>「チェックインは◯時まで」「キャンセル料は◯日前から◯%」「小学生◯円・添い寝◯円」の3つです。チェックインの締め切りだけが足りない宿は46軒ありました。</li>
-        <li><strong>客室ページに料金の目安を書く。</strong>「2名1室1泊◯円〜（夕朝食付き）」の1行です。広さはあるのに料金がない宿が80軒ありました。</li>
-        <li><strong>温泉ページに湯の扱いを書く。</strong>「源泉かけ流し」か「加水・加温・循環あり」かを書きます。泉質だけの宿が42軒ありました。</li>
-        <li><strong>食事ページに場所を書く。</strong>「夕食は部屋食／個室の食事処／レストラン」を書きます。夕食付きだけの宿が38軒ありました。</li>
-        <li><strong>「ない」も書く。</strong>送迎、露天風呂付きの客室、貸切風呂がない場合も「ありません」と書きます。</li>
-        <li><strong>ページ同士の数字をそろえ、古いお知らせを消す。</strong>所要時間、営業時間、送迎の条件がページによって違うと、AIは「宿に確認を」と答えます。</li>
-        <li><strong>大事な情報はJavaScriptなしで読めるようにする。</strong>料金表やチェックインの案内を、HTMLの本文に置きます。</li>
-      </ol>
-    </div></section>
-
-    <section class="ai-section" id="method" aria-labelledby="method-title"><div class="container">
-      <h2 class="ai-h2" id="method-title">診断のしかた</h2>
-      <ul class="ai-steps ai-steps--plain">
-        <li>公式サイトのトップページと、温泉・食事・客室・アクセス・よくある質問などのページを集めました。集めるときは各サイトの robots.txt に従い、間隔をあけています。</li>
-        <li>JavaScriptを動かさずに読める本文をAI（claude-haiku-5-5）に渡し、12の質問と19の項目を宿ごとに3回判定しました。AIが挙げた引用が本文に実在するかは、プログラムで確かめています。</li>
-        <li>「答えられた」は、本文に根拠となる記述があるという意味です。内容が事実どおりかは確かめていません。</li>
-        <li>「あと1行で答えられる」は、答えられなかった質問のうち、足りないのが1つの要素だけだったものです（3回の判定の過半数で数えています）。</li>
-        <li>温泉のない宿では、温泉の質問を対象から外しています。</li>
-      </ul>
-    </div></section>
-
     <section class="ai-section ai-section--plain" id="request" aria-labelledby="request-title"><div class="container">
       <div class="ai-cta">
         <div><h2 class="ai-h2" id="request-title">自館の結果を知りたい方へ</h2><p>この集計に含まれる宿には、その宿の結果だけをお渡しできます。どの質問に答えられなかったか、何を1行足せばよいかがわかります。<a href="/ai-inn-diagnosis/sample/">サンプルレポート</a>もご覧ください。診断の受付は準備中です。</p></div>

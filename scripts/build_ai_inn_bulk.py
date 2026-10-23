@@ -69,8 +69,7 @@ def facts(summary: dict) -> dict:
         "one_short_total": total, "one_short_per_inn": per_inn, "estimate": o["answered"]["mean"] + per_inn,
         "price_absent": items["I11"]["absent_rate"], "cancel_absent": items["I14"]["absent_rate"],
         "child_absent": items["I13"]["absent_rate"], "hidden": o["inns_with_hidden_questions"],
-        "no_price": missing_count(o, "Q04", "1泊の料金"), "no_deadline": missing_count(o, "Q11", "チェックインの締め切り"),
-        "no_flow": missing_count(o, "Q02", "源泉かけ流しかどうか"), "no_place": missing_count(o, "Q06", "部屋食かどうか"),
+        "no_price": missing_count(o, "Q04", "1泊の料金"),
         "markets": len(summary["markets"]), "updated": summary["generated_at"][:10],
     }
 
@@ -171,7 +170,6 @@ def render(summary: dict) -> str:
     means = [g["answered"]["mean"] for g in summary["markets"]]
     market_inns = sorted({g["inns"] for g in summary["markets"]})
     each = f"各地{market_inns[0]}軒" if len(market_inns) == 1 else "各地5軒前後"
-    models = "、".join(summary["models"])
     title = f'温泉旅館{f["inns"]}軒のAIO診断｜{NAME}｜宿泊DXラボ'
     description = (f'温泉地の旅館・ホテル{f["inns"]}軒の公式サイトを、旅館ならではの12の質問で一斉に診断した集計です。'
                    f'AIが答えられた質問は平均{num(f["mean"], 2)}問（11問中）。あと1行書けば答えられる質問が、1軒あたり{num(f["one_short_per_inn"])}問ありました。')
@@ -325,31 +323,6 @@ tool_related:
           {size_rows(summary)}
         </tbody>
       </table></div>
-    </div></section>
-
-    <section class="ai-section ai-section--plain" id="advice" aria-labelledby="advice-title"><div class="container">
-      <h2 class="ai-h2" id="advice-title">宿のサイトで、すぐにできること</h2>
-      <p class="ai-lead">効きやすい順に並べました。いちばん手軽なのは、よくある質問に3行足すことです。実際に対策すると答えがどう変わるかは、<a href="/ai-inn-diagnosis/sample/">架空の宿で対策前と対策後を比べたサンプル</a>で見られます。</p>
-      <ol class="ai-steps">
-        <li><strong>よくある質問に3行足す。</strong>「チェックインは◯時まで」「キャンセル料は◯日前から◯%」「小学生◯円・添い寝◯円」の3つです。チェックインの締め切りだけが足りない宿は{f["no_deadline"]}軒ありました。</li>
-        <li><strong>客室ページに料金の目安を書く。</strong>「2名1室1泊◯円〜（夕朝食付き）」の1行です。広さはあるのに料金がない宿が{f["no_price"]}軒ありました。</li>
-        <li><strong>温泉ページに湯の扱いを書く。</strong>「源泉かけ流し」か「加水・加温・循環あり」かを書きます。泉質だけの宿が{f["no_flow"]}軒ありました。</li>
-        <li><strong>食事ページに場所を書く。</strong>「夕食は部屋食／個室の食事処／レストラン」を書きます。夕食付きだけの宿が{f["no_place"]}軒ありました。</li>
-        <li><strong>「ない」も書く。</strong>送迎、露天風呂付きの客室、貸切風呂がない場合も「ありません」と書きます。</li>
-        <li><strong>ページ同士の数字をそろえ、古いお知らせを消す。</strong>所要時間、営業時間、送迎の条件がページによって違うと、AIは「宿に確認を」と答えます。</li>
-        <li><strong>大事な情報はJavaScriptなしで読めるようにする。</strong>料金表やチェックインの案内を、HTMLの本文に置きます。</li>
-      </ol>
-    </div></section>
-
-    <section class="ai-section" id="method" aria-labelledby="method-title"><div class="container">
-      <h2 class="ai-h2" id="method-title">診断のしかた</h2>
-      <ul class="ai-steps ai-steps--plain">
-        <li>公式サイトのトップページと、温泉・食事・客室・アクセス・よくある質問などのページを集めました。集めるときは各サイトの robots.txt に従い、間隔をあけています。</li>
-        <li>JavaScriptを動かさずに読める本文をAI（{esc(models)}）に渡し、12の質問と19の項目を宿ごとに3回判定しました。AIが挙げた引用が本文に実在するかは、プログラムで確かめています。</li>
-        <li>「答えられた」は、本文に根拠となる記述があるという意味です。内容が事実どおりかは確かめていません。</li>
-        <li>「あと1行で答えられる」は、答えられなかった質問のうち、足りないのが1つの要素だけだったものです（3回の判定の過半数で数えています）。</li>
-        <li>温泉のない宿では、温泉の質問を対象から外しています。</li>
-      </ul>
     </div></section>
 
     <section class="ai-section ai-section--plain" id="request" aria-labelledby="request-title"><div class="container">
