@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-10-23T10:20:06+09:00",
-  "latest_snapshot": "2026-10-23",
+  "generated_at": "2026-10-24T09:53:32+09:00",
+  "latest_snapshot": "2026-10-24",
   "latest_file": "latest.json",
   "history_file": "history.json",
   "history_since": "2026-10-16",
-  "history_records": 8,
+  "history_records": 9,
   "cohort_file": "cohort.json",
   "cohort_version": "bh-v2",
   "conditions": {
